@@ -1,0 +1,20 @@
+{
+  "remotion": {
+    "decode": "passed",
+    "expected_duration": 21.32,
+    "actual_duration": 21.334,
+    "output_revision": [
+      4129205,
+      1794433705770786252
+    ]
+  },
+  "hyperframes": {
+    "decode": "passed",
+    "expected_duration": 21.32,
+    "actual_duration": 21.333,
+    "output_revision": [
+      5828002,
+      1794433743556717214
+    ]
+  }
+}
