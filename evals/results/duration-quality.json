@@ -1,0 +1,52 @@
+{
+  "gate": "passed",
+  "cases": [
+    {
+      "case": "published",
+      "seconds": 21.32,
+      "budget": {
+        "min_seconds": 20,
+        "max_seconds": 35
+      },
+      "baseline_accepts": true,
+      "candidate_accepts": true,
+      "should_accept": true
+    },
+    {
+      "case": "too_short",
+      "seconds": 2.9000000000000004,
+      "budget": {
+        "min_seconds": 20,
+        "max_seconds": 35
+      },
+      "baseline_accepts": true,
+      "candidate_accepts": false,
+      "should_accept": false
+    },
+    {
+      "case": "too_long",
+      "seconds": 37.440000000000005,
+      "budget": {
+        "min_seconds": 20,
+        "max_seconds": 35
+      },
+      "baseline_accepts": true,
+      "candidate_accepts": false,
+      "should_accept": false
+    },
+    {
+      "case": "padding_over_budget",
+      "seconds": 21.32,
+      "budget": {
+        "min_seconds": 20,
+        "max_seconds": 21.25
+      },
+      "baseline_accepts": true,
+      "candidate_accepts": false,
+      "should_accept": false
+    }
+  ],
+  "baseline_invalid_accepted": 3,
+  "candidate_invalid_accepted": 0,
+  "scope": "Explicit duration contract, not semantic or storytelling quality"
+}

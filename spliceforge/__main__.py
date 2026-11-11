@@ -33,6 +33,8 @@ def validate(project):
         raise ValueError('Expected a schema version 1 project object')
     if not isinstance(project.get('source'), str) or not project['source']:
         raise ValueError('Source must be a file path')
+    from .duration import validate_budget
+    validate_budget(project.get('duration_budget'))
     source = Path(project['source'])
     if not source.is_file():
         raise ValueError('Source file does not exist')
@@ -78,6 +80,8 @@ def render(path):
     (path.parent / 'verification.json').unlink(missing_ok=True)
     project = json.loads(path.read_text())
     validate(project)
+    from .duration import require_duration
+    require_duration(sum(b-a for a,b in project['keep']),project.get('duration_budget'))
     from .evidence import input_revision, file_revision
     revision = input_revision(path)
     target = path.parent / 'output.mp4'
@@ -129,6 +133,7 @@ def render(path):
         run([binary('ffmpeg'), '-v', 'error', '-i', temporary, '-f', 'null', '-'])
         metadata = probe(temporary)
         actual = float(metadata['format']['duration'])
+        require_duration(actual,project.get('duration_budget'),tolerance=1/30)
         expected = sum(b-a for a,b in project['keep'])
         if abs(actual - expected) > .15:
             raise ValueError(f'Output duration mismatch: {actual} versus {expected}')
