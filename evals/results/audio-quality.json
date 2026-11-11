@@ -1,0 +1,54 @@
+{
+  "gate": "passed",
+  "source_sha256": "d692dbae9ff7e84285474c72dc68e1295bc70f812c0fed5b589f666c8f093a4b",
+  "probe_attenuation_db": -3.045543048732402,
+  "voice_band_delta_db": -0.021955395072312076,
+  "opening_probe_delta_db": -13.453103042744113,
+  "records": {
+    "before": {
+      "probe_rms": 0.088174155874682,
+      "voice_band_rms": 0.044691167664460116,
+      "opening_probe_rms": 0.08349034753282333,
+      "mix": {
+        "music_ducking": false,
+        "music_fade_seconds": 0,
+        "loudness": {
+          "integrated_lufs": "-17.30",
+          "true_peak_dbtp": "-4.58",
+          "range_lu": "0.60"
+        },
+        "tracks": 1,
+        "level_measurements": [
+          "[Parsed_volumedetect_0 @ 0x600003dd0420] mean_volume: -23.0 dB",
+          "[Parsed_volumedetect_0 @ 0x600003dd0420] max_volume: -4.6 dB"
+        ],
+        "limiter": 0.95,
+        "listening_verified": false
+      },
+      "sha256": "e414e9119ecab25f589508aea205ade880627a2021100cc19fb24b315f4500a9"
+    },
+    "after": {
+      "probe_rms": 0.06209607618874895,
+      "voice_band_rms": 0.04457834408297115,
+      "opening_probe_rms": 0.017741123400619615,
+      "mix": {
+        "music_ducking": true,
+        "music_fade_seconds": 0.25,
+        "loudness": {
+          "integrated_lufs": "-19.83",
+          "true_peak_dbtp": "-5.76",
+          "range_lu": "1.00"
+        },
+        "tracks": 1,
+        "level_measurements": [
+          "[Parsed_volumedetect_0 @ 0x60000225cc60] mean_volume: -25.1 dB",
+          "[Parsed_volumedetect_0 @ 0x60000225cc60] max_volume: -5.8 dB"
+        ],
+        "limiter": 0.95,
+        "listening_verified": false
+      },
+      "sha256": "3ded9e6da10c161b8380baab038905dab6b553bab6b92fe63e6502c38ef7a58d"
+    }
+  },
+  "scope": "Technical masking/fade proxies on one real narration; not a human listening or music suitability score."
+}
