@@ -49,14 +49,32 @@ def serve(directory, port=8765):
             paths = {'/': Path(__file__).parent/'web/index.html', '/output.mp4':directory/'output.mp4'}
             path = paths.get(self.path.split('?')[0])
             if not path or not path.is_file():return self.reply(404, {'error':'Not found'})
-            self.send_response(200)
+            size = path.stat().st_size
+            start, end = 0, size-1
+            partial = self.headers.get('Range')
+            if partial:
+                import re
+                match = re.fullmatch(r'bytes=(\d*)-(\d*)',partial)
+                if not match or not any(match.groups()):return self.reply(416, {'error':'Invalid byte range'})
+                left,right = match.groups()
+                if left:start=int(left);end=min(int(right),end) if right else end
+                else:start=max(0,size-int(right))
+                if start>end or start>=size:return self.reply(416, {'error':'Range outside file'})
+            self.send_response(206 if partial else 200)
+            self.send_header('Accept-Ranges','bytes')
+            if partial:self.send_header('Content-Range',f'bytes {start}-{end}/{size}')
             self.send_header('Content-Type', mimetypes.guess_type(path)[0] or 'application/octet-stream')
-            self.send_header('Content-Length', str(path.stat().st_size))
+            self.send_header('Content-Length', str(end-start+1))
             self.send_header('Cache-Control', 'no-store')
             self.end_headers()
             try:
                 with path.open('rb') as file:
-                    while chunk := file.read(1024*1024):self.wfile.write(chunk)
+                    file.seek(start)
+                    remaining=end-start+1
+                    while remaining:
+                        chunk=file.read(min(1024*1024,remaining))
+                        if not chunk:break
+                        self.wfile.write(chunk);remaining-=len(chunk)
             except (BrokenPipeError, ConnectionResetError):pass
 
         def do_POST(self):
@@ -81,6 +99,22 @@ def serve(directory, port=8765):
                     if len(choices) != len(transcript['segments']) or any(type(x) is not bool for x in choices):raise ValueError('One boolean required per segment')
                     for row, keep in zip(transcript['segments'], choices):row['keep'] = keep
                     write(transcript_path,transcript);apply_selection(project)
+                elif self.path == '/api/design':
+                    item = json.loads(project.read_text())
+                    import re
+                    brand = data['brand']
+                    if not isinstance(brand['name'],str) or not 0 < len(brand['name']) <= 50:raise ValueError('Brand name must contain 1–50 characters')
+                    if not re.fullmatch(r'#[0-9a-fA-F]{6}',brand['accent']):raise ValueError('Use a six-digit hex color')
+                    duration = sum(b-a for a,b in item['keep'])
+                    cards = data['storyboard']
+                    if not isinstance(cards,list) or len(cards)>20:raise ValueError('Use at most 20 storyboard cards')
+                    for card in cards:
+                        if not 0 <= card['start'] < card['start']+card['duration'] <= duration:raise ValueError('Card timing is outside the edited video')
+                        if not isinstance(card['title'],str) or len(card['title'])>60:raise ValueError('Card title is too long')
+                        if not Path(card['image']).is_file():raise ValueError('Card image does not exist')
+                    item.update(brand=brand,storyboard=cards,graphics=bool(data['graphics']))
+                    write(project,item)
+                    (directory/'verification.json').unlink(missing_ok=True)
                 elif self.path in ('/api/transcribe','/api/render'):
                     action = transcribe if self.path.endswith('transcribe') else render
                     state.update(status='running', operation=self.path.rsplit('/',1)[-1], error=None)

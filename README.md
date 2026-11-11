@@ -50,4 +50,4 @@ Install the pinned renderer with `npm ci` (Node.js 22+). Set `graphics` to `true
 {"graphics": true, "brand": {"name": "Your brand", "accent": "#e5a35d"}, "storyboard": [{"title": "A clear decision", "image": "/absolute/path/screen.png", "start": 3, "duration": 6}]}
 ```
 
-These fields belong alongside source and keep in your project. Each card shows its image, title, animated entrance and progress line. The source remains in a side pane; narration is retained. The first Remotion render may download a compatible Chromium browser. Remotion has its own licensing terms; review them before commercial deployment. Currently the workbench does not edit graphics settings: use project.json, then render from CLI or workbench.
+These fields belong alongside source and keep in your project. Each card shows its image, title, animated entrance and progress line. The source remains in a side pane; narration is retained. The first Remotion render may download a compatible Chromium browser. Remotion has its own licensing terms; review them before commercial deployment. The workbench edits the brand, accent color and storyboard cards. Save the design before rendering.
