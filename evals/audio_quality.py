@@ -2,7 +2,7 @@
 
 The tone is a diagnostic signal, not a demo or a music-preference evaluation.
 """
-import argparse,array,hashlib,json,math,subprocess,sys
+import argparse,array,hashlib,json,math,subprocess,sys,tempfile
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from footagepilot.__main__ import binary,run,probe
@@ -33,5 +33,26 @@ def evaluate(source,work):
     assert float(records['after']['mix']['loudness']['true_peak_dbtp'])<0,'Clipped output'
     return {'gate':'passed','source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'probe_attenuation_db':attenuation,'voice_band_delta_db':voice_delta,'opening_probe_delta_db':opening_delta,'records':records,'scope':'Technical masking/fade proxies on one real narration; not a human listening or music suitability score.'}
 
+BASELINE_REVISION='bfa6c91284693b45807c2d28d9aad2a7abc70608'
+BASELINE_SHA256='d692dbae9ff7e84285474c72dc68e1295bc70f812c0fed5b589f666c8f093a4b'
+
+
+def materialize_baseline(directory):
+    root=Path(__file__).resolve().parents[1]
+    try:
+        data=subprocess.check_output(['git','show',BASELINE_REVISION+':gallery/videos/remotion-narration.mp4'],cwd=root,stderr=subprocess.PIPE)
+    except subprocess.CalledProcessError as error:
+        raise ValueError('Reference media unavailable; fetch full repository history or provide an explicit source') from error
+    if hashlib.sha256(data).hexdigest()!=BASELINE_SHA256:raise ValueError('Reference media hash mismatch')
+    source=directory/'reference.mp4';source.write_bytes(data);return source
+
+
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('source',type=Path);p.add_argument('--work',required=True,type=Path);a=p.parse_args();print(json.dumps(evaluate(a.source,a.work),indent=2))
+    p=argparse.ArgumentParser();p.add_argument('source',type=Path,nargs='?');p.add_argument('--baseline',action='store_true',help='Use the original, hash-verified reference clip from Git history');p.add_argument('--work',required=True,type=Path);a=p.parse_args()
+    if bool(a.source)==a.baseline:p.error('Choose one source or --baseline')
+    if a.baseline:
+        with tempfile.TemporaryDirectory(prefix='footagepilot-audio-reference-') as temp:
+            result=evaluate(materialize_baseline(Path(temp)),a.work)
+        result['reference_commit']=BASELINE_REVISION
+    else:result=evaluate(a.source,a.work)
+    print(json.dumps(result,indent=2))

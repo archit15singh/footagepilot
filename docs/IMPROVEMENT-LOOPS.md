@@ -39,7 +39,7 @@ Live Codex 6.1 Sol / low returned a 21.32-second plan for the explicit 20–35-s
 
 Music now ducks from the narration sidechain and fades in/out over 0.25 seconds by default. Voice stays at unity gain; SFX timing/gain stays independent. Explicit controls restore legacy fixed-gain/no-fade behavior. Evidence additionally reports input integrated LUFS, true peak and loudness range from FFmpeg analysis; no automatic loudness normalization was added.
 
-Evaluation: `python3 evals/audio_quality.py gallery/videos/remotion-narration.mp4 --work projects/new-audio-eval`. A 6-kHz probe tone mixed under actual narration makes music-energy change measurable without conflating it with speech. Compared with fixed gain/no fades, the candidate attenuates probe energy by 3.05 dB across seconds 2–18, changes voice-band RMS by −0.02 dB, and reduces opening probe energy by 13.45 dB. Both outputs decode, and candidate true peak stays below 0 dBTP. See [audio-quality.json](../evals/results/audio-quality.json). This is a diagnostic signal on one voice, not representative music or listening preference evidence.
+Evaluation: `python3 evals/audio_quality.py --baseline --work projects/new-audio-eval`. A 6-kHz probe tone mixed under actual narration makes music-energy change measurable without conflating it with speech. Compared with fixed gain/no fades, the candidate attenuates probe energy by 3.05 dB across seconds 2–18, changes voice-band RMS by −0.02 dB, and reduces opening probe energy by 13.45 dB. Both outputs decode, and candidate true peak stays below 0 dBTP. See [audio-quality.json](../evals/results/audio-quality.json). This is a diagnostic signal on one voice, not representative music or listening preference evidence.
 
 Also mixed the actual gallery music/SFX with the actual narration, fully decoded it, and reran MLX Whisper: one substitution in 83 expected words, matching the prior baseline error count. Measured −27.06 LUFS integrated / −5.70 dBTP. SFX-only mix also fully decodes without a music sidechain. See [audio-real.json](../evals/results/audio-real.json). Twenty-one tests pass plus compile/whitespace checks. Thresholds are conservative engineering gates; no human listening, pumping assessment or aesthetic improvement percentage is claimed.
 
@@ -78,3 +78,10 @@ A real Codex 6.1 Sol / low call on the unchanged archival transcript also passes
 ## Evaluation environment
 
 [Tool versions and input provenance](../evals/results/improvement-environment.json) record the installed FFmpeg/ffprobe, Node, Python, Codex CLI, MLX Whisper and pinned renderer packages, lockfile/input hashes and interventions. The toolchain was inspected after the runs and no dependencies changed during the loops. Model cache revision was not captured, so exact binary reproduction is not claimed. Six product fixes were accepted through PRs #2–#6 and #8; PR #7 published integrated evidence. The wider-padding candidate was rejected.
+
+
+## Audio-reference input after the product rename
+
+The gallery is a mutable set of newly planned examples. The rename run chose a different 27.8-second excerpt, and running the original diagnostic on it measured only 2.80 dB of probe attenuation, missing the unchanged 3-dB target. This result is retained in the rename verification; it is not reported as a pass or a naming-caused regression. The source, rather than DSP behavior, changed.
+
+The documented regression command now uses `--baseline`, extracting the exact original narration clip from Git revision bfa6c91 and verifying its recorded SHA-256 before evaluating it. Full Git history is needed for that mode. Passing the historical control does not establish that every new recording meets the target. Explicit-source mode remains available and still fails when a new source misses a gate; no threshold was relaxed.

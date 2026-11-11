@@ -3,7 +3,7 @@
   "python_module": "footagepilot",
   "environment_prefix": "FOOTAGEPILOT_",
   "http_token_header": "X-FootagePilot-Token",
-  "unit_tests_passed": 27,
+  "unit_tests_passed": 29,
   "wheel": {
     "entry_point": "footagepilot = footagepilot.__main__:main",
     "isolated_cli_help": "passed",
@@ -193,5 +193,14 @@
       "expected_duration": 3,
       "actual_duration": 3.0
     }
+  },
+  "additional_audio_evaluation": {
+    "historical_reference_gate": "passed",
+    "historical_reference_attenuation_db": -3.045543048732402,
+    "historical_reference_source_sha256": "d692dbae9ff7e84285474c72dc68e1295bc70f812c0fed5b589f666c8f093a4b",
+    "new_gallery_excerpt_gate": "failed",
+    "new_gallery_excerpt_attenuation_db": -2.804592683563703,
+    "required_attenuation_db": -3,
+    "scope": "Different selected input. The renderer/product rename does not change DSP behavior; this diagnostic does not establish universal ducking quality."
   }
 }
