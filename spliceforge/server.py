@@ -6,7 +6,7 @@ import secrets
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from .__main__ import probe, render, validate, write
-from .transcript import transcribe, apply_selection
+from .transcript import transcribe, apply_selection, selection_ranges
 
 
 def serve(directory, port=8765):
@@ -98,6 +98,8 @@ def serve(directory, port=8765):
                     choices = data['keep']
                     if len(choices) != len(transcript['segments']) or any(type(x) is not bool for x in choices):raise ValueError('One boolean required per segment')
                     for row, keep in zip(transcript['segments'], choices):row['keep'] = keep
+                    item = json.loads(project.read_text())
+                    selection_ranges(transcript['segments'], validate(item))
                     write(transcript_path,transcript);apply_selection(project)
                 elif self.path == '/api/design':
                     item = json.loads(project.read_text())

@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "expected_duration": 1,
+  "actual_duration": 1.0,
+  "decode": "passed",
+  "graphics": {
+    "engine": "remotion",
+    "caption_groups": 0,
+    "storyboard_cards": 0,
+    "caption_timing": "ASR-segment interpolation; review required"
+  },
+  "elapsed_seconds": 16.22485616701306,
+  "limitations": [
+    "No aesthetic, speech continuity or listening assessment"
+  ],
+  "setup": "fresh npm ci and copied product module; default local node_modules resolution"
+}

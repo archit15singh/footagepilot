@@ -1,0 +1,66 @@
+{
+  "source_sha256": "760be16d95829d0c4d87e6bcbf86105841eaa10252c6cd37638409804fbbc3ab",
+  "source_duration": 46.921354,
+  "rejected_segments": [
+    0
+  ],
+  "keep": [
+    [
+      4.16,
+      46.08
+    ]
+  ],
+  "transcript_segments": 10,
+  "runs": [
+    {
+      "name": "first",
+      "sha256": "5284f4c5e574ffbe6038e18e43c1310f37def6f0688816ccc66d23e1cd436802",
+      "audio_hash": "SHA256=229c16b392f6a36a075661326668b9ad7baad262f1503a1550c20227e10fa466",
+      "checks": {
+        "passed": true,
+        "expected_duration": 41.92,
+        "actual_duration": 42.048,
+        "decode": "passed",
+        "graphics": {
+          "engine": "remotion",
+          "caption_groups": 16,
+          "storyboard_cards": 3,
+          "caption_timing": "ASR-segment interpolation; review required"
+        },
+        "elapsed_seconds": 36.2574360419967,
+        "limitations": [
+          "No aesthetic, speech continuity or listening assessment"
+        ]
+      }
+    },
+    {
+      "name": "revision",
+      "sha256": "e320014d981198e91beb953a51289079202dbc977b076332830225e787697d15",
+      "audio_hash": "SHA256=229c16b392f6a36a075661326668b9ad7baad262f1503a1550c20227e10fa466",
+      "checks": {
+        "passed": true,
+        "expected_duration": 41.92,
+        "actual_duration": 42.048,
+        "decode": "passed",
+        "graphics": {
+          "engine": "remotion",
+          "caption_groups": 16,
+          "storyboard_cards": 3,
+          "caption_timing": "ASR-segment interpolation; review required"
+        },
+        "elapsed_seconds": 36.59607408400916,
+        "limitations": [
+          "No aesthetic, speech continuity or listening assessment"
+        ]
+      }
+    }
+  ],
+  "revision_audio_identical": true,
+  "elapsed_seconds": 74.6854010829993,
+  "limitations": [
+    "Synthetic fixture policy removes a known phrase; no autonomous storytelling claim.",
+    "ASR segment timing and interpolated captions require review.",
+    "Frame samples and technical checks do not constitute listening."
+  ],
+  "implementation_note": "Run before character-bounded caption update; retained as baseline, not final release evidence."
+}

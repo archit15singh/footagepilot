@@ -1,0 +1,8 @@
+{
+  "unauthorized_rejected": true,
+  "failed_job_visible": true,
+  "corrected_retry_succeeds": true,
+  "invalid_design_rejected": true,
+  "range_playback": true,
+  "proof_survives_invalid_design": true
+}
