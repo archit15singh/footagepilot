@@ -147,7 +147,7 @@ def main():
     init = commands.add_parser('init'); init.add_argument('source', type=Path); init.add_argument('directory', type=Path)
     for name in ('validate', 'render', 'transcribe', 'apply-transcript', 'align', 'apply-plan', 'cleanup'):
         sub = commands.add_parser(name); sub.add_argument('project', type=Path)
-    production = commands.add_parser('produce'); production.add_argument('project',type=Path); production.add_argument('--brief',required=True); production.add_argument('--skip-cleanup',action='store_true')
+    production = commands.add_parser('produce'); production.add_argument('project',type=Path); production.add_argument('--brief',required=True); production.add_argument('--skip-cleanup',action='store_true'); production.add_argument('--engine',action='append',choices=('remotion','hyperframes'),help='Render only this engine; repeat for both (default: both)')
     planner = commands.add_parser('plan'); planner.add_argument('project',type=Path); planner.add_argument('--brief',required=True)
     commands.add_parser('doctor')
     web = commands.add_parser('serve'); web.add_argument('directory', type=Path); web.add_argument('--port', type=int, default=8765)
@@ -169,7 +169,7 @@ def main():
             print(path)
         elif args.command == 'produce':
             from .pipeline import produce
-            print(json.dumps(produce(args.project.resolve(),args.brief,not args.skip_cleanup),indent=2))
+            print(json.dumps(produce(args.project.resolve(),args.brief,not args.skip_cleanup,args.engine),indent=2))
         elif args.command == 'cleanup':
             from .cleanup import cleanup
             print(json.dumps(cleanup(args.project.resolve()),indent=2))

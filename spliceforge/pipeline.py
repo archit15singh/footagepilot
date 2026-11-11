@@ -7,8 +7,10 @@ from .planner import plan,apply_plan
 from .audio import mix_audio
 
 
-def produce(project_path,brief,remove_silence=True):
-    directory=project_path.parent;state={'status':'running','stages':[],'outputs':[]}
+def produce(project_path,brief,remove_silence=True,engines=None):
+    engines=list(engines) if engines is not None else ['remotion','hyperframes']
+    if not engines or len(set(engines))!=len(engines) or any(e not in ('remotion','hyperframes') for e in engines):raise ValueError('Choose unique render engines: remotion, hyperframes')
+    directory=project_path.parent;state={'status':'running','engines':engines,'stages':[],'outputs':[]}
     state_path=directory/'pipeline-run.json'
     def stage(name,action):
         started=time.monotonic();record={'name':name,'status':'running'};state['stages'].append(record);write(state_path,state)
@@ -25,7 +27,7 @@ def produce(project_path,brief,remove_silence=True):
     stage('story-plan-codex',lambda:plan(project_path,brief))
     stage('apply-word-plan',lambda:apply_plan(project_path))
     project=json.loads(project_path.read_text());audio=project.pop('audio',None)
-    for engine in ['remotion','hyperframes']:
+    for engine in engines:
         project.update(graphics=True,word_captions=True,cut_engine='makemyclip',renderer=engine)
         write(project_path,project)
         stage('render-'+engine,lambda:render(project_path))
@@ -40,7 +42,7 @@ def produce(project_path,brief,remove_silence=True):
     write(project_path,project)
     final=directory/state['outputs'][-1]['path'];shutil.copyfile(final,directory/'output.mp4')
     from .evidence import input_revision,file_revision
-    proof=json.loads((directory/'verification.json').read_text());proof.update(actual_duration=float(probe(directory/'output.mp4')['format']['duration']),input_revision=input_revision(project_path),output_revision=file_revision(directory/'output.mp4'),audio_mix=json.loads((directory/'hyperframes-mix.json').read_text()) if audio else None)
+    proof=json.loads((directory/'verification.json').read_text());proof.update(actual_duration=float(probe(directory/'output.mp4')['format']['duration']),input_revision=input_revision(project_path),output_revision=file_revision(directory/'output.mp4'),audio_mix=json.loads((directory/f'{engines[-1]}-mix.json').read_text()) if audio else None)
     write(directory/'verification.json',proof)
     state['status']='passed';write(state_path,state)
     return state
