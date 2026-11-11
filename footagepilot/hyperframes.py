@@ -26,7 +26,7 @@ def render_hyperframes(project_path,cut,output,project):
     page+=f'<div id="root" data-composition-id="main" data-width="1280" data-height="720" data-duration="{duration}"><header style="color:{brand["accent"]}">{html.escape(brand["name"])}</header><video class="clip source" style="{style}" data-start="0" data-duration="{duration}" data-track-index="0" src="assets/cut.mp4" muted playsinline></video>'+''.join(rows)+'</div><script src="assets/gsap.min.js"></script><script>window.__timelines=window.__timelines||{};const tl=gsap.timeline({paused:true});'+''.join(animations)+'window.__timelines.main=tl;</script></body></html>'
     (project_dir/'index.html').write_text(page)
     env={**os.environ,'HYPERFRAMES_NO_TELEMETRY':'1','HYPERFRAMES_FFMPEG_PATH':binary('ffmpeg'),'HYPERFRAMES_FFPROBE_PATH':binary('ffprobe'),'PATH':str(Path(binary('ffmpeg')).parent)+os.pathsep+os.environ.get('PATH','')}
-    browser=os.environ.get('SPLICEFORGE_BROWSER')
+    browser=os.environ.get('FOOTAGEPILOT_BROWSER')
     if not browser:
         candidates=list((root/'node_modules/.remotion/chrome-headless-shell').rglob('chrome-headless-shell'))
         browser=next((str(p) for p in candidates if p.is_file()),None)

@@ -1,6 +1,6 @@
 # Run the evaluation
 
-Requirements: project setup from README, FFmpeg and ffprobe, whisper.cpp CLI and a local English model. Export the four SPLICEFORGE_* tool/model variables documented in README. Python evaluations use only the standard library.
+Requirements: project setup from README, FFmpeg and ffprobe, whisper.cpp CLI and a local English model. Export the four FOOTAGEPILOT_* tool/model variables documented in README. Python evaluations use only the standard library.
 
 On macOS, generate original inputs with native speech:
 

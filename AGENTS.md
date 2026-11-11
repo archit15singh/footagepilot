@@ -1,4 +1,4 @@
-# Working on SpliceForge
+# Working on FootagePilot
 
 Read README.md for current executable behavior and docs/PLAN.md before changing scope. Distinguish shipped functionality from planned integrations.
 
@@ -8,4 +8,4 @@ Keep project media, machine paths, dependencies and secrets out of commits. Use 
 
 For evaluations, report inputs, tool versions, interventions, failures and limits. Never present precursor benchmark results as product results. Before release, verify the CLI and browser workflow on the actual implementation and publish reproducible evidence.
 
-Expanded pipeline: use `python3 -m spliceforge produce <project.json> --brief <brief>` for cleanup, word alignment, headless planning, both renderers and mixed/narration variants. Test real footage through evals/real_pipeline.py. Keep word IDs/ranges and source meaning traceable; model output is data, never shell commands. Codex is the only supported planner backend. Preserve actual failed-run logs locally and sanitized findings in docs/REAL-E2E-RESULTS.md. Gallery outputs must fully decode and match recorded hashes before publishing.
+Expanded pipeline: use `python3 -m footagepilot produce <project.json> --brief <brief>` for cleanup, word alignment, headless planning, both renderers and mixed/narration variants. Test real footage through evals/real_pipeline.py. Keep word IDs/ranges and source meaning traceable; model output is data, never shell commands. Codex is the only supported planner backend. Preserve actual failed-run logs locally and sanitized findings in docs/REAL-E2E-RESULTS.md. Gallery outputs must fully decode and match recorded hashes before publishing.

@@ -1,5 +1,5 @@
 import unittest
-from spliceforge.graphics import captions_for_cut
+from footagepilot.graphics import captions_for_cut
 
 class CaptionMapping(unittest.TestCase):
     def test_rejected_segments_absent_and_times_rebased(self):

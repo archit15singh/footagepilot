@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from spliceforge.__main__ import binary,run,probe
+from footagepilot.__main__ import binary,run,probe
 out=Path('projects/demo-input').resolve();out.mkdir(parents=True,exist_ok=True)
 text='This is a rejected take. Please discard this sentence. A useful video starts with a clear story. Bring your recordings, notes, and screenshots into one place. Start by organizing the material you actually need, so every scene has a purpose. Next, review the cut. Remove mistakes and check the words that remain. Give each visual one job. Highlight a decision, explain a change, or show the product in action. Finally, deliver a video that is easy to revise. Keep narration clear, captions readable, and graphics consistent. When the brand changes, update the design without rebuilding the story.'
 run(['say','-v','Samantha','-r','166','-o',out/'speech.aiff',text])

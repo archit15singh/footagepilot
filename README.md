@@ -1,28 +1,30 @@
-# SpliceForge
+# FootagePilot
+
+Agent-driven video editing for real footage: clean up speech, plan cuts, add captions and graphics, then verify the exports.
 
 Working agent-operated video editing: MakeMyClip cleanup → local word alignment → headless Codex story planning → validated word cuts → HyperFrames/Remotion → music/SFX mixing.
 
-[Video variations](gallery/index.html) · [Real end-to-end findings](docs/REAL-E2E-RESULTS.md) · [Setup](docs/SETUP.md)
+[Naming and migration](docs/NAMING.md) · [Video variations](gallery/index.html) · [Real end-to-end findings](docs/REAL-E2E-RESULTS.md) · [Setup](docs/SETUP.md)
 
 The committed gallery contains four automatically generated edits of real archival footage. Codex is the only planner and was live-tested. Word timestamps are model estimates and listening remains unverified. No UI polish or synthetic demo is needed to reproduce this run.
 
 ```sh
 npm ci
 # Configure FFmpeg/ffprobe and a Python runtime containing mlx-whisper.
-export SPLICEFORGE_ALIGN_PYTHON=/path/to/python-with-mlx-whisper
+export FOOTAGEPILOT_ALIGN_PYTHON=/path/to/python-with-mlx-whisper
 python3 evals/real_pipeline.py --work projects/real-run --gallery gallery
 ```
 
 For your own footage:
 
 ```sh
-python3 -m spliceforge init recording.mp4 projects/my-film
-python3 -m spliceforge produce projects/my-film/project.json --brief 'Select a coherent 30-second excerpt, preserve meaning and source order.'
+python3 -m footagepilot init recording.mp4 projects/my-film
+python3 -m footagepilot produce projects/my-film/project.json --brief 'Select a coherent 30-second excerpt, preserve meaning and source order.'
 ```
 
 To render one variation, append `--engine remotion` or `--engine hyperframes` to `produce`. Repeat `--engine` to choose both; omitting it preserves the default of both engines. The run manifest lists only outputs from the requested engines.
 
-Use an authenticated `codex` CLI. The planner pins `gpt-6.1-sol` with low reasoning effort. The planner sends transcript text to that provider. The local alignment adapter currently uses MLX Whisper on Apple Silicon. Both renderers and MakeMyClip use the pinned Node dependencies; FFmpeg/ffprobe must be available on PATH or configured using SPLICEFORGE_FFMPEG and SPLICEFORGE_FFPROBE. Models, local project media and credentials are ignored by Git.
+Use an authenticated `codex` CLI. The planner pins `gpt-6.1-sol` with low reasoning effort. The planner sends transcript text to that provider. The local alignment adapter currently uses MLX Whisper on Apple Silicon. Both renderers and MakeMyClip use the pinned Node dependencies; FFmpeg/ffprobe must be available on PATH or configured using FOOTAGEPILOT_FFMPEG and FOOTAGEPILOT_FFPROBE. Models, local project media and credentials are ignored by Git.
 
 For a hard length constraint, add `"duration_budget": {"min_seconds": 20, "max_seconds": 35}` to the project. The planner receives it, and planning/application/rendering reject edits outside it, including cut padding. Final encoded output permits one 30-fps frame of rounding. An impossible or unmet budget fails clearly; it does not silently truncate speech or automatically retry the model. Without this field, the brief remains advisory about duration.
 

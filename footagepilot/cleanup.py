@@ -4,13 +4,13 @@ from pathlib import Path
 from .__main__ import run,probe,write
 
 
-def clip_binary():return os.environ.get('SPLICEFORGE_CLIP',str(Path(__file__).resolve().parents[1]/'node_modules/.bin/clip'))
+def clip_binary():return os.environ.get('FOOTAGEPILOT_CLIP',str(Path(__file__).resolve().parents[1]/'node_modules/.bin/clip'))
 
 
 def export_ranges(project,output,workspace,remove_silence=False):
     workspace.mkdir(parents=True,exist_ok=True)
     env={**os.environ,'MAKEMYCLIP_WORKSPACE':str(workspace)}
-    ffmpeg=os.environ.get('SPLICEFORGE_FFMPEG')
+    ffmpeg=os.environ.get('FOOTAGEPILOT_FFMPEG')
     if ffmpeg:env['PATH']=str(Path(ffmpeg).parent)+os.pathsep+env.get('PATH','')
     records=[]
     def call(args):

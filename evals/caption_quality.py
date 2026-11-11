@@ -2,7 +2,7 @@
 import hashlib,json,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from spliceforge.graphics import word_captions_for_cut
+from footagepilot.graphics import word_captions_for_cut
 
 
 def baseline(words,ranges):

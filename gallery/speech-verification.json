@@ -1,20 +1,19 @@
 {
-  "expected_text": "I've delivered a few hundred of these weekly addresses over the years. And you may have noticed a theme that pops up pretty often. The Republicans who run this Congress aren't doing their jobs. But there's a lot of business they need to get done first. First, even as we're seeing more and more Zika cases inside the United States, they've refused to fund our efforts to protect women and children by fighting Zika in a serious way.",
-  "observed_text": "I've delivered a few hundred of these weekly addresses over the years, and you may have noticed a theme that pops up pretty often. The Republicans who run this Congress aren't doing their job, but there's a lot of business they need to get done first. First, even as we're seeing more and more Zika cases inside the United States, they've refused to fund our efforts to protect women and children by fighting Zika in a serious way.",
-  "expected_words": 83,
-  "edit_distance": 1,
-  "normalized_wer": 0.012048192771084338,
-  "scope": "Latest integrated mixed Remotion and HyperFrames outputs, model re-transcription only; not listening assessment.",
+  "expected_text": "I've delivered a few hundred of these weekly addresses over the years. And you may have noticed a theme that pops up pretty often. The Republicans who run this Congress aren't doing their jobs. First, even as we're seeing more and more Zika cases inside the United States, they've refused to fund our efforts to protect women and children by fighting Zika in a serious way. Second, they still need to provide resources to help the people of Louisiana recover from last month's terrible floods and to help communities like Flint recover from their own challenges.",
+  "expected_words": 101,
   "engines": {
     "remotion": {
       "edit_distance": 1,
-      "normalized_wer": 0.012048192771084338,
-      "sha256": "101689cb33761f375ec2e1dc67733c4c056a50b43eff6823d4f085205adc7aff"
+      "normalized_wer": 0.009900990099009901,
+      "sha256": "e61a5cdf2c691683baf3efb4507825d663c67397abbceb97a362c8a9621ca0bf",
+      "observed_text": "I've delivered a few hundred of these weekly addresses over the years, and you may have noticed a theme that pops up pretty often. The Republicans who run this Congress aren't doing their job. First, even as we're seeing more and more Zika cases inside the United States, they've refused to fund our efforts to protect women and children by fighting Zika in a serious way. Second, they still need to provide resources to help the people of Louisiana recover from last month's terrible floods, and to help communities like Flint recover from their own challenges."
     },
     "hyperframes": {
       "edit_distance": 1,
-      "normalized_wer": 0.012048192771084338,
-      "sha256": "05ac51dcededf56c9d0342ca4a0d36031ff2a46d82da837adbe428c77f6839d4"
+      "normalized_wer": 0.009900990099009901,
+      "sha256": "1ba720435cdb31bd4cb7a3b1bc0989f5930f3bf237d876295ba2ee983e02fe70",
+      "observed_text": "I've delivered a few hundred of these weekly addresses over the years, and you may have noticed a theme that pops up pretty often. The Republicans who run this Congress aren't doing their job. First, even as we're seeing more and more Zika cases inside the United States, they've refused to fund our efforts to protect women and children by fighting Zika in a serious way. Second, they still need to provide resources to help the people of Louisiana recover from last month's terrible floods, and to help communities like Flint recover from their own challenges."
     }
-  }
+  },
+  "scope": "FootagePilot rename run: actual new selected source words versus re-transcribed mixed exports. Different plan from prior gallery; not a comparative quality or listening score."
 }

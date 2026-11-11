@@ -1,4 +1,5 @@
 {
+  "current_brand_in_page": true,
   "unauthorized_rejected": true,
   "failed_job_visible": true,
   "corrected_retry_succeeds": true,

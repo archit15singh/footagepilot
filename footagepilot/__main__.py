@@ -11,9 +11,9 @@ import time
 
 
 def binary(name):
-    path = os.environ.get('SPLICEFORGE_' + name.upper()) or shutil.which(name)
+    path = os.environ.get('FOOTAGEPILOT_' + name.upper()) or shutil.which(name)
     if not path:
-        raise ValueError(f'{name} missing; set SPLICEFORGE_{name.upper()} or add it to PATH')
+        raise ValueError(f'{name} missing; set FOOTAGEPILOT_{name.upper()} or add it to PATH')
     return path
 
 
@@ -147,7 +147,7 @@ def render(path):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='SpliceForge — Make the cut. Show the evidence.')
+    parser = argparse.ArgumentParser(description='FootagePilot — Make the cut. Show the evidence.')
     commands = parser.add_subparsers(dest='command', required=True)
     init = commands.add_parser('init'); init.add_argument('source', type=Path); init.add_argument('directory', type=Path)
     for name in ('validate', 'render', 'transcribe', 'apply-transcript', 'align', 'apply-plan', 'cleanup'):
@@ -170,7 +170,7 @@ def main():
             path = args.directory / 'project.json'
             if path.exists():
                 raise ValueError('Project already exists')
-            write(path, {'schema_version': 1, 'source': str(source), 'keep': [[0, duration]], 'brand': {'name': 'SpliceForge', 'accent': '#e5a35d'}})
+            write(path, {'schema_version': 1, 'source': str(source), 'keep': [[0, duration]], 'brand': {'name': 'FootagePilot', 'accent': '#e5a35d'}})
             print(path)
         elif args.command == 'produce':
             from .pipeline import produce

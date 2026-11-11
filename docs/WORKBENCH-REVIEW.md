@@ -1,3 +1,5 @@
+> Historical browser check under the previous product name. Current product: FootagePilot. The original observed UI labels below are retained as evidence. See [name migration](NAMING.md).
+
 # Workbench review
 
 Live local browser review on macOS Brave, 2026-11-12. Native accessibility controls were used because the browser automation host was unavailable.

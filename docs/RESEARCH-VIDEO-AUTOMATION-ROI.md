@@ -1,6 +1,6 @@
 # Video automation research: smallest changes with the best expected return
 
-Research date: 2026-11-12. Product reviewed: SpliceForge main `bfa6c91284693b45807c2d28d9aad2a7abc70608`.
+Research date: 2026-11-12. Product reviewed: FootagePilot main `bfa6c91284693b45807c2d28d9aad2a7abc70608`.
 
 ## Recommendation
 
@@ -26,7 +26,7 @@ Local raw research material is ignored under `projects/research-youtube/` and `p
 | [Adam Goodyer: How to Edit Videos Properly With Claude and Remotion](https://www.youtube.com/watch?v=bDCLT4Je6WA) | Pipeline around 0:50; architecture around 11:40 | Separate audio analysis, transcription, edit planning and graphics. | Includes external services; it is not evidence of a wholly local open-source stack. |
 | [Ali Abdaal: I Tried Fully Automating My Video Editing With AI](https://www.youtube.com/watch?v=C0jOKDJtK9s) | [Rethink 22:42](https://www.youtube.com/watch?v=C0jOKDJtK9s&t=1362); [motion plates 27:38](https://www.youtube.com/watch?v=C0jOKDJtK9s&t=1658); [verdict 44:20](https://www.youtube.com/watch?v=C0jOKDJtK9s&t=2660) | Clean speech edit and short animation compositions are separate tasks; storyboard before rendering. | He refilmed and manually cleaned speech. Six hours and “97%” are subjective reports, not an autonomous editing benchmark. |
 
-Most tutorial agents are Claude-based. Their useful contribution here is the file contracts, stage boundaries and checks; none requires adding a Claude backend to SpliceForge.
+Most tutorial agents are Claude-based. Their useful contribution here is the file contracts, stage boundaries and checks; none requires adding a Claude backend to FootagePilot.
 
 ## Open-source trail and what to reuse
 
@@ -56,7 +56,7 @@ Impact scores are engineering judgments from 1 (small) to 5 (large), not measure
 
 ### 1. Speech-safe boundaries
 
-Current `spliceforge/planner.py:apply_plan` uses fixed word padding (40 ms before, 60 ms after), bounded by neighboring word times. Start with an RMS-envelope check close to each boundary, conservative limits on movement, and room-tone-aware audio joins. Do not shift video independently or extend into rejected words. Silence cleanup must also preserve its source-to-cleaned time map; planner-only fixes cannot repair consonants already deleted upstream.
+Current `footagepilot/planner.py:apply_plan` uses fixed word padding (40 ms before, 60 ms after), bounded by neighboring word times. Start with an RMS-envelope check close to each boundary, conservative limits on movement, and room-tone-aware audio joins. Do not shift video independently or extend into rejected words. Silence cleanup must also preserve its source-to-cleaned time map; planner-only fixes cannot repair consonants already deleted upstream.
 
 Accept when adversarial clips retain quiet word attacks and endings, exclude rejected filler, keep A/V aligned within one output frame, and sound preferable in blind listening. Include breaths, quiet initial consonants, retakes and background noise. A zero-crossing alone is not proof of a safe speech boundary.
 

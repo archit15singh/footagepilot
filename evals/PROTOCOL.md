@@ -1,6 +1,6 @@
 # Product evaluation protocol
 
-Evaluate SpliceForge itself. Benchmark inputs may be reused, but all outputs must be rendered by the product. Keep run data under ignored projects/, publish sanitized checks and selected original demo frames.
+Evaluate FootagePilot itself. Benchmark inputs may be reused, but all outputs must be rendered by the product. Keep run data under ignored projects/, publish sanitized checks and selected original demo frames.
 
 ## Cases and criteria
 

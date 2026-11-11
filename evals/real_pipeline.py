@@ -2,8 +2,8 @@
 import argparse,hashlib,json,sys,urllib.request
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from spliceforge.__main__ import binary,run,write
-from spliceforge.pipeline import produce
+from footagepilot.__main__ import binary,run,write
+from footagepilot.pipeline import produce
 
 SOURCES={
  'original.webm':'https://upload.wikimedia.org/wikipedia/commons/d/d9/20160917_POTUS_Weekly_Address_HD.webm',

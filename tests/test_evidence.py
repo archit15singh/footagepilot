@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from spliceforge.evidence import input_revision,file_revision,current_verification
+from footagepilot.evidence import input_revision,file_revision,current_verification
 
 class EvidenceFreshness(unittest.TestCase):
     def test_changed_project_transcript_or_output_invalidates_proof(self):

@@ -5,8 +5,8 @@ The tone is a diagnostic signal, not a demo or a music-preference evaluation.
 import argparse,array,hashlib,json,math,subprocess,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from spliceforge.__main__ import binary,run,probe
-from spliceforge.audio import mix_audio
+from footagepilot.__main__ import binary,run,probe
+from footagepilot.audio import mix_audio
 
 
 def rms(path,filter):

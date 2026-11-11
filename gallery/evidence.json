@@ -9,62 +9,62 @@
       {
         "name": "makemyclip-cleanup",
         "status": "passed",
-        "elapsed_seconds": 15.36124058299174
+        "elapsed_seconds": 15.575864667000133
       },
       {
         "name": "word-alignment",
         "status": "passed",
-        "elapsed_seconds": 2.2907460419955896
+        "elapsed_seconds": 3.0460267500020564
       },
       {
         "name": "story-plan-codex",
         "status": "passed",
-        "elapsed_seconds": 10.407718332993682
+        "elapsed_seconds": 12.140349292007159
       },
       {
         "name": "apply-word-plan",
         "status": "passed",
-        "elapsed_seconds": 0.04659545900358353
+        "elapsed_seconds": 0.031188957989797927
       },
       {
         "name": "render-remotion",
         "status": "passed",
-        "elapsed_seconds": 26.484261083998717
+        "elapsed_seconds": 32.07652000000235
       },
       {
         "name": "verify-remotion",
         "status": "passed",
-        "elapsed_seconds": 0.12900600000284612
+        "elapsed_seconds": 0.16732458300248254
       },
       {
         "name": "mix-remotion",
         "status": "passed",
-        "elapsed_seconds": 0.5668572499998845
+        "elapsed_seconds": 0.7059976670134347
       },
       {
         "name": "verify-mix-remotion",
         "status": "passed",
-        "elapsed_seconds": 0.12750520900590345
+        "elapsed_seconds": 0.15561529199476354
       },
       {
         "name": "render-hyperframes",
         "status": "passed",
-        "elapsed_seconds": 19.52885108299961
+        "elapsed_seconds": 25.00426333300129
       },
       {
         "name": "verify-hyperframes",
         "status": "passed",
-        "elapsed_seconds": 0.14519395800016355
+        "elapsed_seconds": 0.1779152920062188
       },
       {
         "name": "mix-hyperframes",
         "status": "passed",
-        "elapsed_seconds": 0.5273175829934189
+        "elapsed_seconds": 0.6569614580075722
       },
       {
         "name": "verify-mix-hyperframes",
         "status": "passed",
-        "elapsed_seconds": 0.14396283400128596
+        "elapsed_seconds": 0.17872258300485555
       }
     ],
     "outputs": [
@@ -75,9 +75,9 @@
         "mixed": false,
         "verification": {
           "full_decode": "passed",
-          "duration": 21.334,
-          "bytes": 4129205,
-          "sha256": "b088815538758ef6f649a362f3edef3ae0d8c1a9aaf48516423403c8549f5904",
+          "duration": 27.84,
+          "bytes": 5291606,
+          "sha256": "62d1850047ed7534e5e94960a878d6e5f1d0461e9b875e4863c7549d207f8fc5",
           "streams": [
             "video",
             "audio"
@@ -91,9 +91,9 @@
         "mixed": true,
         "verification": {
           "full_decode": "passed",
-          "duration": 21.333333,
-          "bytes": 3795156,
-          "sha256": "101689cb33761f375ec2e1dc67733c4c056a50b43eff6823d4f085205adc7aff",
+          "duration": 27.833333,
+          "bytes": 4856909,
+          "sha256": "e61a5cdf2c691683baf3efb4507825d663c67397abbceb97a362c8a9621ca0bf",
           "streams": [
             "video",
             "audio"
@@ -107,9 +107,9 @@
         "mixed": false,
         "verification": {
           "full_decode": "passed",
-          "duration": 21.333,
-          "bytes": 5828002,
-          "sha256": "ef32bc7379896ca76b32b0f9ee2cf022f4f55d8a92a40be530322fd160f7c2df",
+          "duration": 27.8,
+          "bytes": 7657247,
+          "sha256": "da662a4a79aa3db0d005828867f4dfbc0a8c36670e297a84215508b402747216",
           "streams": [
             "video",
             "audio"
@@ -123,9 +123,9 @@
         "mixed": true,
         "verification": {
           "full_decode": "passed",
-          "duration": 21.32,
-          "bytes": 6000463,
-          "sha256": "05ac51dcededf56c9d0342ca4a0d36031ff2a46d82da837adbe428c77f6839d4",
+          "duration": 27.8,
+          "bytes": 7882689,
+          "sha256": "1ba720435cdb31bd4cb7a3b1bc0989f5930f3bf237d876295ba2ee983e02fe70",
           "streams": [
             "video",
             "audio"
@@ -135,21 +135,21 @@
     ]
   },
   "planner": {
-    "title": "Reflecting on Weekly Addresses",
-    "rationale": "Preserves the reflection on recurring themes, identifies Congress as the subject, and includes a complete example in source order. Approximately 21.18 seconds before cut handles; excludes the greeting and the incomplete sentence beginning \u201crecently returned.\u201d",
+    "title": "Reflecting on weekly addresses",
+    "rationale": "Preserves the reflection on recurring themes, followed by two complete examples in source order. Approximately 27.6 seconds before cut handles, leaving room within the 35-second limit. Excludes the greeting and the incomplete vacation sentence.",
     "ranges": [
       {
         "first_word": 2,
         "last_word": 35,
-        "reason": "Complete opening sentences establish the weekly addresses and their recurring theme."
+        "reason": "Establishes the history of weekly addresses and identifies their recurring theme."
       },
       {
-        "first_word": 57,
-        "last_word": 100,
-        "reason": "Complete sentences explain the unfinished business and provide the first concrete example."
+        "first_word": 69,
+        "last_word": 130,
+        "reason": "Preserves two complete, chronological examples explaining that theme, including their factual context."
       }
     ],
-    "planned_duration_seconds": 21.32,
+    "planned_duration_seconds": 27.800000000000004,
     "duration_budget": {
       "min_seconds": 20,
       "max_seconds": 35
@@ -158,29 +158,29 @@
     "model": "gpt-6.1-sol",
     "reasoning_effort": "low",
     "brief": "Create a coherent 20\u201335 second excerpt about reflecting on weekly addresses. Preserve complete sentences, context and chronology. Exclude title silence and greeting; do not invent speech or assertions.",
-    "elapsed_seconds": 10.398448707986972,
-    "words_sha256": "8fd53bba45060493b24d50918f3eb3789e0b0e08716550f91c1c2bcff9acc5a0"
+    "elapsed_seconds": 12.130692292004824,
+    "words_sha256": "f9227b6a297da67dc676d83aa51a9dc2fa5df6b74a6ee6fee6a95c33a016c25e"
   },
   "artifacts": [
     {
       "file": "videos/remotion-narration.mp4",
-      "sha256": "b088815538758ef6f649a362f3edef3ae0d8c1a9aaf48516423403c8549f5904",
-      "duration": 21.334
+      "sha256": "62d1850047ed7534e5e94960a878d6e5f1d0461e9b875e4863c7549d207f8fc5",
+      "duration": 27.84
     },
     {
       "file": "videos/remotion-mixed.mp4",
-      "sha256": "101689cb33761f375ec2e1dc67733c4c056a50b43eff6823d4f085205adc7aff",
-      "duration": 21.333333
+      "sha256": "e61a5cdf2c691683baf3efb4507825d663c67397abbceb97a362c8a9621ca0bf",
+      "duration": 27.833333
     },
     {
       "file": "videos/hyperframes-narration.mp4",
-      "sha256": "ef32bc7379896ca76b32b0f9ee2cf022f4f55d8a92a40be530322fd160f7c2df",
-      "duration": 21.333
+      "sha256": "da662a4a79aa3db0d005828867f4dfbc0a8c36670e297a84215508b402747216",
+      "duration": 27.8
     },
     {
       "file": "videos/hyperframes-mixed.mp4",
-      "sha256": "05ac51dcededf56c9d0342ca4a0d36031ff2a46d82da837adbe428c77f6839d4",
-      "duration": 21.32
+      "sha256": "1ba720435cdb31bd4cb7a3b1bc0989f5930f3bf237d876295ba2ee983e02fe70",
+      "duration": 27.8
     }
   ]
 }

@@ -52,9 +52,9 @@ Set FFmpeg/ffprobe overrides if needed, authenticate Codex CLI, and configure a 
 
 ```sh
 npm ci
-export SPLICEFORGE_ALIGN_PYTHON=/path/to/python-with-mlx-whisper
+export FOOTAGEPILOT_ALIGN_PYTHON=/path/to/python-with-mlx-whisper
 # Optional: point to an already downloaded compatible model or cache.
-export SPLICEFORGE_ALIGN_MODEL=mlx-community/whisper-base.en-mlx
+export FOOTAGEPILOT_ALIGN_MODEL=mlx-community/whisper-base.en-mlx
 python3 evals/real_pipeline.py --work projects/my-real-run --gallery gallery
 ```
 
@@ -63,7 +63,7 @@ The first model/browser use may download weights/Chromium. The runner downloads 
 For your own recording, initialize a project, add optional audio settings, then run:
 
 ```sh
-python3 -m spliceforge produce projects/my-film/project.json --brief 'Your editorial brief'
+python3 -m footagepilot produce projects/my-film/project.json --brief 'Your editorial brief'
 ```
 
 `--skip-cleanup` skips the optional initial silence pass. The alignment adapter currently requires MLX Whisper on Apple Silicon; a cross-platform alignment backend has not been verified.
