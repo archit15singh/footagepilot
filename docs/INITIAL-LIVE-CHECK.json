@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "expected_duration": 10,
+  "actual_duration": 10.0,
+  "decode": "passed",
+  "elapsed_seconds": 0.26997166700311936,
+  "limitations": [
+    "No aesthetic, speech continuity or listening assessment"
+  ]
+}
