@@ -32,7 +32,7 @@ Optional project audio configuration:
 {"audio":{"music":"/absolute/path/music.ogg","music_gain":0.045,"sfx":[{"path":"/absolute/path/effect.wav","start":0.2,"gain":0.03}]}}
 ```
 
-Place those fields alongside source, keep and brand. The pipeline generates narration-only and mixed versions for both renderers. Effects use edited-timeline seconds. Listening and legal suitability of your own media remain your responsibility.
+Place those fields alongside source, keep and brand. The pipeline generates narration-only and mixed versions for both renderers. Effects use edited-timeline seconds. Music now ducks under narration and fades over 0.25 seconds at each end. Set `music_ducking: false` and `music_fade_seconds: 0` inside `audio` to retain fixed-gain behavior. Mix evidence reports integrated LUFS and true peak; it does not automatically normalize loudness. Listening and legal suitability of your own media remain your responsibility.
 
 The CLI also provides cleanup, align, plan, apply-plan, transcribe, apply-transcript, render, validate and doctor. `serve` retains the earlier local workbench; the expanded pipeline is CLI-first. See [architecture](docs/ARCHITECTURE.md), [original findings](docs/RESULTS.md), and [agent instructions](AGENTS.md).
 
