@@ -21,7 +21,7 @@ SpliceForge already supports a local workflow from recording import through ASR,
 | Graphics | Timed cards, source pane, branding and deterministic frame animation render successfully. | A fixed template and simple entrances offer much less visual variety than a human motion designer. |
 | Revision | Brand changes preserve selected ranges and identical decoded audio in the baseline. | Embedded screenshot branding is not rewritten; supply revised screenshots yourself. |
 | Reliability | Failed jobs expose errors and permit correction/retry. | No persisted queue or restart recovery. CLI and UI must not write the same project concurrently. |
-| Agent use | Standard CLI, JSON projects and shared AGENTS.md/CLAUDE.md avoid mouse-only automation. | No integrated LLM planner; autonomous editing requires a coordinating agent or explicit policies. |
+| Agent use | Standard CLI, JSON projects and shared AGENTS.md avoid mouse-only automation. | No integrated LLM planner; autonomous editing requires a coordinating agent or explicit policies. |
 | Verification | Decode, duration, API checks, frame samples and actual browser playback catch concrete failures. | They cannot establish natural speech, good pacing or storytelling. No listening assessment is claimed. |
 
 ## Failure retained

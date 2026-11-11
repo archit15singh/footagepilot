@@ -13,3 +13,9 @@ class WordPlans(unittest.TestCase):
     def test_multiple_ranges_cannot_overlap_or_reorder(self):
         with self.assertRaises(ValueError):
             validate_plan({'title':'Test','rationale':'Test','ranges':[{'first_word':0,'last_word':1,'reason':'A'},{'first_word':1,'last_word':2,'reason':'B'}]},[{},{},{}])
+
+    def test_cli_rejects_provider_selection(self):
+        import subprocess,sys
+        result=subprocess.run([sys.executable,'-m','spliceforge','plan','missing.json','--brief','Test','--backend','claude'],capture_output=True,text=True)
+        self.assertEqual(result.returncode,2)
+        self.assertIn('unrecognized arguments',result.stderr)

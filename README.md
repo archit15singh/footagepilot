@@ -1,10 +1,10 @@
 # SpliceForge
 
-Working agent-operated video editing: MakeMyClip cleanup → local word alignment → headless Codex/Claude story planning → validated word cuts → HyperFrames/Remotion → music/SFX mixing.
+Working agent-operated video editing: MakeMyClip cleanup → local word alignment → headless Codex story planning → validated word cuts → HyperFrames/Remotion → music/SFX mixing.
 
 [Video variations](gallery/index.html) · [Real end-to-end findings](docs/REAL-E2E-RESULTS.md) · [Setup](docs/SETUP.md)
 
-The committed gallery contains four automatically generated edits of real archival footage. Codex was live-tested; Claude support is implemented but not live-tested. Word timestamps are model estimates and listening remains unverified. No UI polish or synthetic demo is needed to reproduce this run.
+The committed gallery contains four automatically generated edits of real archival footage. Codex is the only planner and was live-tested. Word timestamps are model estimates and listening remains unverified. No UI polish or synthetic demo is needed to reproduce this run.
 
 ```sh
 npm ci
@@ -17,10 +17,10 @@ For your own footage:
 
 ```sh
 python3 -m spliceforge init recording.mp4 projects/my-film
-python3 -m spliceforge produce projects/my-film/project.json --backend codex --brief 'Select a coherent 30-second excerpt, preserve meaning and source order.'
+python3 -m spliceforge produce projects/my-film/project.json --brief 'Select a coherent 30-second excerpt, preserve meaning and source order.'
 ```
 
-Use an authenticated `codex` or `claude` CLI. The planner sends transcript text to that provider. The local alignment adapter currently uses MLX Whisper on Apple Silicon. Both renderers and MakeMyClip use the pinned Node dependencies; FFmpeg/ffprobe must be available on PATH or configured using SPLICEFORGE_FFMPEG and SPLICEFORGE_FFPROBE. Models, local project media and credentials are ignored by Git.
+Use an authenticated `codex` CLI. The planner sends transcript text to that provider. The local alignment adapter currently uses MLX Whisper on Apple Silicon. Both renderers and MakeMyClip use the pinned Node dependencies; FFmpeg/ffprobe must be available on PATH or configured using SPLICEFORGE_FFMPEG and SPLICEFORGE_FFPROBE. Models, local project media and credentials are ignored by Git.
 
 Optional project audio configuration:
 

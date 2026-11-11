@@ -19,7 +19,7 @@ def validate_plan(plan,words):
     return plan
 
 
-def plan(project_path,brief,backend='codex'):
+def plan(project_path,brief):
     project=json.loads(project_path.read_text());validate(project)
     alignment=json.loads((project_path.parent/'words.json').read_text())
     if alignment['source']!=project['source']:raise ValueError('Word alignment source mismatch')
@@ -28,21 +28,13 @@ def plan(project_path,brief,backend='codex'):
     started=time.monotonic()
     with tempfile.TemporaryDirectory(prefix='spliceforge-planner-') as temp:
         root=Path(temp);schema=root/'schema.json';schema.write_text(json.dumps(SCHEMA));output=root/'plan.json'
-        if backend=='codex':
-            command=[os.environ.get('SPLICEFORGE_CODEX','codex'),'exec','--ignore-user-config','--ephemeral','--skip-git-repo-check','--sandbox','read-only','--output-schema',str(schema),'-o',str(output),'-']
-        elif backend=='claude':
-            command=[os.environ.get('SPLICEFORGE_CLAUDE','claude'),'-p','--output-format','json','--json-schema',json.dumps(SCHEMA),'--tools','','--strict-mcp-config','--mcp-config','{"mcpServers":{}}']
-        else:raise ValueError('Planner backend must be codex or claude')
+        command=[os.environ.get('SPLICEFORGE_CODEX','codex'),'exec','--ignore-user-config','--ephemeral','--skip-git-repo-check','--sandbox','read-only','--output-schema',str(schema),'-o',str(output),'-']
         result=subprocess.run(command,input=prompt,cwd=root,capture_output=True,text=True,timeout=600)
-        (project_path.parent/f'planner-{backend}.log').write_text(result.stderr)
+        (project_path.parent/'planner-codex.log').write_text(result.stderr)
         if result.returncode:raise ValueError('Headless planner failed: '+result.stderr[-2000:])
-        if backend=='codex':payload=json.loads(output.read_text())
-        else:
-            wrapper=json.loads(result.stdout)
-            if wrapper.get('is_error'):raise ValueError(str(wrapper.get('result')))
-            payload=wrapper.get('structured_output') or json.loads(wrapper['result'])
+        payload=json.loads(output.read_text())
     validate_plan(payload,words)
-    payload.update(backend=backend,brief=brief,elapsed_seconds=time.monotonic()-started,words_sha256=hashlib.sha256((project_path.parent/'words.json').read_bytes()).hexdigest())
+    payload.update(backend='codex',brief=brief,elapsed_seconds=time.monotonic()-started,words_sha256=hashlib.sha256((project_path.parent/'words.json').read_bytes()).hexdigest())
     write(project_path.parent/'plan.json',payload);return payload
 
 

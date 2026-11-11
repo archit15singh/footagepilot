@@ -7,7 +7,7 @@ from .planner import plan,apply_plan
 from .audio import mix_audio
 
 
-def produce(project_path,brief,backend='codex',remove_silence=True):
+def produce(project_path,brief,remove_silence=True):
     directory=project_path.parent;state={'status':'running','stages':[],'outputs':[]}
     state_path=directory/'pipeline-run.json'
     def stage(name,action):
@@ -22,7 +22,7 @@ def produce(project_path,brief,backend='codex',remove_silence=True):
         return {'full_decode':'passed','duration':float(metadata['format']['duration']),'bytes':target.stat().st_size,'sha256':hashlib.sha256(target.read_bytes()).hexdigest(),'streams':[s['codec_type'] for s in metadata['streams']]}
     if remove_silence:stage('makemyclip-cleanup',lambda:cleanup(project_path))
     stage('word-alignment',lambda:align(project_path))
-    stage('story-plan-'+backend,lambda:plan(project_path,brief,backend))
+    stage('story-plan-codex',lambda:plan(project_path,brief))
     stage('apply-word-plan',lambda:apply_plan(project_path))
     project=json.loads(project_path.read_text());audio=project.pop('audio',None)
     for engine in ['remotion','hyperframes']:

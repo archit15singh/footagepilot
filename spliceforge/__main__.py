@@ -147,8 +147,8 @@ def main():
     init = commands.add_parser('init'); init.add_argument('source', type=Path); init.add_argument('directory', type=Path)
     for name in ('validate', 'render', 'transcribe', 'apply-transcript', 'align', 'apply-plan', 'cleanup'):
         sub = commands.add_parser(name); sub.add_argument('project', type=Path)
-    production = commands.add_parser('produce'); production.add_argument('project',type=Path); production.add_argument('--brief',required=True); production.add_argument('--backend',choices=['codex','claude'],default='codex'); production.add_argument('--skip-cleanup',action='store_true')
-    planner = commands.add_parser('plan'); planner.add_argument('project',type=Path); planner.add_argument('--brief',required=True); planner.add_argument('--backend',choices=['codex','claude'],default='codex')
+    production = commands.add_parser('produce'); production.add_argument('project',type=Path); production.add_argument('--brief',required=True); production.add_argument('--skip-cleanup',action='store_true')
+    planner = commands.add_parser('plan'); planner.add_argument('project',type=Path); planner.add_argument('--brief',required=True)
     commands.add_parser('doctor')
     web = commands.add_parser('serve'); web.add_argument('directory', type=Path); web.add_argument('--port', type=int, default=8765)
     args = parser.parse_args()
@@ -169,7 +169,7 @@ def main():
             print(path)
         elif args.command == 'produce':
             from .pipeline import produce
-            print(json.dumps(produce(args.project.resolve(),args.brief,args.backend,not args.skip_cleanup),indent=2))
+            print(json.dumps(produce(args.project.resolve(),args.brief,not args.skip_cleanup),indent=2))
         elif args.command == 'cleanup':
             from .cleanup import cleanup
             print(json.dumps(cleanup(args.project.resolve()),indent=2))
@@ -178,7 +178,7 @@ def main():
             print(json.dumps(align(args.project.resolve()),indent=2))
         elif args.command == 'plan':
             from .planner import plan
-            print(json.dumps(plan(args.project.resolve(),args.brief,args.backend),indent=2))
+            print(json.dumps(plan(args.project.resolve(),args.brief),indent=2))
         elif args.command == 'apply-plan':
             from .planner import apply_plan
             print(json.dumps(apply_plan(args.project.resolve())))

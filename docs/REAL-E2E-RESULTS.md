@@ -34,7 +34,7 @@ Re-transcription of the mixed HyperFrames output recovered82of83normalized expec
 | Remotion | Narration-only and mixed variants exported and decoded. | Frame-driven source composition and clear programmatic controls. | Longer measured render in this run; local font fallback can vary. |
 | HyperFrames | Narration-only and mixed variants exported and decoded. | HTML/GSAP path worked with the same cut and captions. | Different typography/encoding; the sampled archived run's header color differs from Remotion. Current adapter explicitly applies accent color. |
 | Music/SFX | Two real external audio assets mixed at explicit gains. | Preserves narration at unity gain before limiting; timed effects are reproducible. | The music/bell combination is a technical stress test, not a recommended aesthetic treatment of this address. Listening, ducking quality and musical fit are unverified. |
-| Agent compatibility | Codex exec worked live. Claude print/schema support is implemented. | Planner output is validated data; invalid IDs, reordered ranges and stale word files are rejected. | Claude was not installed and was not live-tested, by user choice. No claim of Claude parity. |
+| Agent compatibility | Codex exec worked live and is the sole supported planner. | Planner output is validated data; invalid IDs, reordered ranges and stale word files are rejected. | Provider portability is intentionally outside the current scope. |
 
 Sampled real-footage frames preserve the source's face and framing, and captions fit the inspected frame. No face, performance or voice was generated. The initial template's left-biased crop would have harmed framing; the source renderer was corrected to use the full recording when no image cards are supplied. This was a functional fidelity correction, not UI polishing.
 
@@ -61,10 +61,10 @@ The first model/browser use may download weights/Chromium. The runner downloads 
 For your own recording, initialize a project, add optional audio settings, then run:
 
 ```sh
-python3 -m spliceforge produce projects/my-film/project.json --backend codex --brief 'Your editorial brief'
+python3 -m spliceforge produce projects/my-film/project.json --brief 'Your editorial brief'
 ```
 
-`--backend claude` uses an installed authenticated Claude Code CLI; it is implemented but not live-tested here. `--skip-cleanup` skips the optional initial silence pass. The alignment adapter currently requires MLX Whisper on Apple Silicon; a cross-platform alignment backend has not been verified.
+`--skip-cleanup` skips the optional initial silence pass. The alignment adapter currently requires MLX Whisper on Apple Silicon; a cross-platform alignment backend has not been verified.
 
 ## Source provenance
 
@@ -74,7 +74,7 @@ python3 -m spliceforge produce projects/my-film/project.json --backend codex --b
 
 ## Practical conclusion
 
-The expanded product now executes the requested pipeline on real footage. It is strongest as an agent-operated, inspectable editing system: explicit source words, reproducible cuts and interchangeable renderers. It still needs human editorial/listening review for story quality, rhetoric, cut continuity and sound design. The evidence does not support arbitrary unattended professional editing, Claude runtime verification, or raw-retake quality claims.
+The expanded product now executes the requested pipeline on real footage. It is strongest as an agent-operated, inspectable editing system: explicit source words, reproducible cuts and interchangeable renderers. It still needs human editorial/listening review for story quality, rhetoric, cut continuity and sound design. The evidence does not support arbitrary unattended professional editing, raw-retake quality claims.
 
 ## Final checks
 

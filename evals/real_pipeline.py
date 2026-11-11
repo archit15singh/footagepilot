@@ -13,7 +13,7 @@ EXPECTED={'original.webm':'a5b7f6f37a055651b3014e6954d83d18f2516903ae817736e536d
 BRIEF='Create a coherent 20–35 second excerpt about the speaker reflecting on delivering weekly addresses. Preserve complete sentences, context and chronology. Exclude title silence and greeting; do not invent speech or assertions.'
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--work',type=Path,default=Path('projects/real-run'));p.add_argument('--backend',choices=['codex','claude'],default='codex');p.add_argument('--brief',default=BRIEF);p.add_argument('--gallery',type=Path,default=Path('gallery'));a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--work',type=Path,default=Path('projects/real-run'));p.add_argument('--brief',default=BRIEF);p.add_argument('--gallery',type=Path,default=Path('gallery'));a=p.parse_args()
     if a.work.exists():raise ValueError('Use a new working directory to preserve previous evidence')
     a.work.mkdir(parents=True);work=a.work.resolve();provenance=[]
     for name,url in SOURCES.items():
@@ -24,6 +24,6 @@ def main():
     write(work/'downloads.json',provenance)
     run([binary('ffmpeg'),'-y','-i',work/'original.webm','-t','60','-vf','scale=1280:720','-c:v','libx264','-pix_fmt','yuv420p','-c:a','aac',work/'source.mp4'])
     project=work/'project.json';write(project,{'schema_version':1,'source':str(work/'source.mp4'),'keep':[[0,60]],'brand':{'name':'Word-aligned editorial test','accent':'#e5a35d'},'audio':{'music':str(work/'music.ogg'),'music_gain':.045,'sfx':[{'path':str(work/'effect.wav'),'start':.2,'gain':.03}]}})
-    produce(project,a.brief,a.backend)
+    produce(project,a.brief)
     run([sys.executable,Path(__file__).parent/'publish_gallery.py',work,'--output',a.gallery])
 if __name__=='__main__':main()
