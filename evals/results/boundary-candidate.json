@@ -1,0 +1,80 @@
+{
+  "decision": "reject",
+  "source_sha256": "77ae9cbd97c2b7c3af93b51b3087755c9a0819a6b1bdf79f9f54ad0330a476a3",
+  "quiet_proxy_threshold_dbfs": -45,
+  "rows": {
+    "before": {
+      "ranges": [
+        [
+          0.82,
+          9.92
+        ],
+        [
+          16.12,
+          28.34
+        ]
+      ],
+      "duration": 21.32,
+      "active_edges": 2,
+      "edges": [
+        {
+          "time": 0.82,
+          "kind": "start",
+          "dbfs": -52.41946608926722
+        },
+        {
+          "time": 16.12,
+          "kind": "start",
+          "dbfs": -56.506776060217135
+        },
+        {
+          "time": 9.92,
+          "kind": "end",
+          "dbfs": -44.279793100652476
+        },
+        {
+          "time": 28.34,
+          "kind": "end",
+          "dbfs": -28.411612692437238
+        }
+      ]
+    },
+    "candidate": {
+      "ranges": [
+        [
+          0.74,
+          10.0
+        ],
+        [
+          16.04,
+          28.34
+        ]
+      ],
+      "duration": 21.560000000000002,
+      "active_edges": 2,
+      "edges": [
+        {
+          "time": 0.74,
+          "kind": "start",
+          "dbfs": -55.214187929935676
+        },
+        {
+          "time": 16.04,
+          "kind": "start",
+          "dbfs": -46.41114423651761
+        },
+        {
+          "time": 10.0,
+          "kind": "end",
+          "dbfs": -24.496706290985834
+        },
+        {
+          "time": 28.34,
+          "kind": "end",
+          "dbfs": -28.411612692437238
+        }
+      ]
+    }
+  },
+  "scope": "Ten-ms source RMS at four edit edges. Does not establish clipped phonemes, listening preference or safe adaptive alignment."
+}

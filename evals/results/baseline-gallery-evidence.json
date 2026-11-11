@@ -1,0 +1,188 @@
+{
+  "pipeline": {
+    "status": "passed",
+    "stages": [
+      {
+        "name": "makemyclip-cleanup",
+        "status": "passed",
+        "elapsed_seconds": 15.375127207997139
+      },
+      {
+        "name": "word-alignment",
+        "status": "passed",
+        "elapsed_seconds": 2.226643291010987
+      },
+      {
+        "name": "story-plan-codex",
+        "status": "passed",
+        "elapsed_seconds": 9.28713450000214
+      },
+      {
+        "name": "apply-word-plan",
+        "status": "passed",
+        "elapsed_seconds": 0.033911708000232466
+      },
+      {
+        "name": "render-remotion",
+        "status": "passed",
+        "elapsed_seconds": 22.51274191698758
+      },
+      {
+        "name": "verify-remotion",
+        "status": "passed",
+        "elapsed_seconds": 0.12416812499577645
+      },
+      {
+        "name": "mix-remotion",
+        "status": "passed",
+        "elapsed_seconds": 0.23900854200473987
+      },
+      {
+        "name": "verify-mix-remotion",
+        "status": "passed",
+        "elapsed_seconds": 0.12211112500517629
+      },
+      {
+        "name": "render-hyperframes",
+        "status": "passed",
+        "elapsed_seconds": 18.99149345900514
+      },
+      {
+        "name": "verify-hyperframes",
+        "status": "passed",
+        "elapsed_seconds": 0.14295404199219774
+      },
+      {
+        "name": "mix-hyperframes",
+        "status": "passed",
+        "elapsed_seconds": 0.20094387499557342
+      },
+      {
+        "name": "verify-mix-hyperframes",
+        "status": "passed",
+        "elapsed_seconds": 0.14301112499379087
+      }
+    ],
+    "outputs": [
+      {
+        "name": "remotion narration",
+        "path": "remotion-narration.mp4",
+        "engine": "remotion",
+        "mixed": false,
+        "verification": {
+          "full_decode": "passed",
+          "duration": 21.334,
+          "bytes": 4023640,
+          "sha256": "d692dbae9ff7e84285474c72dc68e1295bc70f812c0fed5b589f666c8f093a4b",
+          "streams": [
+            "video",
+            "audio"
+          ]
+        }
+      },
+      {
+        "name": "remotion music and SFX",
+        "path": "remotion-mixed.mp4",
+        "engine": "remotion",
+        "mixed": true,
+        "verification": {
+          "full_decode": "passed",
+          "duration": 21.333333,
+          "bytes": 3689256,
+          "sha256": "7a0e8427edcc3e7c7925dca7882539f411dfb9fc06b2df5e448bd57edbb62121",
+          "streams": [
+            "video",
+            "audio"
+          ]
+        }
+      },
+      {
+        "name": "hyperframes narration",
+        "path": "hyperframes-narration.mp4",
+        "engine": "hyperframes",
+        "mixed": false,
+        "verification": {
+          "full_decode": "passed",
+          "duration": 21.333,
+          "bytes": 5796123,
+          "sha256": "395da012c65cb3de8d601432b33eac101c2d7325a2fa9ce1ac3780ae315a53ee",
+          "streams": [
+            "video",
+            "audio"
+          ]
+        }
+      },
+      {
+        "name": "hyperframes music and SFX",
+        "path": "hyperframes-mixed.mp4",
+        "engine": "hyperframes",
+        "mixed": true,
+        "verification": {
+          "full_decode": "passed",
+          "duration": 21.32,
+          "bytes": 5967044,
+          "sha256": "a6efa8bd300cb0734d605015bbf16e3d4fa5211af88dc323d7e59ce82436927f",
+          "streams": [
+            "video",
+            "audio"
+          ]
+        }
+      }
+    ]
+  },
+  "planner": {
+    "title": "Reflecting on Weekly Addresses",
+    "rationale": "Approximately 21.2 seconds of complete sentences, preserving source order and the context of the recurring theme. Excludes the greeting and the incomplete vacation sentence.",
+    "ranges": [
+      {
+        "first_word": 2,
+        "last_word": 35,
+        "reason": "Establishes the speaker\u2019s experience delivering weekly addresses and identifies their recurring theme."
+      },
+      {
+        "first_word": 57,
+        "last_word": 100,
+        "reason": "Connects the criticism to unfinished congressional business and preserves the complete first example."
+      }
+    ],
+    "backend": "codex",
+    "brief": "Create a coherent 20\u201335 second excerpt about the speaker reflecting on delivering weekly addresses. Preserve complete sentences, context and chronology. Exclude title silence and greeting; do not invent speech or assertions.",
+    "elapsed_seconds": 9.278034957998898,
+    "words_sha256": "44a630c088c637d87b5940b8cc08496263a9204fb29590c27cd7d154c9189760"
+  },
+  "artifacts": [
+    {
+      "file": "videos/remotion-narration.mp4",
+      "sha256": "d692dbae9ff7e84285474c72dc68e1295bc70f812c0fed5b589f666c8f093a4b",
+      "duration": 21.334
+    },
+    {
+      "file": "videos/remotion-mixed.mp4",
+      "sha256": "7a0e8427edcc3e7c7925dca7882539f411dfb9fc06b2df5e448bd57edbb62121",
+      "duration": 21.333333
+    },
+    {
+      "file": "videos/hyperframes-narration.mp4",
+      "sha256": "395da012c65cb3de8d601432b33eac101c2d7325a2fa9ce1ac3780ae315a53ee",
+      "duration": 21.333
+    },
+    {
+      "file": "videos/hyperframes-mixed.mp4",
+      "sha256": "a6efa8bd300cb0734d605015bbf16e3d4fa5211af88dc323d7e59ce82436927f",
+      "duration": 21.32
+    }
+  ],
+  "speech_verification": {
+    "expected_text": "I've delivered a few hundred of these weekly addresses over the years. And you may have noticed a theme that pops up pretty often. The Republicans who run this Congress aren't doing their jobs. But there's a lot of business they need to get done first. First, even as we're seeing more and more Zika cases inside the United States, they've refused to fund our efforts to protect women and children by fighting Zika in a serious way.",
+    "observed_text": "I've delivered a few hundred of these weekly addresses over the years, and you may have noticed a theme that pops up pretty often. The Republicans who run this Congress aren't doing their job, but there's a lot of business they need to get done first. First, even as we're seeing more and more Zika cases inside the United States, they've refused to fund our efforts to protect women and children by fighting Zika in a serious way.",
+    "expected_words": 83,
+    "edit_distance": 1,
+    "normalized_wer": 0.012048192771084338,
+    "scope": "Model re-transcription of HyperFrames music/SFX output, not listening assessment."
+  },
+  "cost": {
+    "cli_reported_tokens": 24385,
+    "separate_api_charge_observed": false,
+    "dollar_cost": "unknown; authenticated CLI subscription usage consumed"
+  }
+}

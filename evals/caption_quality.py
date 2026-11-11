@@ -24,7 +24,7 @@ def metrics(captions):
 
 
 def evaluate():
-    path=Path(__file__).resolve().parents[1]/'gallery/word-alignment.json';words=json.loads(path.read_text())['words']
+    path=Path(__file__).resolve().parents[1]/'evals/fixtures/weekly-address-words.json';words=json.loads(path.read_text())['words']
     cases={'published_edit':[[.82,9.92],[16.12,28.34]],'full_recording':[[0,words[-1]['end']]],'alternate_excerpt':[[words[20]['start'],words[65]['end']]]}
     results={};improvements=0
     for name,ranges in cases.items():

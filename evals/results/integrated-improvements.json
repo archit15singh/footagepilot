@@ -1,0 +1,152 @@
+{
+  "gate": "passed",
+  "tested_commit": "0fd2f20622cb6932d7e8e259b6ee3bbce1c10e23",
+  "full_pipeline": "passed",
+  "duration_budget": {
+    "min_seconds": 20,
+    "max_seconds": 35
+  },
+  "stages": [
+    {
+      "name": "makemyclip-cleanup",
+      "status": "passed",
+      "elapsed_seconds": 15.36124058299174
+    },
+    {
+      "name": "word-alignment",
+      "status": "passed",
+      "elapsed_seconds": 2.2907460419955896
+    },
+    {
+      "name": "story-plan-codex",
+      "status": "passed",
+      "elapsed_seconds": 10.407718332993682
+    },
+    {
+      "name": "apply-word-plan",
+      "status": "passed",
+      "elapsed_seconds": 0.04659545900358353
+    },
+    {
+      "name": "render-remotion",
+      "status": "passed",
+      "elapsed_seconds": 26.484261083998717
+    },
+    {
+      "name": "verify-remotion",
+      "status": "passed",
+      "elapsed_seconds": 0.12900600000284612
+    },
+    {
+      "name": "mix-remotion",
+      "status": "passed",
+      "elapsed_seconds": 0.5668572499998845
+    },
+    {
+      "name": "verify-mix-remotion",
+      "status": "passed",
+      "elapsed_seconds": 0.12750520900590345
+    },
+    {
+      "name": "render-hyperframes",
+      "status": "passed",
+      "elapsed_seconds": 19.52885108299961
+    },
+    {
+      "name": "verify-hyperframes",
+      "status": "passed",
+      "elapsed_seconds": 0.14519395800016355
+    },
+    {
+      "name": "mix-hyperframes",
+      "status": "passed",
+      "elapsed_seconds": 0.5273175829934189
+    },
+    {
+      "name": "verify-mix-hyperframes",
+      "status": "passed",
+      "elapsed_seconds": 0.14396283400128596
+    }
+  ],
+  "total_stage_seconds": 75.75925541798642,
+  "outputs": [
+    {
+      "name": "remotion narration",
+      "engine": "remotion",
+      "mixed": false,
+      "verification": {
+        "full_decode": "passed",
+        "duration": 21.334,
+        "bytes": 4129205,
+        "sha256": "b088815538758ef6f649a362f3edef3ae0d8c1a9aaf48516423403c8549f5904",
+        "streams": [
+          "video",
+          "audio"
+        ]
+      }
+    },
+    {
+      "name": "remotion music and SFX",
+      "engine": "remotion",
+      "mixed": true,
+      "verification": {
+        "full_decode": "passed",
+        "duration": 21.333333,
+        "bytes": 3795156,
+        "sha256": "101689cb33761f375ec2e1dc67733c4c056a50b43eff6823d4f085205adc7aff",
+        "streams": [
+          "video",
+          "audio"
+        ]
+      }
+    },
+    {
+      "name": "hyperframes narration",
+      "engine": "hyperframes",
+      "mixed": false,
+      "verification": {
+        "full_decode": "passed",
+        "duration": 21.333,
+        "bytes": 5828002,
+        "sha256": "ef32bc7379896ca76b32b0f9ee2cf022f4f55d8a92a40be530322fd160f7c2df",
+        "streams": [
+          "video",
+          "audio"
+        ]
+      }
+    },
+    {
+      "name": "hyperframes music and SFX",
+      "engine": "hyperframes",
+      "mixed": true,
+      "verification": {
+        "full_decode": "passed",
+        "duration": 21.32,
+        "bytes": 6000463,
+        "sha256": "05ac51dcededf56c9d0342ca4a0d36031ff2a46d82da837adbe428c77f6839d4",
+        "streams": [
+          "video",
+          "audio"
+        ]
+      }
+    }
+  ],
+  "audio_settings_preserved": true,
+  "limits": [
+    "One real archival recording, already-produced speech; not raw retakes.",
+    "Single integrated run, not a controlled speedup benchmark.",
+    "No human listening or preference ratings."
+  ],
+  "speech_consistency": {
+    "remotion": {
+      "edit_distance": 1,
+      "normalized_wer": 0.012048192771084338,
+      "sha256": "101689cb33761f375ec2e1dc67733c4c056a50b43eff6823d4f085205adc7aff"
+    },
+    "hyperframes": {
+      "edit_distance": 1,
+      "normalized_wer": 0.012048192771084338,
+      "sha256": "05ac51dcededf56c9d0342ca4a0d36031ff2a46d82da837adbe428c77f6839d4"
+    }
+  }
+}
