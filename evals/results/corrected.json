@@ -1,0 +1,76 @@
+{
+  "source_sha256": "25d8b16de6a7cf9250a89084cb95af65deb71b015a8b061d92670b10fc51c390",
+  "source_duration": 37.833333,
+  "rejected_segments": [
+    0,
+    1
+  ],
+  "keep": [
+    [
+      3.32,
+      37.833333
+    ]
+  ],
+  "transcript_segments": 16,
+  "runs": [
+    {
+      "name": "first",
+      "sha256": "3e9cac7338ebddeb214fbc1efa5c5704b4048b8c5ba824056262d05ea9410d7b",
+      "audio_hash": "SHA256=0c8bfc3a5d63cd05c3d8f971d5a05a7b09a1357436c40758166acc8e16a57328",
+      "checks": {
+        "passed": true,
+        "expected_duration": 34.513333,
+        "actual_duration": 34.539,
+        "decode": "passed",
+        "graphics": {
+          "engine": "remotion",
+          "caption_groups": 14,
+          "storyboard_cards": 3,
+          "caption_timing": "ASR-segment interpolation; review required",
+          "caption_warnings": []
+        },
+        "elapsed_seconds": 30.60777629200311,
+        "limitations": [
+          "No aesthetic, speech continuity or listening assessment"
+        ]
+      }
+    },
+    {
+      "name": "revision",
+      "sha256": "def95fa62d2c3a28e40f15d71ce9f2d7aa9c23dd0351260332e3d66df7786db3",
+      "audio_hash": "SHA256=0c8bfc3a5d63cd05c3d8f971d5a05a7b09a1357436c40758166acc8e16a57328",
+      "checks": {
+        "passed": true,
+        "expected_duration": 34.513333,
+        "actual_duration": 34.539,
+        "decode": "passed",
+        "graphics": {
+          "engine": "remotion",
+          "caption_groups": 14,
+          "storyboard_cards": 3,
+          "caption_timing": "ASR-segment interpolation; review required",
+          "caption_warnings": []
+        },
+        "elapsed_seconds": 30.380578541997238,
+        "limitations": [
+          "No aesthetic, speech continuity or listening assessment"
+        ]
+      }
+    }
+  ],
+  "revision_audio_identical": true,
+  "elapsed_seconds": 62.62121162500989,
+  "limitations": [
+    "Synthetic fixture policy removes a known phrase; no autonomous storytelling claim.",
+    "ASR segment timing and interpolated captions require review.",
+    "Frame samples and technical checks do not constitute listening."
+  ],
+  "semantic_phrase_check": {
+    "rejected_take_absent": true,
+    "discard_sentence_absent": true,
+    "retranscription": "A useful video starts with a clear story, bring your recordings, notes, and screenshots into one place. Start by organizing the material you actually need, so every scene has a purpose. Next, review the cut, remove mistakes and check the words that remain, give each visual one job, highlight a decision, explain a change, or show the product in action, finally, deliver a video that is easy to revise, keep narration clear, captions readable, and graphics consistent, when the brand changes, update the design without rebuilding the story.",
+    "limitations": [
+      "ASR consistency is not a listening or exact word-boundary assessment."
+    ]
+  }
+}

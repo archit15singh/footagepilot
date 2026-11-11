@@ -24,8 +24,8 @@ SpliceForge already supports a local workflow from recording import through ASR,
 
 ## Failure retained
 
-The owned synthetic fixture exposed a selection-policy failure: Whisper split the known rejection into two segments. Matching only “rejected take” left “Please discard this sentence” in the output. The technical checks still passed. Evidence is preserved in evals/results/segmentation-failure.json. A corrected two-phrase fixture policy is being evaluated; it is not a general story-selection model.
+The owned synthetic fixture exposed a selection-policy failure: Whisper split the known rejection into two segments. Matching only “rejected take” left “Please discard this sentence” in the output. The technical checks still passed. Evidence is preserved in evals/results/segmentation-failure.json. The corrected two-phrase fixture policy dropped both segments; output re-transcription recovered the intended narration with neither rejected phrase. Corrected renders took30.61/30.38seconds with34.539seconds exported and14caption groups, no reading-rate warnings, and identical decoded audio. See evals/results/corrected.json. This is not a general story-selection model.
 
 ## Limits of this report
 
-This remains a pre-release report until the corrected run, caption stress frames, full fresh-project browser flow, narrow layout, and final source/evidence audit finish. Synthetic speech and simple owned screens do not establish real talking-head editorial quality. No blind human panel, subjective numeric quality score, broad speed comparison or universal unattended editing claim is supported.
+This remains a pre-release report until caption stress frames, the full fresh-project browser flow, narrow layout, and final source/evidence audit finish. Synthetic speech and simple owned screens do not establish real talking-head editorial quality. No blind human panel, subjective numeric quality score, broad speed comparison or universal unattended editing claim is supported.

@@ -5,6 +5,7 @@ from pathlib import Path
 import secrets
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from .evidence import current_verification
 from .__main__ import probe, render, validate, write
 from .transcript import transcribe, apply_selection, selection_ranges
 
@@ -43,9 +44,12 @@ def serve(directory, port=8765):
                 return self.reply(403, {'error': 'Invalid host'})
             if self.path == '/api/state':
                 data = {'job': dict(state), 'token': token}
-                for name, path in [('project',project),('transcript',directory/'transcript.json'),('verification',directory/'verification.json')]:
+                for name, path in [('project',project),('transcript',directory/'transcript.json')]:
                     if path.exists():data[name] = json.loads(path.read_text())
+                proof=current_verification(project)
+                if proof:data['verification']=proof
                 return self.reply(200, data)
+            if self.path.split('?')[0]=='/output.mp4' and not current_verification(project):return self.reply(409, {'error':'Export is stale; render the current project'})
             paths = {'/': Path(__file__).parent/'web/index.html', '/output.mp4':directory/'output.mp4'}
             path = paths.get(self.path.split('?')[0])
             if not path or not path.is_file():return self.reply(404, {'error':'Not found'})

@@ -1,0 +1,8 @@
+{
+  "rejected_take_absent": true,
+  "discard_sentence_absent": true,
+  "retranscription": "A useful video starts with a clear story, bring your recordings, notes, and screenshots into one place. Start by organizing the material you actually need, so every scene has a purpose. Next, review the cut, remove mistakes and check the words that remain, give each visual one job, highlight a decision, explain a change, or show the product in action, finally, deliver a video that is easy to revise, keep narration clear, captions readable, and graphics consistent, when the brand changes, update the design without rebuilding the story.",
+  "limitations": [
+    "ASR consistency is not a listening or exact word-boundary assessment."
+  ]
+}

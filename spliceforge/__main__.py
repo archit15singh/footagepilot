@@ -29,20 +29,29 @@ def probe(path):
 
 
 def validate(project):
+    if not isinstance(project, dict) or project.get('schema_version', 1) != 1:
+        raise ValueError('Expected a schema version 1 project object')
+    if not isinstance(project.get('source'), str) or not project['source']:
+        raise ValueError('Source must be a file path')
     source = Path(project['source'])
     if not source.is_file():
         raise ValueError('Source file does not exist')
     duration = float(probe(source)['format']['duration'])
     ranges = project.get('keep', [])
-    if not ranges:
+    if not isinstance(ranges,list) or not ranges:
         raise ValueError('At least one keep range is required')
     previous = 0
-    for start, end in ranges:
+    for pair in ranges:
+        if not isinstance(pair,list) or len(pair)!=2:
+            raise ValueError('Each keep range must contain start and end seconds')
+        start, end = pair
         if not all(isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x) for x in (start, end)):
             raise ValueError('Range timestamps must be finite numbers')
         if not 0 <= start < end <= duration or start < previous:
             raise ValueError('Keep ranges must be ordered, disjoint and within the source')
         previous = end
+    if 'graphics' in project and type(project['graphics']) is not bool:
+        raise ValueError('Graphics must be a boolean')
     return duration
 
 
@@ -56,6 +65,8 @@ def render(path):
     (path.parent / 'verification.json').unlink(missing_ok=True)
     project = json.loads(path.read_text())
     validate(project)
+    from .evidence import input_revision, file_revision
+    revision = input_revision(path)
     target = path.parent / 'output.mp4'
     temporary = path.parent / 'output.partial.mp4'
     if Path(project['source']).resolve() in (target.resolve(), temporary.resolve()):
@@ -92,8 +103,10 @@ def render(path):
         expected = sum(b-a for a,b in project['keep'])
         if abs(actual - expected) > .15:
             raise ValueError(f'Output duration mismatch: {actual} versus {expected}')
+        if input_revision(path) != revision:
+            raise ValueError('Project inputs changed during render; rerender the current edit')
         temporary.replace(target)
-        write(path.parent / 'verification.json', {'passed': True, 'expected_duration': expected, 'actual_duration': actual, 'decode': 'passed', 'graphics': graphics, 'elapsed_seconds': time.monotonic()-started, 'limitations': ['No aesthetic, speech continuity or listening assessment'], 'command': [str(x) for x in command]})
+        write(path.parent / 'verification.json', {'passed': True, 'input_revision': revision, 'output_revision': file_revision(target), 'expected_duration': expected, 'actual_duration': actual, 'decode': 'passed', 'graphics': graphics, 'elapsed_seconds': time.monotonic()-started, 'limitations': ['No aesthetic, speech continuity or listening assessment'], 'command': [str(x) for x in command]})
     finally:
         temporary.unlink(missing_ok=True)
     return target
