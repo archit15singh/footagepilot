@@ -1,0 +1,34 @@
+{
+  "gate": "passed",
+  "fault": "Nonzero MakeMyClip executable during actual render stage",
+  "stages": [
+    {
+      "name": "word-alignment",
+      "status": "passed",
+      "elapsed_seconds": 2.4467547920066863
+    },
+    {
+      "name": "story-plan-codex",
+      "status": "passed",
+      "elapsed_seconds": 9.372209916997235
+    },
+    {
+      "name": "apply-word-plan",
+      "status": "passed",
+      "elapsed_seconds": 0.036277749997680075
+    },
+    {
+      "name": "render-remotion",
+      "status": "failed",
+      "error": "MakeMyClip failed: ",
+      "elapsed_seconds": 0.02271325000037905
+    }
+  ],
+  "audio_settings_preserved": true,
+  "output_created": false,
+  "planner": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "low"
+  },
+  "scope": "Actual local alignment and Codex plan; external renderer deliberately fails before media export. Not a successful render claim."
+}

@@ -26,20 +26,22 @@ def produce(project_path,brief,remove_silence=True,engines=None):
     stage('word-alignment',lambda:align(project_path))
     stage('story-plan-codex',lambda:plan(project_path,brief))
     stage('apply-word-plan',lambda:apply_plan(project_path))
-    project=json.loads(project_path.read_text());audio=project.pop('audio',None)
-    for engine in engines:
-        project.update(graphics=True,word_captions=True,cut_engine='makemyclip',renderer=engine)
-        write(project_path,project)
-        stage('render-'+engine,lambda:render(project_path))
-        target=directory/f'{engine}-narration.mp4';shutil.copyfile(directory/'output.mp4',target)
-        proof=json.loads((directory/'verification.json').read_text());proof.pop('command',None);write(directory/f'{engine}-verification.json',proof)
-        state['outputs'].append({'name':engine+' narration','path':target.name,'engine':engine,'mixed':False,'verification':stage('verify-'+engine,lambda:verify_output(target))})
-        if audio:
-            mixed=directory/f'{engine}-mixed.mp4';duration=sum(b-a for a,b in project['keep'])
-            details=stage('mix-'+engine,lambda:mix_audio(target,mixed,audio,duration));write(directory/f'{engine}-mix.json',details)
-            state['outputs'].append({'name':engine+' music and SFX','path':mixed.name,'engine':engine,'mixed':True,'verification':stage('verify-mix-'+engine,lambda:verify_output(mixed))})
-    if audio:project['audio']=audio
-    write(project_path,project)
+    project=json.loads(project_path.read_text());has_audio='audio' in project;audio=project.pop('audio',None)
+    try:
+        for engine in engines:
+            project.update(graphics=True,word_captions=True,cut_engine='makemyclip',renderer=engine)
+            write(project_path,project)
+            stage('render-'+engine,lambda:render(project_path))
+            target=directory/f'{engine}-narration.mp4';shutil.copyfile(directory/'output.mp4',target)
+            proof=json.loads((directory/'verification.json').read_text());proof.pop('command',None);write(directory/f'{engine}-verification.json',proof)
+            state['outputs'].append({'name':engine+' narration','path':target.name,'engine':engine,'mixed':False,'verification':stage('verify-'+engine,lambda:verify_output(target))})
+            if audio:
+                mixed=directory/f'{engine}-mixed.mp4';duration=sum(b-a for a,b in project['keep'])
+                details=stage('mix-'+engine,lambda:mix_audio(target,mixed,audio,duration));write(directory/f'{engine}-mix.json',details)
+                state['outputs'].append({'name':engine+' music and SFX','path':mixed.name,'engine':engine,'mixed':True,'verification':stage('verify-mix-'+engine,lambda:verify_output(mixed))})
+    finally:
+        if has_audio:
+            current=json.loads(project_path.read_text());current['audio']=audio;write(project_path,current)
     final=directory/state['outputs'][-1]['path'];shutil.copyfile(final,directory/'output.mp4')
     from .evidence import input_revision,file_revision
     proof=json.loads((directory/'verification.json').read_text());proof.update(actual_duration=float(probe(directory/'output.mp4')['format']['duration']),input_revision=input_revision(project_path),output_revision=file_revision(directory/'output.mp4'),audio_mix=json.loads((directory/f'{engines[-1]}-mix.json').read_text()) if audio else None)
