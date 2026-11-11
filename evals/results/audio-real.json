@@ -19,12 +19,13 @@
   "decode": "passed",
   "sha256": "507e2e5775dffaef9e1443e733ae917d721e2eaeddde7d8540c67cc6adc18864",
   "asr": {
-    "expected_words": 78,
+    "expected_words": 83,
     "edit_distance": 1,
     "baseline_edit_distance": 1,
-    "normalized_wer": 0.01282051282051282,
+    "normalized_wer": 0.012048192771084338,
     "observed_text": "I've delivered a few hundred of these weekly addresses over the years, and you may have noticed a theme that pops up pretty often. The Republicans who run this Congress aren't doing their job, but there's a lot of business they need to get done first. First, even as we're seeing more and more Zika cases inside the United States, they've refused to fund our efforts to protect women and children by fighting Zika in a serious way.",
-    "scope": "MLX Whisper re-transcription consistency, not listening verification"
+    "scope": "MLX Whisper re-transcription consistency, not listening verification",
+    "normalization": "Lowercase ASCII alphanumeric tokens; contractions split, matching gallery baseline"
   },
   "sfx_only": {
     "decode": "passed",
