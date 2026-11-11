@@ -73,3 +73,8 @@ Final review found a freshness race: the model read one transcript, but the save
 Three injected concurrent changes (words, project, source) are accepted by the baseline and rejected by the candidate; an unchanged control remains accepted. Twenty-four tests pass. This is a planner acceptance change, not a media-rendering algorithm change; integrated gallery exports remain those tested at 0fd2f20.
 
 A real Codex 6.1 Sol / low call on the unchanged archival transcript also passes, with the saved hash matching the exact input bytes. Evidence: [planner-snapshot.json](../evals/results/planner-snapshot.json).
+
+
+## Evaluation environment
+
+[Tool versions and input provenance](../evals/results/improvement-environment.json) record the installed FFmpeg/ffprobe, Node, Python, Codex CLI, MLX Whisper and pinned renderer packages, lockfile/input hashes and interventions. The toolchain was inspected after the runs and no dependencies changed during the loops. Model cache revision was not captured, so exact binary reproduction is not claimed. Six product fixes were accepted through PRs #2–#6 and #8; PR #7 published integrated evidence. The wider-padding candidate was rejected.
