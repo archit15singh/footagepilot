@@ -7,7 +7,7 @@ from spliceforge.duration import require_duration
 
 
 def evaluate():
-    words=json.loads((Path(__file__).resolve().parents[1]/'gallery/word-alignment.json').read_text())['words'];budget={'min_seconds':20,'max_seconds':35}
+    words=json.loads((Path(__file__).resolve().parents[1]/'evals/fixtures/weekly-address-words.json').read_text())['words'];budget={'min_seconds':20,'max_seconds':35}
     cases={'published':([(2,35),(57,100)],True),'too_short':([(2,13)],False),'too_long':([(0,130)],False),'padding_over_budget':([(2,35),(57,100)],False)}
     rows=[]
     for name,(selections,valid) in cases.items():

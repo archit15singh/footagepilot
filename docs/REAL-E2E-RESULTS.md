@@ -1,5 +1,7 @@
 # Real-footage end-to-end results
 
+The timings and findings below describe the original baseline run. The gallery has since been refreshed after five evaluated improvements. See [current improvement results](IMPROVEMENT-LOOPS.md) and [latest integrated evidence](../evals/results/integrated-improvements.json). The [original gallery evidence](../evals/results/baseline-gallery-evidence.json) is archived separately so these historical measurements remain traceable.
+
 The product ran automatically from a real human recording through MakeMyClip silence cleanup, local word alignment, a headless Codex story plan, word-level selection, MakeMyClip timeline export, Remotion and HyperFrames composition, and music/SFX mixing. The four exported videos are committed in [the gallery](../gallery/index.html). This is an engineering evaluation of an archival recording, not an endorsement or a newly generated speech.
 
 ## Run and evidence

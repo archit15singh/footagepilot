@@ -4,5 +4,17 @@
   "expected_words": 83,
   "edit_distance": 1,
   "normalized_wer": 0.012048192771084338,
-  "scope": "Model re-transcription of HyperFrames music/SFX output, not listening assessment."
+  "scope": "Latest integrated mixed Remotion and HyperFrames outputs, model re-transcription only; not listening assessment.",
+  "engines": {
+    "remotion": {
+      "edit_distance": 1,
+      "normalized_wer": 0.012048192771084338,
+      "sha256": "101689cb33761f375ec2e1dc67733c4c056a50b43eff6823d4f085205adc7aff"
+    },
+    "hyperframes": {
+      "edit_distance": 1,
+      "normalized_wer": 0.012048192771084338,
+      "sha256": "05ac51dcededf56c9d0342ca4a0d36031ff2a46d82da837adbe428c77f6839d4"
+    }
+  }
 }
