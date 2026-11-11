@@ -53,6 +53,7 @@ def write(path, data):
 
 
 def render(path):
+    (path.parent / 'verification.json').unlink(missing_ok=True)
     project = json.loads(path.read_text())
     validate(project)
     target = path.parent / 'output.mp4'
@@ -93,7 +94,7 @@ def main():
     parser = argparse.ArgumentParser(description='SpliceForge — Make the cut. Show the evidence.')
     commands = parser.add_subparsers(dest='command', required=True)
     init = commands.add_parser('init'); init.add_argument('source', type=Path); init.add_argument('directory', type=Path)
-    for name in ('validate', 'render'):
+    for name in ('validate', 'render', 'transcribe', 'apply-transcript'):
         sub = commands.add_parser(name); sub.add_argument('project', type=Path)
     commands.add_parser('doctor')
     args = parser.parse_args()
@@ -109,6 +110,12 @@ def main():
                 raise ValueError('Project already exists')
             write(path, {'schema_version': 1, 'source': str(source), 'keep': [[0, duration]], 'brand': {'name': 'SpliceForge', 'accent': '#e5a35d'}})
             print(path)
+        elif args.command == 'transcribe':
+            from .transcript import transcribe
+            print(json.dumps(transcribe(args.project.resolve()), indent=2))
+        elif args.command == 'apply-transcript':
+            from .transcript import apply_selection
+            print(json.dumps(apply_selection(args.project.resolve())))
         elif args.command == 'validate':
             validate(json.loads(args.project.read_text())); print('Valid')
         else:

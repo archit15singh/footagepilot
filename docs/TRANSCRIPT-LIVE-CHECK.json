@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "expected_duration": 41.92,
+  "actual_duration": 41.92,
+  "decode": "passed",
+  "elapsed_seconds": 0.7931349169957684,
+  "limitations": [
+    "No aesthetic, speech continuity or listening assessment",
+    "ASR segment boundaries are approximate; no word alignment or audio playback review yet."
+  ],
+  "selection": {
+    "rejected_segment": 0,
+    "method": "explicit transcript review",
+    "keep": [
+      [
+        4.16,
+        46.08
+      ]
+    ]
+  }
+}
