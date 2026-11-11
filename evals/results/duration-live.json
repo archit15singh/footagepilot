@@ -1,0 +1,24 @@
+{
+  "gate": "passed",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "budget": {
+    "min_seconds": 20,
+    "max_seconds": 35
+  },
+  "planned_seconds": 21.32,
+  "encoded_seconds": 21.333,
+  "decode": "passed",
+  "negative_controls": [
+    {
+      "command": "apply-plan",
+      "rejected": true,
+      "error": "Edit duration 21.320s outside budget 20\u201321.25s"
+    },
+    {
+      "command": "render",
+      "rejected": true,
+      "error": "Edit duration 21.320s outside budget 20\u201321.25s"
+    }
+  ]
+}

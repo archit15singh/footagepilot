@@ -23,7 +23,7 @@ def main():
         provenance.append({'file':name,'url':url,'sha256':hashlib.sha256(target.read_bytes()).hexdigest()})
     write(work/'downloads.json',provenance)
     run([binary('ffmpeg'),'-y','-i',work/'original.webm','-t','60','-vf','scale=1280:720','-c:v','libx264','-pix_fmt','yuv420p','-c:a','aac',work/'source.mp4'])
-    project=work/'project.json';write(project,{'schema_version':1,'source':str(work/'source.mp4'),'keep':[[0,60]],'brand':{'name':'Word-aligned editorial test','accent':'#e5a35d'},'audio':{'music':str(work/'music.ogg'),'music_gain':.045,'sfx':[{'path':str(work/'effect.wav'),'start':.2,'gain':.03}]}})
+    project=work/'project.json';write(project,{'schema_version':1,'source':str(work/'source.mp4'),'keep':[[0,60]],'duration_budget':{'min_seconds':20,'max_seconds':35},'brand':{'name':'Word-aligned editorial test','accent':'#e5a35d'},'audio':{'music':str(work/'music.ogg'),'music_gain':.045,'sfx':[{'path':str(work/'effect.wav'),'start':.2,'gain':.03}]}})
     produce(project,a.brief)
     run([sys.executable,Path(__file__).parent/'publish_gallery.py',work,'--output',a.gallery])
 if __name__=='__main__':main()

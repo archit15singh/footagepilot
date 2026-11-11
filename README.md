@@ -24,6 +24,8 @@ To render one variation, append `--engine remotion` or `--engine hyperframes` to
 
 Use an authenticated `codex` CLI. The planner pins `gpt-6.1-sol` with low reasoning effort. The planner sends transcript text to that provider. The local alignment adapter currently uses MLX Whisper on Apple Silicon. Both renderers and MakeMyClip use the pinned Node dependencies; FFmpeg/ffprobe must be available on PATH or configured using SPLICEFORGE_FFMPEG and SPLICEFORGE_FFPROBE. Models, local project media and credentials are ignored by Git.
 
+For a hard length constraint, add `"duration_budget": {"min_seconds": 20, "max_seconds": 35}` to the project. The planner receives it, and planning/application/rendering reject edits outside it, including cut padding. Final encoded output permits one 30-fps frame of rounding. An impossible or unmet budget fails clearly; it does not silently truncate speech or automatically retry the model. Without this field, the brief remains advisory about duration.
+
 Optional project audio configuration:
 
 ```json
