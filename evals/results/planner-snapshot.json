@@ -1,0 +1,27 @@
+{
+  "gate": "passed",
+  "fault_cases": {
+    "changed_words": {
+      "baseline_accepts": true,
+      "candidate_accepts": false
+    },
+    "changed_project": {
+      "baseline_accepts": true,
+      "candidate_accepts": false
+    },
+    "changed_source": {
+      "baseline_accepts": true,
+      "candidate_accepts": false
+    }
+  },
+  "unchanged_control_accepts": true,
+  "live_planner": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "low",
+    "planned_duration_seconds": 21.32,
+    "words_sha256": "8fd53bba45060493b24d50918f3eb3789e0b0e08716550f91c1c2bcff9acc5a0",
+    "elapsed_seconds": 10.518184334010584
+  },
+  "live_snapshot_hash_matches": true,
+  "scope": "Fault injection plus actual headless Codex acceptance on unchanged real transcript. No new media-rendering claim."
+}

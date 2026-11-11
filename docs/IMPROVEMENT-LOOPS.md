@@ -64,3 +64,12 @@ Main `0fd2f20622cb6932d7e8e259b6ee3bbce1c10e23` completed all twelve stages from
 Stage total is about 75.8 seconds on this single run. This is not a speedup result against the historical 69.4-second run: system conditions vary and added audio analysis has cost. Engine selection avoids an unwanted renderer, but both-engine production is not claimed to be faster. Quality benefits are the specific caption, budget, audio-proxy and recovery measurements above, not an overall quality percentage.
 
 Regression evaluation inputs are now frozen under `evals/fixtures/weekly-address-words.json`, independent of future gallery refreshes. The frozen input exactly preserves the earlier benchmark hash. Twenty-two tests pass. Remaining limits: one already-produced archival speaker, no independent listening or preference scores, no proven phoneme-safe automatic boundary adjustment, no semantic story critic, stage cache or new visual-planning system. These are outstanding candidates, not shipped features.
+
+
+## Loop 7 — reject inputs changed while the planner runs
+
+Final review found a freshness race: the model read one transcript, but the saved plan hash was calculated by rereading the file after the response. A concurrent alignment update could therefore bind old word IDs to new transcript content. The candidate hashes the exact captured bytes and checks transcript, project bytes and source file revision before accepting a response. Detected changes fail clearly and do not save a new plan. This is a before/after freshness check, not an atomic filesystem transaction.
+
+Three injected concurrent changes (words, project, source) are accepted by the baseline and rejected by the candidate; an unchanged control remains accepted. Twenty-four tests pass. This is a planner acceptance change, not a media-rendering algorithm change; integrated gallery exports remain those tested at 0fd2f20.
+
+A real Codex 6.1 Sol / low call on the unchanged archival transcript also passes, with the saved hash matching the exact input bytes. Evidence: [planner-snapshot.json](../evals/results/planner-snapshot.json).
