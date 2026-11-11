@@ -20,6 +20,8 @@ python3 -m spliceforge init recording.mp4 projects/my-film
 python3 -m spliceforge produce projects/my-film/project.json --brief 'Select a coherent 30-second excerpt, preserve meaning and source order.'
 ```
 
+To render one variation, append `--engine remotion` or `--engine hyperframes` to `produce`. Repeat `--engine` to choose both; omitting it preserves the default of both engines. The run manifest lists only outputs from the requested engines.
+
 Use an authenticated `codex` CLI. The planner pins `gpt-6.1-sol` with low reasoning effort. The planner sends transcript text to that provider. The local alignment adapter currently uses MLX Whisper on Apple Silicon. Both renderers and MakeMyClip use the pinned Node dependencies; FFmpeg/ffprobe must be available on PATH or configured using SPLICEFORGE_FFMPEG and SPLICEFORGE_FFPROBE. Models, local project media and credentials are ignored by Git.
 
 Optional project audio configuration:

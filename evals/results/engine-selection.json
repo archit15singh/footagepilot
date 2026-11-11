@@ -1,0 +1,63 @@
+{
+  "gate": "passed",
+  "requested_engine": "remotion",
+  "render_stages": [
+    "render-remotion"
+  ],
+  "planner": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "low"
+  },
+  "stages": [
+    {
+      "name": "word-alignment",
+      "status": "passed",
+      "elapsed_seconds": 9.436936874990351
+    },
+    {
+      "name": "story-plan-codex",
+      "status": "passed",
+      "elapsed_seconds": 8.357352207996882
+    },
+    {
+      "name": "apply-word-plan",
+      "status": "passed",
+      "elapsed_seconds": 0.0258543749951059
+    },
+    {
+      "name": "render-remotion",
+      "status": "passed",
+      "elapsed_seconds": 29.336694166995585
+    },
+    {
+      "name": "verify-remotion",
+      "status": "passed",
+      "elapsed_seconds": 0.1247101670014672
+    },
+    {
+      "name": "mix-remotion",
+      "status": "passed",
+      "elapsed_seconds": 0.2375074159936048
+    },
+    {
+      "name": "verify-mix-remotion",
+      "status": "passed",
+      "elapsed_seconds": 0.12403487499977928
+    }
+  ],
+  "outputs": [
+    {
+      "name": "remotion narration",
+      "sha256": "b088815538758ef6f649a362f3edef3ae0d8c1a9aaf48516423403c8549f5904",
+      "duration": 21.334,
+      "decode": "passed"
+    },
+    {
+      "name": "remotion music and SFX",
+      "sha256": "863d41bc25745eafba26faafc83235a0fcff459784986aa609635410810a70b5",
+      "duration": 21.333333,
+      "decode": "passed"
+    }
+  ],
+  "scope": "One live pipeline run on already-cleaned real speech. No controlled wall-clock speedup claim."
+}
