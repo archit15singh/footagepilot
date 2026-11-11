@@ -170,5 +170,28 @@
     "Codex selected a different valid excerpt; compare ASR with its actual selected words, not the old gallery text.",
     "Historical commits/screenshots/evidence retain their original names and measurements.",
     "Package names checked, not published or reserved."
-  ]
+  ],
+  "migration": {
+    "repository": "archit15singh/footagepilot",
+    "repository_public": true,
+    "previous_repository_redirect": "verified",
+    "canonical_workspace": "~/projects/footagepilot",
+    "previous_workspace_redirect": "preserves archived absolute media paths",
+    "linked_git_worktrees": "accessible after repair",
+    "artifact_catalog_id": "footagepilot-video-variations",
+    "herdr_tab": "FootagePilot \u2014 Rename & Verify",
+    "post_move_http_checks": "passed"
+  },
+  "post_move_real_footage_render_checks": {
+    "remotion": {
+      "decode": "passed",
+      "expected_duration": 3,
+      "actual_duration": 3.008
+    },
+    "hyperframes": {
+      "decode": "passed",
+      "expected_duration": 3,
+      "actual_duration": 3.0
+    }
+  }
 }
