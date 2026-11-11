@@ -2,7 +2,7 @@
 
 **Make the cut. Show the evidence.**
 
-A local video editing workbench for creators and coding agents. Currently under construction: the first executable slice creates a project, validates explicit keep ranges, renders cuts with FFmpeg, and records decode and duration checks. Local transcription and explicit segment selection are available. Motion graphics and the browser workbench remain planned.
+A local video editing workbench for creators and coding agents. Currently under construction: the first executable slice creates a project, validates explicit keep ranges, renders cuts with FFmpeg, and records decode and duration checks. Local transcription and explicit segment selection are available. Captioned Remotion graphics and the local browser workbench are available.
 
 ## Run without installation
 
@@ -19,7 +19,7 @@ python3 -m unittest discover -s tests -v
 
 The source stays intact. Each successful render replaces the project's output.mp4 and verification.json. Decode checks do not prove good pacing, natural speech cuts or visual quality.
 
-See [the build plan](docs/PLAN.md). The precursor [benchmark](https://github.com/archit15singh/video-editing-agent-bench) motivates separating speech cleanup from motion graphics. Its results are not evaluations of this product.
+See [setup](docs/SETUP.md), [architecture and limits](docs/ARCHITECTURE.md), [evaluation findings](docs/RESULTS.md), and [the build plan](docs/PLAN.md). The precursor [benchmark](https://github.com/archit15singh/video-editing-agent-bench) motivates separating speech cleanup from motion graphics. Its results are not evaluations of this product.
 
 ## Transcript review
 

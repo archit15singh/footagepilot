@@ -27,7 +27,7 @@ def main():
     # Known rejection phrase is an explicit fixture policy, not inferred editorial taste.
     rejected=[]
     for row in transcript['segments']:
-        if 'rejected take' in row['text'].lower():row['keep']=False;rejected.append(row['id'])
+        if any(phrase in row['text'].lower() for phrase in ('rejected take','discard this sentence')):row['keep']=False;rejected.append(row['id'])
     if not rejected:raise ValueError('Fixture must contain the phrase rejected take')
     write(a.directory/'transcript.json',transcript);ranges=apply_selection(project_path)
     item=json.loads(project_path.read_text());edited=sum(b-a for a,b in ranges)

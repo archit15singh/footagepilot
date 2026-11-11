@@ -1,0 +1,69 @@
+{
+  "source_sha256": "25d8b16de6a7cf9250a89084cb95af65deb71b015a8b061d92670b10fc51c390",
+  "source_duration": 37.833333,
+  "rejected_segments": [
+    0
+  ],
+  "keep": [
+    [
+      1.52,
+      37.833333
+    ]
+  ],
+  "transcript_segments": 16,
+  "runs": [
+    {
+      "name": "first",
+      "sha256": "c87d3aed11c79a39e33bde1e5f256f1042d4e62c17906190ad6e063fb208f556",
+      "audio_hash": "SHA256=6ff8d61c9912e59589349125f926ba823be90b7446f73cc2f990dbd9837cc783",
+      "checks": {
+        "passed": true,
+        "expected_duration": 36.313333,
+        "actual_duration": 36.352,
+        "decode": "passed",
+        "graphics": {
+          "engine": "remotion",
+          "caption_groups": 15,
+          "storyboard_cards": 3,
+          "caption_timing": "ASR-segment interpolation; review required",
+          "caption_warnings": []
+        },
+        "elapsed_seconds": 33.29262070800178,
+        "limitations": [
+          "No aesthetic, speech continuity or listening assessment"
+        ]
+      }
+    },
+    {
+      "name": "revision",
+      "sha256": "bacbec445a3611ac9d8a9eaf76bb2b425f54926d4ce1c02487499148befa663f",
+      "audio_hash": "SHA256=6ff8d61c9912e59589349125f926ba823be90b7446f73cc2f990dbd9837cc783",
+      "checks": {
+        "passed": true,
+        "expected_duration": 36.313333,
+        "actual_duration": 36.352,
+        "decode": "passed",
+        "graphics": {
+          "engine": "remotion",
+          "caption_groups": 15,
+          "storyboard_cards": 3,
+          "caption_timing": "ASR-segment interpolation; review required",
+          "caption_warnings": []
+        },
+        "elapsed_seconds": 32.57740404199285,
+        "limitations": [
+          "No aesthetic, speech continuity or listening assessment"
+        ]
+      }
+    }
+  ],
+  "revision_audio_identical": true,
+  "elapsed_seconds": 67.60211433299992,
+  "limitations": [
+    "Synthetic fixture policy removes a known phrase; no autonomous storytelling claim.",
+    "ASR segment timing and interpolated captions require review.",
+    "Frame samples and technical checks do not constitute listening."
+  ],
+  "semantic_failure": "ASR split rejection into two segments; policy dropped rejected take but retained Please discard this sentence.",
+  "semantic_passed": false
+}
