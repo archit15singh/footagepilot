@@ -44,6 +44,14 @@ try:
     r=urllib.request.urlopen(urllib.request.Request(base+'/output.mp4',headers={'Range':'bytes=0-99'}))
     checks['range_playback']=r.status==206 and len(r.read())==100
     checks['proof_survives_invalid_design']='verification' in state()
+    transcript={'source':str(source),'segments':[{'id':0,'start':0,'end':1,'text':'One segment','keep':True}]}
+    write(root/'transcript.json',transcript)
+    checks['all_deselected_rejected']=post('selection',{'keep':[False]},token)[0]==400
+    checks['invalid_selection_not_saved']=json.loads((root/'transcript.json').read_text())['segments'][0]['keep'] is True
+    checks['design_save']=post('design',{'brand':{'name':'Revision','accent':'#66c6ba'},'storyboard':[],'graphics':False},token)[0]==200
+    checks['stale_proof_hidden']='verification' not in state()
+    try:urllib.request.urlopen(base+'/output.mp4');checks['stale_output_denied']=False
+    except urllib.error.HTTPError as e:checks['stale_output_denied']=e.code==409
     assert all(checks.values()),checks
     Path('evals/API-RESULTS.json').write_text(json.dumps(checks,indent=2)+'\n');print(checks)
 finally:

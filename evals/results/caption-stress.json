@@ -1,0 +1,44 @@
+{
+  "passed": true,
+  "input_revision": "ec8e66c81acb118a3692c75746d42b19c7e251676a3caab60a754e31b9468e04",
+  "output_revision": [
+    279121,
+    1794431016445628727
+  ],
+  "expected_duration": 5,
+  "actual_duration": 5.013,
+  "decode": "passed",
+  "graphics": {
+    "engine": "remotion",
+    "caption_groups": 5,
+    "storyboard_cards": 0,
+    "caption_timing": "ASR-segment interpolation; review required",
+    "caption_warnings": [
+      {
+        "group": 0,
+        "reason": "Fast reading rate or short display"
+      },
+      {
+        "group": 1,
+        "reason": "Fast reading rate or short display"
+      },
+      {
+        "group": 2,
+        "reason": "Fast reading rate or short display"
+      },
+      {
+        "group": 3,
+        "reason": "Fast reading rate or short display"
+      },
+      {
+        "group": 4,
+        "reason": "Fast reading rate or short display"
+      }
+    ]
+  },
+  "elapsed_seconds": 6.524977458000649,
+  "limitations": [
+    "No aesthetic, speech continuity or listening assessment"
+  ],
+  "visual_review": "A 64-character long-token group fits within the caption band at0.5seconds; all5groups flagged for fast reading. This intentionally adversarial caption is not considered readable."
+}

@@ -4,5 +4,10 @@
   "corrected_retry_succeeds": true,
   "invalid_design_rejected": true,
   "range_playback": true,
-  "proof_survives_invalid_design": true
+  "proof_survives_invalid_design": true,
+  "all_deselected_rejected": true,
+  "invalid_selection_not_saved": true,
+  "design_save": true,
+  "stale_proof_hidden": true,
+  "stale_output_denied": true
 }
