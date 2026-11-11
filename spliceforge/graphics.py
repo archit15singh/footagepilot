@@ -29,15 +29,38 @@ def captions_for_cut(segments, ranges):
 
 
 def word_captions_for_cut(words,ranges):
+    """Partition each retained interval into readable, phrase-aware cues.
+
+    Optimize the whole interval so a greedy seven-word chunk cannot strand a
+    one-word tail. Never borrow time from removed speech or bridge long pauses.
+    Dense speech can remain unreadable; report that rather than hide words.
+    """
     captions=[];offset=0
     for start,end in ranges:
-        group=[]
         selected=[w for w in words if w['start']>=start-.001 and w['end']<=end+.001]
-        for word in selected:
-            if group and (len(group)>=7 or len(' '.join(w['text'] for w in group+[word]))>64):
-                captions.append({'text':' '.join(w['text'] for w in group),'start':offset+group[0]['start']-start,'end':offset+group[-1]['end']-start});group=[]
-            group.append(word)
-        if group:captions.append({'text':' '.join(w['text'] for w in group),'start':offset+group[0]['start']-start,'end':offset+group[-1]['end']-start})
+        count=len(selected);best=[None]*(count+1);best[count]=(0,None)
+        for first in range(count-1,-1,-1):
+            for last in range(first,min(count,first+7)):
+                group=selected[first:last+1];text=' '.join(w['text'] for w in group)
+                if len(text)>64 and last>first:break
+                if last>first and selected[last]['start']-selected[last-1]['end']>.6:break
+                duration=group[-1]['end']-group[0]['start']
+                if duration<=0:continue
+                bad=duration<1 or len(text)/duration>22
+                crossings=sum(w['text'].endswith(('.', '!', '?')) for w in group[:-1])
+                cost=1000*bad+100*crossings+1
+                # Prefer punctuation boundaries when readability is otherwise equal.
+                if last<count-1 and not group[-1]['text'].endswith(('.', '!', '?', ',', ';', ':')):cost+=.1
+                if best[last+1] is None:continue
+                cost+=best[last+1][0]
+                if best[first] is None or cost<best[first][0]:best[first]=(cost,last)
+        if count and best[0] is None:raise ValueError('Caption words need positive display duration')
+        first=0
+        while first<count:
+            last=best[first][1]
+            group=selected[first:last+1]
+            captions.append({'text':' '.join(w['text'] for w in group),'start':offset+group[0]['start']-start,'end':offset+group[-1]['end']-start})
+            first=last+1
         offset+=end-start
     return captions
 
