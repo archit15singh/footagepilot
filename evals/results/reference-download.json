@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "source": "Public Instagram transition tutorial; selected through browser saved reference review",
+  "duration": 11.213,
+  "frames": 24,
+  "cut_candidates": 4,
+  "audio_onsets": 32,
+  "source_sha256": "e108e39e3d23d25f9d0f766958291ff80ee4a55b0d5742745bfa578e870d1a4d",
+  "decode": "passed",
+  "downloader": "yt-dlp 2026.10.26 without browser cookies",
+  "limitations": [
+    "Sampled frames can miss fast actions.",
+    "Scene changes are candidates, not transition classifications.",
+    "Audio onsets may be speech/SFX; beat and phrase interpretation needs listening."
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "title": "A few moments",
+  "aspect": "9:16",
+  "fps": 30,
+  "shots": [
+    {"path": "hero.jpg", "duration": 2, "fit": "fill", "zoom": 0.025},
+    {"path": "detail.jpg", "duration": 1, "fit": "fill"},
+    {"path": "closing.jpg", "duration": 3, "fit": "fill"}
+  ],
+  "titles": [{"text": "A FEW MOMENTS", "start": 0, "duration": 2, "size": 28, "y": 0.34, "color": "#FFFFFF"}],
+  "music": "score.wav",
+  "music_gain": 0.65
+}

@@ -39,3 +39,20 @@ Place those fields alongside source, keep and brand. The pipeline generates narr
 The CLI also provides cleanup, align, plan, apply-plan, transcribe, apply-transcript, render, validate and doctor. `serve` retains the earlier local workbench; the expanded pipeline is CLI-first. See [architecture](docs/ARCHITECTURE.md), [original findings](docs/RESULTS.md), and [agent instructions](AGENTS.md).
 
 Checks: `python3 -m unittest discover -s tests -v`. Real-footage reproduction is in evals/real_pipeline.py; prior synthetic evaluations are retained as historical evidence and are not substituted for real-footage results.
+
+## Reference-driven editing with Instagram Edits
+
+Read the [Edits guide and official tutorial map](docs/edits/GUIDE.md) and [rebuild plan](docs/REFERENCE-PLAN.md). Native Edits for Mac can be controlled through its authenticated local MCP; computer use handles saved-post browsing, setup and file-picker access.
+
+```sh
+# Requires yt-dlp (or FOOTAGEPILOT_YT_DLP), FFmpeg and ffprobe.
+python3 -m footagepilot reference 'https://www.instagram.com/reel/SHORTCODE/' --output projects/reference-01
+# A browser-downloaded local video is also accepted as the source.
+python3 -m footagepilot edits-render projects/recreation.json --token-file /private/path/token --output projects/recreation-01.mp4
+python3 -m footagepilot learn-check --fetch
+python3 -m footagepilot compare-edits projects/baseline.mp4 projects/recreation-01.mp4 --output projects/comparison-01.json
+```
+
+Reference reports contain timestamped frames, dense before/after cut samples, audio-energy/onset candidates, and seekable local playback. Onsets are not guaranteed musical beats. Saved collections are selected through the signed-in browser, not scraped by the CLI. Optional `reference --browser brave` uses the existing authenticated browser session; no cookie file is exported. Keep references, personal media and authentication local. See [recreation manifest](examples/edits-recreation.json) for the executable format; replace its paths with your own imported media.
+
+`learn-check` exits 2 when research is stale, changed or unavailable. It never silently renews verified dates. `compare-edits` retains hashes and technical checks; only an explicit `--verdict better --notes 'reason'` records a preferred candidate. These are evidence/feedback loops, not model training or unattended policy/code changes.

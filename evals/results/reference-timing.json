@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "known_cuts": [
+    1.0,
+    2.0,
+    3.0
+  ],
+  "known_onsets": [
+    1.0,
+    2.0,
+    3.0
+  ],
+  "silent_negative_control": "passed",
+  "scope": "Technical timing only"
+}

@@ -154,11 +154,32 @@ def main():
         sub = commands.add_parser(name); sub.add_argument('project', type=Path)
     production = commands.add_parser('produce'); production.add_argument('project',type=Path); production.add_argument('--brief',required=True); production.add_argument('--skip-cleanup',action='store_true'); production.add_argument('--engine',action='append',choices=('remotion','hyperframes'),help='Render only this engine; repeat for both (default: both)')
     planner = commands.add_parser('plan'); planner.add_argument('project',type=Path); planner.add_argument('--brief',required=True)
+    reference=commands.add_parser('reference');reference.add_argument('source');reference.add_argument('--output',type=Path,required=True);reference.add_argument('--interval',type=float,default=1.);reference.add_argument('--scene-threshold',type=float,default=.28);reference.add_argument('--max-duration',type=float,default=180.);reference.add_argument('--browser',choices=('brave','chrome','firefox','edge'))
+    edits=commands.add_parser('edits-render');edits.add_argument('manifest',type=Path);edits.add_argument('--output',type=Path,required=True);edits.add_argument('--token-file',type=Path)
+    knowledge=commands.add_parser('learn-check');knowledge.add_argument('--sources',type=Path,default=Path('docs/edits/sources.json'));knowledge.add_argument('--fetch',action='store_true')
+    compare=commands.add_parser('compare-edits');compare.add_argument('baseline',type=Path);compare.add_argument('candidate',type=Path);compare.add_argument('--output',type=Path,required=True);compare.add_argument('--verdict',choices=('unreviewed','better','worse','tie'),default='unreviewed');compare.add_argument('--notes',default='')
+    et=commands.add_parser('edits-tools');et.add_argument('--token-file',type=Path);et.add_argument('--output',type=Path,required=True)
     commands.add_parser('doctor')
     web = commands.add_parser('serve'); web.add_argument('directory', type=Path); web.add_argument('--port', type=int, default=8765)
     args = parser.parse_args()
     try:
-        if args.command == 'serve':
+        if args.command == 'edits-tools':
+            from .edits import EditsClient
+            if args.output.exists():raise ValueError('Use a fresh capability snapshot path')
+            tools=EditsClient(args.token_file).tools();args.output.parent.mkdir(parents=True,exist_ok=True);write(args.output,{'tools':tools});print(json.dumps({'tools':len(tools),'snapshot':str(args.output)}))
+        elif args.command == 'learn-check':
+            from .learning import check_sources
+            result=check_sources(args.sources,args.fetch);print(json.dumps(result,indent=2));return 2 if result['needs_research'] else 0
+        elif args.command == 'compare-edits':
+            from .learning import compare_edits
+            print(json.dumps(compare_edits(args.baseline,args.candidate,args.output,args.verdict,args.notes),indent=2))
+        elif args.command == 'edits-render':
+            from .edits import render_edit
+            print(json.dumps(render_edit(args.manifest.resolve(),args.output.resolve(),args.token_file),indent=2))
+        elif args.command == 'reference':
+            from .reference import analyze_reference
+            print(json.dumps(analyze_reference(args.source,args.output.resolve(),args.interval,args.scene_threshold,args.max_duration,args.browser),indent=2))
+        elif args.command == 'serve':
             from .server import serve
             serve(args.directory, args.port)
         elif args.command == 'doctor':

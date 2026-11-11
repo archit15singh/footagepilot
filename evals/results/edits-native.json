@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "input": "10 locally reviewed personal travel photos; original locally composed score",
+  "engine": "Edits 455.0.0.32.104 local MCP",
+  "duration_seconds": 14,
+  "width": 1080,
+  "height": 1920,
+  "fps": "30/1",
+  "video_codec": "hevc",
+  "audio_codec": "aac",
+  "decode": "passed",
+  "timeline": "10 main shots, 4 photo overlays, 2 titles, one music track",
+  "output_sha256": "2ad699ea1fa8e81b5a6f5bdd6c6d996ebba5898987c649815dc8ae4027d8a8e3",
+  "interventions": [
+    "Native folder import for sandbox bookmarks",
+    "Corrected wrapped title after frame inspection",
+    "Discovered valid HEVC export preset",
+    "Exported through native writable folder, then copied locally"
+  ],
+  "preference": "unreviewed; user rejected previous slideshow baseline",
+  "limits": [
+    "No listening assessment",
+    "Not automatic semantic style recreation",
+    "Photos cannot reproduce camera motion from live-action references"
+  ],
+  "transition_export": {
+    "passed": true,
+    "duration": 14.0,
+    "beat_markers": 28,
+    "transitions": 1,
+    "sha256": "814aaa1dd3a8dc3ae9126e2c46fd04e78d1a1e9bdcff68831d9dce57985facba"
+  }
+}
