@@ -30,3 +30,7 @@ The first graphics render downloads Chromium if needed. ASR and rendering then r
 - Graphics timing error after cutting: update card start/duration values against the edited timeline.
 - Different fonts across machines: the renderer currently uses local fallback fonts. Cross-platform pixel parity has not been established.
 - Browser media error: reload and play; byte-range serving is supported. Verify the export with FFmpeg if the error persists.
+
+## Expanded pipeline requirements
+
+Run npm ci for pinned MakeMyClip, HyperFrames, GSAP and Remotion. Install/authenticate Codex CLI to live-run the planner; Claude Code is an alternative supported command but was not installed/tested in this evaluation. Use SPLICEFORGE_CODEX/SPLICEFORGE_CLAUDE for executable overrides. Install mlx-whisper into an isolated Python runtime and point SPLICEFORGE_ALIGN_PYTHON at it. SPLICEFORGE_ALIGN_MODEL overrides the compatible local/Hugging Face model path; model download is separate. These components use their own licenses. See REAL-E2E-RESULTS.md for one-command real-footage reproduction and limits.

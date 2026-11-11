@@ -15,6 +15,8 @@ def input_revision(project_path):
     transcript=project_path.parent/'transcript.json'
     payload={'project':raw.decode(),'source':file_revision(item['source']),
              'transcript':transcript.read_text() if transcript.exists() else None,
+             'words':(project_path.parent/'words.json').read_text() if (project_path.parent/'words.json').exists() else None,
+             'audio_files':[file_revision(p) for p in ([item.get('audio',{}).get('music')] if item.get('audio',{}).get('music') else [])+[s['path'] for s in item.get('audio',{}).get('sfx',[])]],
              'images':[file_revision(card['image']) for card in item.get('storyboard',[])]}
     return hashlib.sha256(json.dumps(payload,sort_keys=True).encode()).hexdigest()
 

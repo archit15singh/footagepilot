@@ -1,0 +1,8 @@
+{
+  "expected_text": "I've delivered a few hundred of these weekly addresses over the years. And you may have noticed a theme that pops up pretty often. The Republicans who run this Congress aren't doing their jobs. But there's a lot of business they need to get done first. First, even as we're seeing more and more Zika cases inside the United States, they've refused to fund our efforts to protect women and children by fighting Zika in a serious way.",
+  "observed_text": "I've delivered a few hundred of these weekly addresses over the years, and you may have noticed a theme that pops up pretty often. The Republicans who run this Congress aren't doing their job, but there's a lot of business they need to get done first. First, even as we're seeing more and more Zika cases inside the United States, they've refused to fund our efforts to protect women and children by fighting Zika in a serious way.",
+  "expected_words": 83,
+  "edit_distance": 1,
+  "normalized_wer": 0.012048192771084338,
+  "scope": "Model re-transcription of HyperFrames music/SFX output, not listening assessment."
+}

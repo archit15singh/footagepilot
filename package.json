@@ -1,1 +1,19 @@
-{"name":"spliceforge-renderer","private":true,"version":"0.1.0","type":"module","dependencies":{"@remotion/cli":"4.0.543","@remotion/renderer":"4.0.543","react":"19.2.0","react-dom":"19.2.0","remotion":"4.0.543"}}
+{
+  "name": "spliceforge-renderer",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "@remotion/cli": "4.0.543",
+    "@remotion/renderer": "4.0.543",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.543",
+    "@makemyclip/editor": "0.4.1",
+    "hyperframes": "0.9.34",
+    "gsap": "3.14.2"
+  },
+  "overrides": {
+    "undici": "7.30.2"
+  }
+}

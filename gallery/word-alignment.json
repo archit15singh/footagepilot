@@ -1,0 +1,797 @@
+{
+  "source": "Archival recording after MakeMyClip silence cleanup",
+  "engine": "mlx-whisper",
+  "model": "mlx-community/whisper-base.en-mlx",
+  "elapsed_seconds": 2.2191343330050586,
+  "words": [
+    {
+      "id": 0,
+      "text": "Hi",
+      "start": 0,
+      "end": 0.16
+    },
+    {
+      "id": 1,
+      "text": "everybody.",
+      "start": 0.16,
+      "end": 0.36
+    },
+    {
+      "id": 2,
+      "text": "I've",
+      "start": 0.86,
+      "end": 1.06
+    },
+    {
+      "id": 3,
+      "text": "delivered",
+      "start": 1.06,
+      "end": 1.26
+    },
+    {
+      "id": 4,
+      "text": "a",
+      "start": 1.26,
+      "end": 1.46
+    },
+    {
+      "id": 5,
+      "text": "few",
+      "start": 1.46,
+      "end": 1.62
+    },
+    {
+      "id": 6,
+      "text": "hundred",
+      "start": 1.62,
+      "end": 2.0
+    },
+    {
+      "id": 7,
+      "text": "of",
+      "start": 2.0,
+      "end": 2.18
+    },
+    {
+      "id": 8,
+      "text": "these",
+      "start": 2.18,
+      "end": 2.32
+    },
+    {
+      "id": 9,
+      "text": "weekly",
+      "start": 2.32,
+      "end": 2.52
+    },
+    {
+      "id": 10,
+      "text": "addresses",
+      "start": 2.52,
+      "end": 3.0
+    },
+    {
+      "id": 11,
+      "text": "over",
+      "start": 3.0,
+      "end": 3.34
+    },
+    {
+      "id": 12,
+      "text": "the",
+      "start": 3.34,
+      "end": 3.5
+    },
+    {
+      "id": 13,
+      "text": "years.",
+      "start": 3.5,
+      "end": 3.66
+    },
+    {
+      "id": 14,
+      "text": "And",
+      "start": 4.02,
+      "end": 4.08
+    },
+    {
+      "id": 15,
+      "text": "you",
+      "start": 4.08,
+      "end": 4.2
+    },
+    {
+      "id": 16,
+      "text": "may",
+      "start": 4.2,
+      "end": 4.34
+    },
+    {
+      "id": 17,
+      "text": "have",
+      "start": 4.34,
+      "end": 4.48
+    },
+    {
+      "id": 18,
+      "text": "noticed",
+      "start": 4.48,
+      "end": 4.74
+    },
+    {
+      "id": 19,
+      "text": "a",
+      "start": 4.74,
+      "end": 5.06
+    },
+    {
+      "id": 20,
+      "text": "theme",
+      "start": 5.06,
+      "end": 5.42
+    },
+    {
+      "id": 21,
+      "text": "that",
+      "start": 5.42,
+      "end": 5.66
+    },
+    {
+      "id": 22,
+      "text": "pops",
+      "start": 5.66,
+      "end": 6.0
+    },
+    {
+      "id": 23,
+      "text": "up",
+      "start": 6.0,
+      "end": 6.28
+    },
+    {
+      "id": 24,
+      "text": "pretty",
+      "start": 6.28,
+      "end": 6.44
+    },
+    {
+      "id": 25,
+      "text": "often.",
+      "start": 6.44,
+      "end": 6.76
+    },
+    {
+      "id": 26,
+      "text": "The",
+      "start": 6.98,
+      "end": 7.04
+    },
+    {
+      "id": 27,
+      "text": "Republicans",
+      "start": 7.04,
+      "end": 7.36
+    },
+    {
+      "id": 28,
+      "text": "who",
+      "start": 7.36,
+      "end": 7.8
+    },
+    {
+      "id": 29,
+      "text": "run",
+      "start": 7.8,
+      "end": 7.94
+    },
+    {
+      "id": 30,
+      "text": "this",
+      "start": 7.94,
+      "end": 8.08
+    },
+    {
+      "id": 31,
+      "text": "Congress",
+      "start": 8.08,
+      "end": 8.34
+    },
+    {
+      "id": 32,
+      "text": "aren't",
+      "start": 8.34,
+      "end": 9.18
+    },
+    {
+      "id": 33,
+      "text": "doing",
+      "start": 9.18,
+      "end": 9.36
+    },
+    {
+      "id": 34,
+      "text": "their",
+      "start": 9.36,
+      "end": 9.56
+    },
+    {
+      "id": 35,
+      "text": "jobs.",
+      "start": 9.56,
+      "end": 9.86
+    },
+    {
+      "id": 36,
+      "text": "And",
+      "start": 10.26,
+      "end": 10.28
+    },
+    {
+      "id": 37,
+      "text": "guess",
+      "start": 10.28,
+      "end": 10.4
+    },
+    {
+      "id": 38,
+      "text": "what?",
+      "start": 10.4,
+      "end": 10.66
+    },
+    {
+      "id": 39,
+      "text": "recently",
+      "start": 11.04,
+      "end": 11.34
+    },
+    {
+      "id": 40,
+      "text": "returned",
+      "start": 11.34,
+      "end": 11.9
+    },
+    {
+      "id": 41,
+      "text": "from",
+      "start": 11.9,
+      "end": 12.22
+    },
+    {
+      "id": 42,
+      "text": "a",
+      "start": 12.22,
+      "end": 12.34
+    },
+    {
+      "id": 43,
+      "text": "seven",
+      "start": 12.34,
+      "end": 12.56
+    },
+    {
+      "id": 44,
+      "text": "-week",
+      "start": 12.56,
+      "end": 12.82
+    },
+    {
+      "id": 45,
+      "text": "vacation",
+      "start": 12.82,
+      "end": 13.22
+    },
+    {
+      "id": 46,
+      "text": "and",
+      "start": 13.22,
+      "end": 13.66
+    },
+    {
+      "id": 47,
+      "text": "they've",
+      "start": 13.66,
+      "end": 13.82
+    },
+    {
+      "id": 48,
+      "text": "only",
+      "start": 13.82,
+      "end": 13.94
+    },
+    {
+      "id": 49,
+      "text": "got",
+      "start": 13.94,
+      "end": 14.16
+    },
+    {
+      "id": 50,
+      "text": "two",
+      "start": 14.16,
+      "end": 14.38
+    },
+    {
+      "id": 51,
+      "text": "weeks",
+      "start": 14.38,
+      "end": 14.54
+    },
+    {
+      "id": 52,
+      "text": "left",
+      "start": 14.54,
+      "end": 14.82
+    },
+    {
+      "id": 53,
+      "text": "until",
+      "start": 14.82,
+      "end": 15.28
+    },
+    {
+      "id": 54,
+      "text": "their",
+      "start": 15.28,
+      "end": 15.52
+    },
+    {
+      "id": 55,
+      "text": "next",
+      "start": 15.52,
+      "end": 15.74
+    },
+    {
+      "id": 56,
+      "text": "one.",
+      "start": 15.74,
+      "end": 15.96
+    },
+    {
+      "id": 57,
+      "text": "But",
+      "start": 16.16,
+      "end": 16.22
+    },
+    {
+      "id": 58,
+      "text": "there's",
+      "start": 16.22,
+      "end": 16.4
+    },
+    {
+      "id": 59,
+      "text": "a",
+      "start": 16.4,
+      "end": 16.48
+    },
+    {
+      "id": 60,
+      "text": "lot",
+      "start": 16.48,
+      "end": 16.62
+    },
+    {
+      "id": 61,
+      "text": "of",
+      "start": 16.62,
+      "end": 16.7
+    },
+    {
+      "id": 62,
+      "text": "business",
+      "start": 16.7,
+      "end": 17.0
+    },
+    {
+      "id": 63,
+      "text": "they",
+      "start": 17.0,
+      "end": 17.44
+    },
+    {
+      "id": 64,
+      "text": "need",
+      "start": 17.44,
+      "end": 17.64
+    },
+    {
+      "id": 65,
+      "text": "to",
+      "start": 17.64,
+      "end": 17.78
+    },
+    {
+      "id": 66,
+      "text": "get",
+      "start": 17.78,
+      "end": 17.92
+    },
+    {
+      "id": 67,
+      "text": "done",
+      "start": 17.92,
+      "end": 18.12
+    },
+    {
+      "id": 68,
+      "text": "first.",
+      "start": 18.12,
+      "end": 18.38
+    },
+    {
+      "id": 69,
+      "text": "First,",
+      "start": 18.78,
+      "end": 18.92
+    },
+    {
+      "id": 70,
+      "text": "even",
+      "start": 19.16,
+      "end": 19.5
+    },
+    {
+      "id": 71,
+      "text": "as",
+      "start": 19.5,
+      "end": 19.86
+    },
+    {
+      "id": 72,
+      "text": "we're",
+      "start": 19.86,
+      "end": 20.1
+    },
+    {
+      "id": 73,
+      "text": "seeing",
+      "start": 20.1,
+      "end": 20.38
+    },
+    {
+      "id": 74,
+      "text": "more",
+      "start": 20.38,
+      "end": 20.7
+    },
+    {
+      "id": 75,
+      "text": "and",
+      "start": 20.7,
+      "end": 20.82
+    },
+    {
+      "id": 76,
+      "text": "more",
+      "start": 20.82,
+      "end": 21.04
+    },
+    {
+      "id": 77,
+      "text": "Zika",
+      "start": 21.04,
+      "end": 21.26
+    },
+    {
+      "id": 78,
+      "text": "cases",
+      "start": 21.26,
+      "end": 21.76
+    },
+    {
+      "id": 79,
+      "text": "inside",
+      "start": 21.76,
+      "end": 22.0
+    },
+    {
+      "id": 80,
+      "text": "the",
+      "start": 22.0,
+      "end": 22.28
+    },
+    {
+      "id": 81,
+      "text": "United",
+      "start": 22.28,
+      "end": 22.38
+    },
+    {
+      "id": 82,
+      "text": "States,",
+      "start": 22.38,
+      "end": 22.86
+    },
+    {
+      "id": 83,
+      "text": "they've",
+      "start": 23.16,
+      "end": 23.32
+    },
+    {
+      "id": 84,
+      "text": "refused",
+      "start": 23.32,
+      "end": 23.64
+    },
+    {
+      "id": 85,
+      "text": "to",
+      "start": 23.64,
+      "end": 23.94
+    },
+    {
+      "id": 86,
+      "text": "fund",
+      "start": 23.94,
+      "end": 24.2
+    },
+    {
+      "id": 87,
+      "text": "our",
+      "start": 24.2,
+      "end": 24.44
+    },
+    {
+      "id": 88,
+      "text": "efforts",
+      "start": 24.44,
+      "end": 24.72
+    },
+    {
+      "id": 89,
+      "text": "to",
+      "start": 24.72,
+      "end": 25.0
+    },
+    {
+      "id": 90,
+      "text": "protect",
+      "start": 25.0,
+      "end": 25.3
+    },
+    {
+      "id": 91,
+      "text": "women",
+      "start": 25.3,
+      "end": 25.74
+    },
+    {
+      "id": 92,
+      "text": "and",
+      "start": 25.74,
+      "end": 25.98
+    },
+    {
+      "id": 93,
+      "text": "children",
+      "start": 25.98,
+      "end": 26.24
+    },
+    {
+      "id": 94,
+      "text": "by",
+      "start": 26.24,
+      "end": 26.6
+    },
+    {
+      "id": 95,
+      "text": "fighting",
+      "start": 26.6,
+      "end": 26.96
+    },
+    {
+      "id": 96,
+      "text": "Zika",
+      "start": 26.96,
+      "end": 27.2
+    },
+    {
+      "id": 97,
+      "text": "in",
+      "start": 27.2,
+      "end": 27.64
+    },
+    {
+      "id": 98,
+      "text": "a",
+      "start": 27.64,
+      "end": 27.72
+    },
+    {
+      "id": 99,
+      "text": "serious",
+      "start": 27.72,
+      "end": 27.9
+    },
+    {
+      "id": 100,
+      "text": "way.",
+      "start": 27.9,
+      "end": 28.34
+    },
+    {
+      "id": 101,
+      "text": "Second,",
+      "start": 28.34,
+      "end": 28.82
+    },
+    {
+      "id": 102,
+      "text": "they",
+      "start": 29.14,
+      "end": 29.18
+    },
+    {
+      "id": 103,
+      "text": "still",
+      "start": 29.18,
+      "end": 29.42
+    },
+    {
+      "id": 104,
+      "text": "need",
+      "start": 29.42,
+      "end": 29.7
+    },
+    {
+      "id": 105,
+      "text": "to",
+      "start": 29.7,
+      "end": 29.78
+    },
+    {
+      "id": 106,
+      "text": "provide",
+      "start": 29.78,
+      "end": 30.02
+    },
+    {
+      "id": 107,
+      "text": "resources",
+      "start": 30.02,
+      "end": 30.44
+    },
+    {
+      "id": 108,
+      "text": "to",
+      "start": 30.44,
+      "end": 30.8
+    },
+    {
+      "id": 109,
+      "text": "help",
+      "start": 30.8,
+      "end": 30.94
+    },
+    {
+      "id": 110,
+      "text": "the",
+      "start": 30.94,
+      "end": 31.08
+    },
+    {
+      "id": 111,
+      "text": "people",
+      "start": 31.08,
+      "end": 31.32
+    },
+    {
+      "id": 112,
+      "text": "of",
+      "start": 31.32,
+      "end": 31.46
+    },
+    {
+      "id": 113,
+      "text": "Louisiana",
+      "start": 31.46,
+      "end": 31.78
+    },
+    {
+      "id": 114,
+      "text": "recover",
+      "start": 31.78,
+      "end": 32.36
+    },
+    {
+      "id": 115,
+      "text": "from",
+      "start": 32.36,
+      "end": 32.76
+    },
+    {
+      "id": 116,
+      "text": "last",
+      "start": 32.76,
+      "end": 32.9
+    },
+    {
+      "id": 117,
+      "text": "month's",
+      "start": 32.9,
+      "end": 33.32
+    },
+    {
+      "id": 118,
+      "text": "terrible",
+      "start": 33.32,
+      "end": 33.64
+    },
+    {
+      "id": 119,
+      "text": "floods",
+      "start": 33.64,
+      "end": 34.04
+    },
+    {
+      "id": 120,
+      "text": "and",
+      "start": 34.04,
+      "end": 34.58
+    },
+    {
+      "id": 121,
+      "text": "to",
+      "start": 34.58,
+      "end": 34.7
+    },
+    {
+      "id": 122,
+      "text": "help",
+      "start": 34.7,
+      "end": 34.84
+    },
+    {
+      "id": 123,
+      "text": "communities",
+      "start": 34.84,
+      "end": 35.24
+    },
+    {
+      "id": 124,
+      "text": "like",
+      "start": 35.24,
+      "end": 35.62
+    },
+    {
+      "id": 125,
+      "text": "Flint",
+      "start": 35.62,
+      "end": 35.9
+    },
+    {
+      "id": 126,
+      "text": "recover",
+      "start": 35.9,
+      "end": 36.54
+    },
+    {
+      "id": 127,
+      "text": "from",
+      "start": 36.54,
+      "end": 36.9
+    },
+    {
+      "id": 128,
+      "text": "their",
+      "start": 36.9,
+      "end": 37.02
+    },
+    {
+      "id": 129,
+      "text": "own",
+      "start": 37.02,
+      "end": 37.16
+    },
+    {
+      "id": 130,
+      "text": "challenges.",
+      "start": 37.16,
+      "end": 37.38
+    }
+  ],
+  "limitations": [
+    "Model-estimated word boundaries require cut-boundary review."
+  ]
+}

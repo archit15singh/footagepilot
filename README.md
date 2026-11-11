@@ -1,53 +1,35 @@
 # SpliceForge
 
-**Make the cut. Show the evidence.**
+Working agent-operated video editing: MakeMyClip cleanup → local word alignment → headless Codex/Claude story planning → validated word cuts → HyperFrames/Remotion → music/SFX mixing.
 
-A local video editing workbench for creators and coding agents. Currently under construction: the first executable slice creates a project, validates explicit keep ranges, renders cuts with FFmpeg, and records decode and duration checks. Local transcription and explicit segment selection are available. Captioned Remotion graphics and the local browser workbench are available.
+[Video variations](gallery/index.html) · [Real end-to-end findings](docs/REAL-E2E-RESULTS.md) · [Setup](docs/SETUP.md)
 
-## Run without installation
-
-Requires Python 3.11+, FFmpeg and ffprobe on PATH. Override tool locations with `SPLICEFORGE_FFMPEG` and `SPLICEFORGE_FFPROBE`.
+The committed gallery contains four automatically generated edits of real archival footage. Codex was live-tested; Claude support is implemented but not live-tested. Word timestamps are model estimates and listening remains unverified. No UI polish or synthetic demo is needed to reproduce this run.
 
 ```sh
-python3 -m spliceforge doctor
-python3 -m spliceforge init recording.mp4 projects/demo
-# Edit projects/demo/project.json: keep contains ordered [start, end] seconds.
-python3 -m spliceforge validate projects/demo/project.json
-python3 -m spliceforge render projects/demo/project.json
-python3 -m unittest discover -s tests -v
+npm ci
+# Configure FFmpeg/ffprobe and a Python runtime containing mlx-whisper.
+export SPLICEFORGE_ALIGN_PYTHON=/path/to/python-with-mlx-whisper
+python3 evals/real_pipeline.py --work projects/real-run --gallery gallery
 ```
 
-The source stays intact. Each successful render replaces the project's output.mp4 and verification.json. Decode checks do not prove good pacing, natural speech cuts or visual quality.
-
-See [setup](docs/SETUP.md), [architecture and limits](docs/ARCHITECTURE.md), [evaluation findings](docs/RESULTS.md), and [the build plan](docs/PLAN.md). The precursor [benchmark](https://github.com/archit15singh/video-editing-agent-bench) motivates separating speech cleanup from motion graphics. Its results are not evaluations of this product.
-
-## Transcript review
-
-Use a local whisper.cpp CLI and model; set `SPLICEFORGE_WHISPER` to its executable and `SPLICEFORGE_WHISPER_MODEL` to the model file. No remote transcription service is called.
+For your own footage:
 
 ```sh
-python3 -m spliceforge transcribe projects/demo/project.json
-# Review transcript.json and change unwanted segments' keep values to false.
-python3 -m spliceforge apply-transcript projects/demo/project.json
-python3 -m spliceforge render projects/demo/project.json
+python3 -m spliceforge init recording.mp4 projects/my-film
+python3 -m spliceforge produce projects/my-film/project.json --backend codex --brief 'Select a coherent 30-second excerpt, preserve meaning and source order.'
 ```
 
-Selections use ASR segment timestamps with 80ms padding and merge adjacent regions. They can retain pauses within a segment and are not word-accurate. Review cut boundaries before delivery. Reapplying selections invalidates old verification evidence.
+Use an authenticated `codex` or `claude` CLI. The planner sends transcript text to that provider. The local alignment adapter currently uses MLX Whisper on Apple Silicon. Both renderers and MakeMyClip use the pinned Node dependencies; FFmpeg/ffprobe must be available on PATH or configured using SPLICEFORGE_FFMPEG and SPLICEFORGE_FFPROBE. Models, local project media and credentials are ignored by Git.
 
-## Local workbench
-
-```sh
-python3 -m spliceforge serve projects/demo
-```
-
-Visit http://127.0.0.1:8765. Import a recording by absolute path, transcribe, select segments, apply the selection, render and play the output. Configure the same media and ASR environment variables before starting the server. Jobs run one at a time and expose errors in the interface. Keep the terminal running; job state is in memory and unfinished jobs do not resume after restart. The server binds to loopback and requires a per-session request token for mutations. It is intended for a trusted local machine, not remote hosting.
-
-## Captioned motion graphics
-
-Install the pinned renderer with `npm ci` (Node.js 22+). Set `graphics` to `true` in project.json to render the cut through Remotion. A reviewed transcript supplies captions; their timing is interpolated within ASR segments and needs review. Add storyboard cards using edited-timeline seconds:
+Optional project audio configuration:
 
 ```json
-{"graphics": true, "brand": {"name": "Your brand", "accent": "#e5a35d"}, "storyboard": [{"title": "A clear decision", "image": "/absolute/path/screen.png", "start": 3, "duration": 6}]}
+{"audio":{"music":"/absolute/path/music.ogg","music_gain":0.045,"sfx":[{"path":"/absolute/path/effect.wav","start":0.2,"gain":0.03}]}}
 ```
 
-These fields belong alongside source and keep in your project. Each card shows its image, title, animated entrance and progress line. The source remains in a side pane; narration is retained. The first Remotion render may download a compatible Chromium browser. Remotion has its own licensing terms; review them before commercial deployment. The workbench edits the brand, accent color and storyboard cards. Save the design before rendering.
+Place those fields alongside source, keep and brand. The pipeline generates narration-only and mixed versions for both renderers. Effects use edited-timeline seconds. Listening and legal suitability of your own media remain your responsibility.
+
+The CLI also provides cleanup, align, plan, apply-plan, transcribe, apply-transcript, render, validate and doctor. `serve` retains the earlier local workbench; the expanded pipeline is CLI-first. See [architecture](docs/ARCHITECTURE.md), [original findings](docs/RESULTS.md), and [agent instructions](AGENTS.md).
+
+Checks: `python3 -m unittest discover -s tests -v`. Real-footage reproduction is in evals/real_pipeline.py; prior synthetic evaluations are retained as historical evidence and are not substituted for real-footage results.

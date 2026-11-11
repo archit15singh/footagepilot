@@ -28,6 +28,20 @@ def captions_for_cut(segments, ranges):
     return captions
 
 
+def word_captions_for_cut(words,ranges):
+    captions=[];offset=0
+    for start,end in ranges:
+        group=[]
+        selected=[w for w in words if w['start']>=start-.001 and w['end']<=end+.001]
+        for word in selected:
+            if group and (len(group)>=7 or len(' '.join(w['text'] for w in group+[word]))>64):
+                captions.append({'text':' '.join(w['text'] for w in group),'start':offset+group[0]['start']-start,'end':offset+group[-1]['end']-start});group=[]
+            group.append(word)
+        if group:captions.append({'text':' '.join(w['text'] for w in group),'start':offset+group[0]['start']-start,'end':offset+group[-1]['end']-start})
+        offset+=end-start
+    return captions
+
+
 def render_graphics(project_path, cut, output, project):
     duration = sum(b-a for a,b in project['keep'])
     brand = project.get('brand',{})
@@ -35,7 +49,12 @@ def render_graphics(project_path, cut, output, project):
     if not re.fullmatch(r'#[0-9a-fA-F]{6}',brand.get('accent','')):raise ValueError('Brand accent must be a six-digit hex color')
     transcript_path = project_path.parent/'transcript.json'
     rows = json.loads(transcript_path.read_text())['segments'] if transcript_path.exists() else []
-    captions = captions_for_cut(rows,project['keep'])
+    aligned=project.get('word_captions',False)
+    if aligned:
+        alignment=json.loads((project_path.parent/'words.json').read_text())
+        if alignment['source']!=project['source']:raise ValueError('Word caption source mismatch')
+        captions=word_captions_for_cut(alignment['words'],project['keep'])
+    else:captions = captions_for_cut(rows,project['keep'])
     cards = []
     with tempfile.TemporaryDirectory(prefix='spliceforge-film-') as tmp:
         public = Path(tmp);shutil.copyfile(cut,public/'cut.mp4')
@@ -50,4 +69,4 @@ def render_graphics(project_path, cut, output, project):
         props={'duration':duration,'brand':brand,'captions':captions,'cards':cards}
         executable = os.environ.get('SPLICEFORGE_REMOTION') or str(Path(__file__).resolve().parents[1]/'node_modules/.bin/remotion')
         run([executable,'render',Path(__file__).parent/'render/film.jsx','SpliceForge',output,'--public-dir',public,'--props',json.dumps(props),'--concurrency','2','--log','error'])
-    return {'engine':'remotion','caption_groups':len(captions),'storyboard_cards':len(cards),'caption_timing':'ASR-segment interpolation; review required','caption_warnings':[{'group':i,'reason':'Fast reading rate or short display'} for i,c in enumerate(captions) if c['end']-c['start']<1 or len(c['text'])/(c['end']-c['start'])>22]}
+    return {'engine':'remotion','caption_groups':len(captions),'storyboard_cards':len(cards),'caption_timing':'ASR word timestamps; review required' if aligned else 'ASR-segment interpolation; review required','caption_warnings':[{'group':i,'reason':'Fast reading rate or short display'} for i,c in enumerate(captions) if c['end']-c['start']<1 or len(c['text'])/(c['end']-c['start'])>22]}

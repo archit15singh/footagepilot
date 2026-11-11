@@ -7,3 +7,5 @@ Run `python3 -m unittest discover -s tests -v` after changing the project contra
 Keep project media, machine paths, dependencies and secrets out of commits. Use environment overrides for external binaries. Preserve source footage. Keep subprocess arguments as arrays; do not interpolate media names into shell commands.
 
 For evaluations, report inputs, tool versions, interventions, failures and limits. Never present precursor benchmark results as product results. Before release, verify the CLI and browser workflow on the actual implementation and publish reproducible evidence.
+
+Expanded pipeline: use `python3 -m spliceforge produce <project.json> --brief <brief>` for cleanup, word alignment, headless planning, both renderers and mixed/narration variants. Test real footage through evals/real_pipeline.py. Keep word IDs/ranges and source meaning traceable; model output is data, never shell commands. Claude backend is unverified until actually run. Preserve actual failed-run logs locally and sanitized findings in docs/REAL-E2E-RESULTS.md. Gallery outputs must fully decode and match recorded hashes before publishing.

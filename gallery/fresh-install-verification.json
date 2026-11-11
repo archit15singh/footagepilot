@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "input_revision": "52c46edf7ab3bdff3c63d8d1b3e5f834222b9668c914da280ba1043168bba415",
+  "output_revision": [
+    640887,
+    1794432333983596129
+  ],
+  "expected_duration": 2.0,
+  "actual_duration": 2.0,
+  "decode": "passed",
+  "graphics": {
+    "engine": "hyperframes",
+    "caption_groups": 0,
+    "storyboard_cards": 0,
+    "caption_timing": "ASR segment interpolation"
+  },
+  "audio_mix": null,
+  "elapsed_seconds": 4.645774457996595,
+  "limitations": [
+    "No aesthetic, speech continuity or listening assessment"
+  ],
+  "setup": "Fresh npm ci for declared MakeMyClip/HyperFrames/Remotion dependencies; actual 2-second real-footage MakeMyClip+HyperFrames render; shared existing Chromium and FFmpeg binaries."
+}

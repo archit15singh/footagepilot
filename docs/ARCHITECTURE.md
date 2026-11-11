@@ -1,3 +1,7 @@
+# Current pipeline
+
+The functional pipeline is implemented in spliceforge/pipeline.py. It runs MakeMyClip cleanup, alignment.py, planner.py, word-level apply_plan, both renderer adapters and audio.py. See [the real run](REAL-E2E-RESULTS.md) for current verification and limits. The CLI is the primary interface; the earlier browser workbench remains available without further UI changes.
+
 # Architecture and boundaries
 
 The editable project.json stores source, ordered keep ranges, brand, graphics toggle and storyboard cards. transcript.json records local whisper.cpp segments and explicit keep decisions. FFmpeg trims and concatenates selected audio/video; Remotion composes a source pane, reviewed captions and timed image cards. verification.json records full decode, expected/actual duration and graphics diagnostics.
