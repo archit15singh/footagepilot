@@ -12,4 +12,4 @@ requires-python = ">=3.11"
 spliceforge = "spliceforge.__main__:main"
 
 [tool.setuptools.package-data]
-spliceforge = ["web/*.html"]
+spliceforge = ["web/*.html", "render/*.jsx"]

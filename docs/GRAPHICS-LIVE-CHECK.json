@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "expected_duration": 41.92,
+  "actual_duration": 42.048,
+  "decode": "passed",
+  "graphics": {
+    "engine": "remotion",
+    "caption_groups": 16,
+    "storyboard_cards": 1,
+    "caption_timing": "ASR-segment interpolation; review required"
+  },
+  "elapsed_seconds": 39.419487999999546,
+  "limitations": [
+    "No aesthetic, speech continuity or listening assessment"
+  ]
+}

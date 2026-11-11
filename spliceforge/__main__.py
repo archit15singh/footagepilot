@@ -77,6 +77,15 @@ def render(path):
     started = time.monotonic()
     try:
         run(command)
+        graphics = None
+        if project.get('graphics', False):
+            from .graphics import render_graphics
+            styled = path.parent / 'styled.partial.mp4'
+            try:
+                graphics = render_graphics(path, temporary, styled, project)
+                styled.replace(temporary)
+            finally:
+                styled.unlink(missing_ok=True)
         run([binary('ffmpeg'), '-v', 'error', '-i', temporary, '-f', 'null', '-'])
         metadata = probe(temporary)
         actual = float(metadata['format']['duration'])
@@ -84,7 +93,7 @@ def render(path):
         if abs(actual - expected) > .15:
             raise ValueError(f'Output duration mismatch: {actual} versus {expected}')
         temporary.replace(target)
-        write(path.parent / 'verification.json', {'passed': True, 'expected_duration': expected, 'actual_duration': actual, 'decode': 'passed', 'elapsed_seconds': time.monotonic()-started, 'limitations': ['No aesthetic, speech continuity or listening assessment'], 'command': [str(x) for x in command]})
+        write(path.parent / 'verification.json', {'passed': True, 'expected_duration': expected, 'actual_duration': actual, 'decode': 'passed', 'graphics': graphics, 'elapsed_seconds': time.monotonic()-started, 'limitations': ['No aesthetic, speech continuity or listening assessment'], 'command': [str(x) for x in command]})
     finally:
         temporary.unlink(missing_ok=True)
     return target
