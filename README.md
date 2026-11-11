@@ -33,3 +33,11 @@ python3 -m spliceforge render projects/demo/project.json
 ```
 
 Selections use ASR segment timestamps with 80ms padding and merge adjacent regions. They can retain pauses within a segment and are not word-accurate. Review cut boundaries before delivery. Reapplying selections invalidates old verification evidence.
+
+## Local workbench
+
+```sh
+python3 -m spliceforge serve projects/demo
+```
+
+Visit http://127.0.0.1:8765. Import a recording by absolute path, transcribe, select segments, apply the selection, render and play the output. Configure the same media and ASR environment variables before starting the server. Jobs run one at a time and expose errors in the interface. Keep the terminal running; job state is in memory and unfinished jobs do not resume after restart. The server binds to loopback and requires a per-session request token for mutations. It is intended for a trusted local machine, not remote hosting.

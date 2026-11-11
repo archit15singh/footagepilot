@@ -1,0 +1,8 @@
+{
+  "state": true,
+  "transcript_segments": 10,
+  "/../README.md": 404,
+  "/not-found": 404,
+  "missing_token": 403,
+  "selection": 200
+}

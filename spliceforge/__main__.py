@@ -97,9 +97,13 @@ def main():
     for name in ('validate', 'render', 'transcribe', 'apply-transcript'):
         sub = commands.add_parser(name); sub.add_argument('project', type=Path)
     commands.add_parser('doctor')
+    web = commands.add_parser('serve'); web.add_argument('directory', type=Path); web.add_argument('--port', type=int, default=8765)
     args = parser.parse_args()
     try:
-        if args.command == 'doctor':
+        if args.command == 'serve':
+            from .server import serve
+            serve(args.directory, args.port)
+        elif args.command == 'doctor':
             print(json.dumps({name: binary(name) for name in ('ffmpeg', 'ffprobe')}, indent=2))
         elif args.command == 'init':
             source = args.source.resolve()
