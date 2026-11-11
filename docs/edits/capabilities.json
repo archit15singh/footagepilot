@@ -1,0 +1,6515 @@
+{
+  "observed_at": "2026-11-12",
+  "app_version": "455.0.0.32.104",
+  "source": "Installed Edits local tools/list; snapshot, rediscover before use",
+  "tools": [
+    {
+      "inputSchema": {
+        "required": [
+          "startSeconds",
+          "durationSeconds",
+          "kind"
+        ],
+        "properties": {
+          "durationSeconds": {
+            "type": "number"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "startSeconds": {
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false
+      },
+      "description": "Insert an adjustment layer, at the Insert-menu default geometry or an explicit one [editing]",
+      "name": "addAdjustmentLayer"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "name": "addBeatMarker",
+      "description": "Add a hand-placed beat marker to an audio element (timeline core) [editing]",
+      "inputSchema": {
+        "properties": {
+          "seconds": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "seconds"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Import a GIF file as a true gif element [media]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "name": "addGif",
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "addLibraryMedia",
+      "annotations": {
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "description": "Append media library items to the timeline, as a media-panel drop does [media]"
+    },
+    {
+      "name": "addMedia",
+      "description": "Import a media file and add it to the composition [media]",
+      "inputSchema": {
+        "required": [
+          "path",
+          "audioKind"
+        ],
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "audioKind": {
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "description": "Add Media Panel items to the timeline, as the cell + (one) or Add N (several) does; startTime/sourceIn/sourceOut/trackId place one alias off the main track [media]",
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "trackId": {
+            "description": "Existing overlay or audio track UUID; the range there must be free",
+            "type": "string"
+          },
+          "startTime": {
+            "description": "Timeline start in seconds; defaults to the playhead",
+            "type": "number"
+          },
+          "asOverlay": {
+            "description": "Place a single non-audio alias on a new overlay track (default false)",
+            "type": "boolean"
+          },
+          "aliasIds": {
+            "type": "array",
+            "description": "Media Panel alias UUIDs, in insert order"
+          },
+          "sourceIn": {
+            "type": "number",
+            "description": "Source in-point in seconds"
+          },
+          "sourceOut": {
+            "description": "Source out-point in seconds",
+            "type": "number"
+          }
+        },
+        "required": [
+          "aliasIds"
+        ]
+      },
+      "name": "addMediaPanelItemsToTimeline"
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "name": "addMusicTrack",
+      "inputSchema": {
+        "properties": {
+          "track": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "track",
+          "type"
+        ],
+        "type": "object"
+      },
+      "description": "Add music track \u2014 now imports real asset via addMediaFromPath (was stub) [media]"
+    },
+    {
+      "inputSchema": {
+        "required": [
+          "path",
+          "startSeconds",
+          "x",
+          "y",
+          "scale"
+        ],
+        "properties": {
+          "y": {
+            "type": "number"
+          },
+          "startSeconds": {
+            "type": "number"
+          },
+          "x": {
+            "type": "number"
+          },
+          "scale": {
+            "type": "number"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Import media as a picture-in-picture overlay [editing]",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "name": "addOverlay"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "description": "Add a filled rectangle (optionally rounded and translucent) as an overlay on a new top layer, e.g. a box behind a title or a scrim [editing]",
+      "name": "addShape",
+      "inputSchema": {
+        "required": [
+          "x",
+          "y",
+          "width",
+          "height",
+          "color",
+          "opacity",
+          "cornerRadius",
+          "startSeconds",
+          "duration"
+        ],
+        "properties": {
+          "opacity": {
+            "type": "number"
+          },
+          "x": {
+            "type": "number"
+          },
+          "startSeconds": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "duration": {
+            "type": "number"
+          },
+          "color": {
+            "type": "string"
+          },
+          "cornerRadius": {
+            "type": "number"
+          },
+          "width": {
+            "type": "number"
+          },
+          "height": {
+            "type": "number"
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "description": "Add a library song to the composition \u2014 full file for royalty-free, obfuscated window for licensed [media]",
+      "name": "addSongToComposition",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "audioAssetId": {
+            "type": "string"
+          },
+          "track": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "track",
+          "audioAssetId"
+        ]
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "name": "addSoundEffect",
+      "annotations": {
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false
+      },
+      "description": "Add a sound effect onto the timeline \u2014 bundled name or catalog id/title from searchSoundEffects [media]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "effect": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "effect"
+        ]
+      }
+    },
+    {
+      "name": "addSticker",
+      "inputSchema": {
+        "required": [
+          "sticker",
+          "path",
+          "duration"
+        ],
+        "type": "object",
+        "properties": {
+          "atSeconds": {
+            "type": "number"
+          },
+          "duration": {
+            "type": "number"
+          },
+          "sticker": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Add a bitmap sticker overlay at the playhead [editing]",
+      "annotations": {
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "description": "Cut the subject out of an element into a masked overlay [editing]",
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "name": "addStickerFromCutout"
+    },
+    {
+      "inputSchema": {
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "atSeconds": {
+            "type": "number"
+          },
+          "duration": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "text",
+          "duration"
+        ],
+        "type": "object"
+      },
+      "name": "addText",
+      "description": "Add a text overlay at the playhead [editing]",
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "durationSeconds": {
+            "type": "number",
+            "description": "Stored (slider) duration in seconds. Defaults to the model's 0.5s.",
+            "default": 0.5,
+            "minimum": 0
+          },
+          "dryRun": {
+            "description": "Validate only: do not mutate",
+            "type": "boolean",
+            "default": false
+          },
+          "filterId": {
+            "x-catalog": "transition",
+            "default": "transition_dissolve",
+            "type": "string",
+            "description": "Shader id from listCatalog({kind: \"transition\"}), e.g. transition_dissolve; normal removes the transition at the boundary"
+          },
+          "toId": {
+            "type": "string",
+            "description": "Element UUID on the incoming side. Omit for a composition-END fade."
+          },
+          "fromId": {
+            "type": "string",
+            "description": "Element UUID on the outgoing side. Omit for a composition-START fade."
+          }
+        }
+      },
+      "annotations": {
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false
+      },
+      "name": "addTransition",
+      "description": "Add a transition at a video-track boundary [editing]"
+    },
+    {
+      "name": "appState",
+      "description": "Get current app screen (home/editor/loading) [navigation]",
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "applyAdjust",
+      "description": "Apply adjust \u2014 writes a real slider value (was stub) [media]",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "adjust": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "adjust",
+          "value"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "name": "applyEffect",
+      "description": "Apply a catalog video effect to a clip [editing]",
+      "inputSchema": {
+        "required": [
+          "id",
+          "effect"
+        ],
+        "type": "object",
+        "properties": {
+          "effect": {
+            "type": "string",
+            "x-catalog": "videoEffect",
+            "description": "Effect filter id (e.g. video_shake), or none to clear. Values: listCatalog({kind: \"videoEffect\"})"
+          },
+          "dryRun": {
+            "description": "Validate only: do not mutate",
+            "default": false,
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string",
+            "description": "Video element UUID"
+          }
+        }
+      }
+    },
+    {
+      "description": "Apply a catalog filter to a video clip [editing]",
+      "annotations": {
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "intensity": {
+            "maximum": 1,
+            "minimum": 0,
+            "description": "Intensity, 0...1 (defaults to the catalog default)",
+            "type": "number"
+          },
+          "dryRun": {
+            "type": "boolean",
+            "description": "Validate only: do not mutate",
+            "default": false
+          },
+          "filter": {
+            "description": "Catalog filter id (e.g. subtle), or normal to clear. Values: listCatalog({kind: \"filter\"})",
+            "x-catalog": "filter",
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "Video element UUID"
+          }
+        },
+        "required": [
+          "id",
+          "filter"
+        ],
+        "type": "object"
+      },
+      "name": "applyFilter"
+    },
+    {
+      "annotations": {
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false
+      },
+      "name": "applyLUT",
+      "inputSchema": {
+        "properties": {
+          "dryRun": {
+            "default": false,
+            "type": "boolean",
+            "description": "Validate only: do not mutate"
+          },
+          "table": {
+            "x-catalog": "lut",
+            "type": "string",
+            "description": "Built-in LUT as its proto LogConversionTable name (e.g. SONY_SLOG3_SGAMUT3_TO_REC709) or catalog id. Values: listCatalog({kind: \"lut\"})"
+          }
+        },
+        "required": [
+          "table"
+        ],
+        "type": "object"
+      },
+      "description": "Apply a built-in Adjust LUT as an Adjust > Presets tile tap does: to the selected clips, else a selected Adjust layer, else a new adjustment layer [editing]"
+    },
+    {
+      "description": "Import a CutoutMaskStore as a clip's subject mask and apply a subject effect [editing]",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "name": "applySubjectEffect",
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "storePath",
+          "effect"
+        ],
+        "properties": {
+          "storePath": {
+            "type": "string"
+          },
+          "effect": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "description": "Apply a named text style preset (font, colour, effect, animation) from the app's text styles, e.g. to all titles at once [editing]",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "name": "applyTextPreset",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "x-catalog": "textPreset",
+            "type": "string",
+            "description": "Preset name from listTextPresets, e.g. Strictly business; with id or the current selection, the textPresets tool must be active"
+          },
+          "ids": {
+            "type": "string",
+            "description": "Comma-separated text overlay UUIDs to restyle together (not captions); opens the presets tool itself. Omit to restyle the selection"
+          },
+          "dryRun": {
+            "description": "Validate only: do not mutate",
+            "default": false,
+            "type": "boolean"
+          },
+          "id": {
+            "description": "Text element UUID to select and restyle (omit for the current selection)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    },
+    {
+      "name": "applyTextToSpeech",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "voice": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "voice"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "description": "Synthesize a text element's content and attach it as voiceover [text]"
+    },
+    {
+      "name": "audioChords",
+      "description": "Chords over time from 12-bin chroma matched to major, minor, sus and seventh shapes [analysis]",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": true
+      },
+      "inputSchema": {
+        "required": [
+          "id",
+          "path",
+          "start",
+          "duration",
+          "hop",
+          "minDuration"
+        ],
+        "type": "object",
+        "properties": {
+          "hop": {
+            "type": "number"
+          },
+          "minDuration": {
+            "type": "number"
+          },
+          "start": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "name": "audioLevels",
+      "description": "RMS level envelope in dBFS for a clip, library item or file, with its noise floor and speech level [analysis]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "duration": {
+            "type": "number"
+          },
+          "path": {
+            "type": "string"
+          },
+          "hop": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          },
+          "start": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "start",
+          "duration",
+          "hop"
+        ]
+      }
+    },
+    {
+      "name": "audioOnsets",
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "path",
+          "start",
+          "duration"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "number"
+          },
+          "start": {
+            "type": "number"
+          },
+          "path": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Note and hit onsets in a clip's audio, and the tempo that best fits them [analysis]",
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      }
+    },
+    {
+      "inputSchema": {
+        "properties": {
+          "maxHz": {
+            "type": "number"
+          },
+          "resolutionHz": {
+            "type": "number"
+          },
+          "minHz": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          },
+          "minProminenceDb": {
+            "type": "number"
+          },
+          "path": {
+            "type": "string"
+          },
+          "start": {
+            "type": "number"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "duration": {
+            "type": "number"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "path",
+          "start",
+          "duration",
+          "minHz",
+          "maxHz",
+          "resolutionHz",
+          "minProminenceDb",
+          "limit"
+        ]
+      },
+      "name": "audioSpectrum",
+      "annotations": {
+        "idempotentHint": true,
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "description": "Steady tones that stand out of a clip's average spectrum (hum, whine), with frequency, level and prominence [analysis]"
+    },
+    {
+      "inputSchema": {
+        "properties": {
+          "subject": {
+            "type": "string",
+            "description": "largestFace, largestPerson, center, or {\"trackId\": N} from detectSubjects on the one id"
+          },
+          "wideThreshold": {
+            "type": "number",
+            "description": "Median subjects' horizontal span over the fill crop width above which a shot is wide"
+          },
+          "wideShotPolicy": {
+            "description": "Shots whose subjects don't fit one crop: crop (fill anyway) or stack2 (two-panel split screen)",
+            "type": "string"
+          },
+          "ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "description": "Element UUIDs; omit for every video element on the main track"
+          },
+          "motion": {
+            "description": "static (one focus point) or follow (smoothed position keyframes)",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "annotations": {
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false
+      },
+      "name": "autoReframe",
+      "description": "Fill the canvas with each video element while keeping its subject in frame, in one undo step; wide shots can become stack2 split screens [editing]"
+    },
+    {
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": true
+      },
+      "name": "beatMarkers",
+      "description": "List an audio element's visible beat markers with timeline and source times [editing]",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id"
+        ]
+      }
+    },
+    {
+      "annotations": {
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "description": "Browse music categories \u2014 now fetches real feeds (was stub) [media]",
+      "name": "browseMusicCategories"
+    },
+    {
+      "name": "cancelExport",
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "description": "Cancel an in-progress export [export]",
+      "inputSchema": {
+        "properties": {},
+        "type": "object",
+        "required": []
+      }
+    },
+    {
+      "description": "Cancel an in-flight reverse transcode for a clip [tools]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false
+      },
+      "name": "cancelReverse"
+    },
+    {
+      "name": "cancelVoiceoverRecording",
+      "description": "Cancel the current voiceover recording without saving [voiceover]",
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false
+      },
+      "inputSchema": {
+        "required": [],
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "name": "captions",
+      "description": "Get all caption elements with id, text, startTime, endTime [captions]",
+      "inputSchema": {
+        "type": "object",
+        "required": [],
+        "properties": {}
+      }
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "atSeconds": {
+            "type": "number",
+            "description": "Timeline time to render in seconds (default: playhead)"
+          },
+          "times": {
+            "type": "string",
+            "description": "Comma-separated timeline times to render (omit for the single atSeconds / playhead frame)"
+          },
+          "maxWidth": {
+            "type": "integer",
+            "description": "Maximum output width in pixels (default 720, max 1920)"
+          }
+        },
+        "required": []
+      },
+      "description": "Render the exact composition frame at the playhead as a base64 JPEG (export-pipeline, like previewVideo) [inspection]",
+      "name": "captureFrame",
+      "annotations": {
+        "idempotentHint": true,
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "captureSourceFrames",
+      "description": "Raw source frames of a library item or timeline element at given times, ignoring transform, crop and effects, as images in request order [inspection]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "aliasId": {
+            "description": "Media-library alias UUID from mediaBin; times are source seconds",
+            "type": "string"
+          },
+          "tile": {
+            "type": "string",
+            "description": "Tile all frames into one labelled image in reading order: {\"columns\": N}, N 1-12"
+          },
+          "times": {
+            "description": "Times in seconds within the element or media, one image per time, returned in this order",
+            "type": "array"
+          },
+          "grid": {
+            "description": "Draw N-1 evenly spaced guide lines each way, 0-20; 10 gives 10% guides (default 0)",
+            "type": "integer"
+          },
+          "id": {
+            "type": "string",
+            "description": "Timeline element UUID; times are timeline seconds mapped through its source in-point and speed"
+          },
+          "maxWidth": {
+            "type": "integer",
+            "description": "Maximum width of each frame in pixels, 64-1920 (default 320)"
+          }
+        },
+        "required": [
+          "times"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      }
+    },
+    {
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "description": "Remove the crop from an element [tools]",
+      "name": "clearCrop",
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "description": "Clear the current selection [editing]",
+      "name": "clearSelection"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "name": "clipMetadata",
+      "description": "Capture metadata from a clip's source file: date and time shot, GPS location, camera and lens, resolution, frame rate, codec, HDR, audio format [media]",
+      "inputSchema": {
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "annotations": {
+        "idempotentHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "description": "Get video clips (id, trackId, startTime, endTime, duration, source in/out), filtered and paged [inspection]",
+      "name": "clips",
+      "inputSchema": {
+        "properties": {
+          "trackId": {
+            "description": "Only clips on this track UUID",
+            "type": "string"
+          },
+          "rangeStart": {
+            "type": "number",
+            "description": "Seconds; with rangeEnd, only clips overlapping [rangeStart, rangeEnd)"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Keys to return per clip, e.g. id,startTime,endTime,sourceInPoint; omit for all"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "description": "Index of the first row"
+          },
+          "rangeEnd": {
+            "type": "number",
+            "description": "Seconds; pass with rangeStart"
+          },
+          "limit": {
+            "description": "Maximum rows per page; nextOffset is returned when more remain",
+            "minimum": 1,
+            "default": 200,
+            "type": "integer"
+          }
+        },
+        "type": "object",
+        "required": []
+      }
+    },
+    {
+      "description": "Close the current project and return to home [navigation]",
+      "name": "closeProject",
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "inputSchema": {
+        "required": [],
+        "properties": {},
+        "type": "object"
+      },
+      "name": "closeTeleprompter",
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false
+      },
+      "description": "Close the teleprompter overlay [voiceover]"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false
+      },
+      "name": "convertToMain",
+      "description": "Convert an overlay clip back to a main lane [editing]",
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "name": "convertToOverlay",
+      "description": "Convert a main-track clip to an overlay lane [editing]"
+    },
+    {
+      "name": "copy",
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "description": "Copy selected elements to clipboard [editing]",
+      "annotations": {
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "name": "createTextSticker",
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "description": "Create text sticker \u2014 now inserts a real sticker (was stub) [text]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "cropClip",
+      "description": "Crop clip \u2014 applies a real crop rect through setElementCrop [media]",
+      "annotations": {
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false
+      },
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {
+          "rect": {
+            "description": "Crop rect JSON object with numeric left/top/right/bottom edges in normalized 0...1 coordinates; {} or empty keeps the legacy default inset (0.1, 0.1, 0.9, 0.9); unknown keys and non-numeric values are rejected; the response reports the landed rect as cropRect with x/y/width/height",
+            "type": "string"
+          },
+          "id": {
+            "description": "Element UUID (default: selected, else first element)",
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "name": "cut",
+      "annotations": {
+        "destructiveHint": true,
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      },
+      "description": "Cut selected elements to clipboard [editing]"
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "required": [],
+        "properties": {}
+      },
+      "description": "Delete the currently selected elements [editing]",
+      "annotations": {
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": false
+      },
+      "name": "delete"
+    },
+    {
+      "inputSchema": {
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "deleteAccountFont",
+      "description": "Delete an entry from the account's imported-font library [text]",
+      "annotations": {
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": true
+      }
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "readOnlyHint": false
+      },
+      "description": "Delete captions (single by id or all) [captions]",
+      "name": "deleteCaptions",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": []
+      }
+    },
+    {
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false
+      },
+      "name": "deleteProject",
+      "description": "Delete a project by ID [navigation]"
+    },
+    {
+      "name": "deleteSoundEffect",
+      "description": "Delete sound effect \u2014 now removes the real element (was stub) [media]",
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "destructiveHint": true
+      },
+      "inputSchema": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "description": "Delete a voiceover clip by its element UUID [voiceover]",
+      "name": "deleteVoiceoverClip",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id"
+        ]
+      }
+    },
+    {
+      "inputSchema": {
+        "properties": {
+          "frames": {
+            "type": "integer"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "frames"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "idempotentHint": true,
+        "destructiveHint": false
+      },
+      "description": "List what's in a clip with on-device MetaAISceneX: caption categories, captions, topics and vibes with scores, plus an aesthetic score. Use the labels as trackObject prompts [ai]",
+      "name": "describeClip"
+    },
+    {
+      "annotations": {
+        "idempotentHint": true,
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "name": "detectCuts",
+      "description": "Camera cuts in a clip, library item or file, and its shots grouped by angle (e.g. wide and two close-ups) [analysis]",
+      "inputSchema": {
+        "properties": {
+          "sensitivity": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "number"
+          },
+          "start": {
+            "type": "number"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "start",
+          "duration",
+          "sensitivity"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "inputSchema": {
+        "properties": {
+          "includeDissolves": {
+            "default": false,
+            "type": "boolean",
+            "description": "Report fades and dissolves as ranges instead of cuts at their midpoint"
+          },
+          "aliasId": {
+            "description": "Media-library alias UUID from mediaBin",
+            "type": "string"
+          },
+          "sensitivity": {
+            "type": "number",
+            "description": "0-1, higher finds more cuts",
+            "default": 0.5
+          },
+          "minShotSeconds": {
+            "type": "number",
+            "description": "Cuts closer than this many seconds merge, keeping the stronger",
+            "default": 0.1
+          },
+          "id": {
+            "description": "Timeline element UUID; timeline times map through its in-point, speed and reversal. Speed-ramped clips are refused",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "name": "detectShots",
+      "description": "Shot changes in a video library item or timeline element: exact source-frame cut times, project-grid timeline times, shots and dissolves [inspection]"
+    },
+    {
+      "description": "Faces and people in a library item or timeline element, sampled over a time range, with boxes and per-shot track ids [inspection]",
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "name": "detectSubjects",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Timeline element UUID; times are timeline seconds"
+          },
+          "sampleEvery": {
+            "type": "number",
+            "description": "Seconds between samples, 0.04-10 (default 0.25)"
+          },
+          "end": {
+            "type": "number",
+            "description": "Last sample time in seconds; omit for the end of the media or element"
+          },
+          "start": {
+            "type": "number",
+            "description": "First sample time in seconds; omit for the start of the media or element"
+          },
+          "kinds": {
+            "description": "What to detect: face, person (default both)",
+            "type": "array"
+          },
+          "aliasId": {
+            "type": "string",
+            "description": "Media-library alias UUID from mediaBin; times are source seconds"
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "description": "Dismiss opacity panel \u2014 real toolPresenter.dismiss, presentedTools readback [tools]",
+      "annotations": {
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "name": "dismissOpacityPanel",
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Dismiss speed panel \u2014 real toolPresenter.dismiss, presentedTools readback [tools]",
+      "name": "dismissSpeedPanel",
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "name": "dismissToast",
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "description": "Dismiss the currently visible tool-toast, if any [editing]",
+      "annotations": {
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "inputSchema": {
+        "required": [],
+        "properties": {},
+        "type": "object"
+      },
+      "description": "Dismiss the currently active tool in the sidebar [tools]",
+      "name": "dismissTool",
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "description": "Dismiss transform panel \u2014 real toolPresenter.dismiss, presentedTools readback [tools]",
+      "name": "dismissTransformPanel",
+      "inputSchema": {
+        "type": "object",
+        "required": [],
+        "properties": {}
+      },
+      "annotations": {
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "name": "dismissVolumePanel",
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "description": "Dismiss volume panel \u2014 real toolPresenter.dismiss, presentedTools readback [media]"
+    },
+    {
+      "name": "dragSoundEffectTrack",
+      "description": "Drag sound effect track \u2014 now moves the real element (was stub) [media]",
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "newTrack": {
+            "type": "boolean"
+          },
+          "delta": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "delta",
+          "newTrack"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "description": "DEPRECATED: prefer setSpeedCurve({id, preset}). This drives the Speed panel's internal callback, which is currently refused (it crashed the app twice via reflection). [tools]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "preset": {
+            "type": "string"
+          },
+          "settle": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "preset",
+          "settle"
+        ]
+      },
+      "annotations": {
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false
+      },
+      "name": "dragSpeedPanelCurve"
+    },
+    {
+      "name": "dragTextHorizontallyBlocked",
+      "annotations": {
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "description": "Drag text horizontally blocked \u2014 now verifies real element count via getAllElements (was stub) [text]",
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "description": "Duplicate a timeline element by id as one undo step [editing]",
+      "name": "duplicate",
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Element UUID"
+          },
+          "placement": {
+            "default": "afterOriginal",
+            "enum": [
+              "afterOriginal",
+              "newTrackSameTime",
+              "atPlayhead"
+            ],
+            "type": "string",
+            "description": "Where the clone goes"
+          },
+          "rippleMainTrack": {
+            "description": "Allow clips on a magnetic (main) track to shift to make room for the clone",
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "editCaption",
+      "description": "Edit the text of a caption element [captions]",
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "text"
+        ],
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false
+      }
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "name": "editText",
+      "description": "Set a text element's content [editing]",
+      "inputSchema": {
+        "required": [
+          "id",
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      },
+      "description": "Type into, or arrow-step, a tool value field through the field's own delegate callbacks [tools]",
+      "inputSchema": {
+        "required": [
+          "match"
+        ],
+        "properties": {
+          "index": {
+            "type": "integer"
+          },
+          "arrow": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "match": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "editValueField"
+    },
+    {
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "minimum": 1,
+            "default": 200,
+            "type": "integer",
+            "description": "Maximum rows per page; nextOffset is returned when more remain"
+          },
+          "trackId": {
+            "type": "string",
+            "description": "Only elements on this track UUID"
+          },
+          "offset": {
+            "description": "Index of the first row",
+            "minimum": 0,
+            "default": 0,
+            "type": "integer"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Keys to return per element, e.g. id,startTime,endTime,sourceInPoint; omit for all"
+          },
+          "rangeEnd": {
+            "type": "number",
+            "description": "Seconds; pass with rangeStart"
+          },
+          "rangeStart": {
+            "description": "Seconds; with rangeEnd, only elements overlapping [rangeStart, rangeEnd)",
+            "type": "number"
+          }
+        },
+        "type": "object",
+        "required": []
+      },
+      "name": "elements",
+      "description": "Get elements across all tracks with full metadata, filtered and paged [inspection]",
+      "annotations": {
+        "openWorldHint": false,
+        "idempotentHint": true,
+        "destructiveHint": false,
+        "readOnlyHint": true
+      }
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "description": "Report each element's stored opacity, volume and alpha keyframe values as exact text and bits [inspection]",
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": true,
+        "readOnlyHint": true
+      },
+      "name": "exactElementValues"
+    },
+    {
+      "inputSchema": {
+        "required": [
+          "id",
+          "duration"
+        ],
+        "type": "object",
+        "properties": {
+          "duration": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Expand music clip \u2014 now moves element via moveElement (was stub) [media]",
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false
+      },
+      "name": "expandMusicClip"
+    },
+    {
+      "inputSchema": {
+        "required": [
+          "path"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Export the current project to a video file [export]",
+      "name": "export",
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "description": "Get current export progress and state [export]",
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "name": "exportStatus",
+      "inputSchema": {
+        "properties": {},
+        "type": "object",
+        "required": []
+      }
+    },
+    {
+      "description": "Extract a video clip's audio onto a music track (timeline core) [editing]",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id"
+        ]
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false
+      },
+      "name": "extractAudio"
+    },
+    {
+      "name": "favoriteMusicTrack",
+      "inputSchema": {
+        "properties": {
+          "track": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "track"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false
+      },
+      "description": "Favorite music track \u2014 now bookmarks via the real API (was stub) [media]"
+    },
+    {
+      "annotations": {
+        "idempotentHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "description": "Stretches of near-silence in a clip, library item or file [analysis]",
+      "name": "findPauses",
+      "inputSchema": {
+        "properties": {
+          "duration": {
+            "type": "number"
+          },
+          "thresholdDb": {
+            "type": "number"
+          },
+          "path": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "start": {
+            "type": "number"
+          },
+          "minDuration": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "start",
+          "duration",
+          "minDuration",
+          "thresholdDb"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "frameSheet",
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "path",
+          "times",
+          "columns",
+          "cellWidth"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "times": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "columns": {
+            "type": "integer"
+          },
+          "cellWidth": {
+            "type": "integer"
+          }
+        }
+      },
+      "annotations": {
+        "idempotentHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "description": "A labelled contact sheet of frames in one image (returned inline, and saved as a PNG): the rendered edit at timeline times, or a clip, library item or file [analysis]"
+    },
+    {
+      "inputSchema": {
+        "required": [
+          "source",
+          "language",
+          "curseWords"
+        ],
+        "type": "object",
+        "properties": {
+          "language": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "curseWords": {
+            "type": "boolean"
+          }
+        }
+      },
+      "description": "Generate captions from the composition audio [captions]",
+      "annotations": {
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "name": "generateCaptions"
+    },
+    {
+      "name": "getAdjustState",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "readOnlyHint": true
+      },
+      "description": "Get Adjust filter state for selected element \u2014 verifies sliders at default (0) [inspection]"
+    },
+    {
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "name": "getAudioState",
+      "description": "Get audio state \u2014 real speed/volume read (stub fallbacks dropped) [media]",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "name": "getCanvas",
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "description": "Get the project canvas width, height, aspect (e.g. 9:16) and frame rate [inspection]",
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": [],
+        "properties": {}
+      },
+      "description": "Global rules for driving the editor: schema version, time/canvas/rotation/color conventions, catalogs and recipes [inspection]",
+      "name": "getCapabilities"
+    },
+    {
+      "annotations": {
+        "idempotentHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "name": "getCatalogItem",
+      "description": "Describe one catalog item: its apply tool/param plus the params the apply tool accepts for it [inspection]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "id"
+        ]
+      }
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "name": "getColor",
+      "description": "Read a clip's colour tools in model units: grade sliders, colour wheels, HSL per band, and tone-curve knots [color]",
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": true,
+        "readOnlyHint": true
+      }
+    },
+    {
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "name": "getCountdownEnabled",
+      "description": "Get whether the recording countdown is enabled and its duration [voiceover]",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "One element by id, with applied catalog items and (for text) content, color, alignment, animation [inspection]",
+      "name": "getElement"
+    },
+    {
+      "description": "Get whether looping is enabled [playback]",
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "name": "getLoop"
+    },
+    {
+      "name": "getMediaPanelItems",
+      "description": "List the Media Panel grid's items in display order [inspection]",
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "getMediaPanelSort",
+      "description": "Get Media Panel sort/filter UI state plus the persisted Project.db values [inspection]",
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "idempotentHint": true
+      }
+    },
+    {
+      "name": "getMusicTrackDetails",
+      "annotations": {
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "track": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "track"
+        ]
+      },
+      "description": "Get music track details from the track catalog by id or exact title [media]"
+    },
+    {
+      "description": "Get music track list for a tab from the track catalog [media]",
+      "annotations": {
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false
+      },
+      "inputSchema": {
+        "required": [
+          "tab"
+        ],
+        "type": "object",
+        "properties": {
+          "tab": {
+            "type": "string"
+          }
+        }
+      },
+      "name": "getMusicTrackList"
+    },
+    {
+      "description": "Get saved tracks \u2014 now fetches the real Saved tab (was stub) [media]",
+      "name": "getSavedTracks",
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "name": "getSound",
+      "description": "Read a clip's volume in dB and its Voice Enhance settings (reduce noise, enhance voice, 0-100) [audio]",
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "description": "Get sync state \u2014 reads real playback and mix state (was hardcoded) [media]",
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false
+      },
+      "name": "getSyncState"
+    },
+    {
+      "description": "Get the current teleprompter text and settings [voiceover]",
+      "annotations": {
+        "idempotentHint": true,
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "name": "getTeleprompterText",
+      "inputSchema": {
+        "properties": {},
+        "type": "object",
+        "required": []
+      }
+    },
+    {
+      "annotations": {
+        "idempotentHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "name": "getToast",
+      "description": "Read the currently visible tool-toast, if any [inspection]"
+    },
+    {
+      "description": "Read an element's position, scale, rotation, and mirror flags [editing]",
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "inputSchema": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "name": "getTransform"
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "idempotentHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      },
+      "name": "getTransformKeyframes",
+      "inputSchema": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "List an element's transform keyframes in time order [editing]"
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "name": "getVoiceoverAudioLevels",
+      "description": "Get the current voiceover audio level [voiceover]",
+      "annotations": {
+        "openWorldHint": false,
+        "idempotentHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "applyAll": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "string"
+          }
+        },
+        "required": []
+      },
+      "name": "getVoiceoverPanelState",
+      "description": "Get voiceover panel state \u2014 reads the panel mode (no product backing) [voiceover]",
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "name": "getVoiceoverRecordingState",
+      "annotations": {
+        "idempotentHint": true,
+        "destructiveHint": false,
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "description": "Get the current voiceover recording state, duration, and audio level [voiceover]"
+    },
+    {
+      "annotations": {
+        "idempotentHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "name": "getVoiceoverState",
+      "description": "Get voiceover state \u2014 reads real voiceover volumes (stub fallback dropped) [voiceover]"
+    },
+    {
+      "description": "Get volume for an element as a linear gain fraction in 0...10 (0 = silent, 1 = unity/0 dB neutral, 10 = +20 dB max boost); same scale as /elements, `getAudioState`, and `exactElementValues` [media]",
+      "annotations": {
+        "idempotentHint": true,
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "name": "getVolume",
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Element UUID. Returns `volume` as a linear gain fraction in 0...10 (0 = silent, 1 = unity/0 dB neutral, 10 = +20 dB max boost); same scale as /elements, `getAudioState`, and `exactElementValues`."
+          }
+        }
+      }
+    },
+    {
+      "description": "Get the current zoom level [zoom]",
+      "name": "getZoom",
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "name": "homeSelection",
+      "description": "Get home-grid bulk selection (mode + selected project IDs) [navigation]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "path"
+        ]
+      },
+      "description": "Import a font file into the account's imported-font library [text]",
+      "name": "importAccountFont"
+    },
+    {
+      "name": "importMedia",
+      "inputSchema": {
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "path"
+        ]
+      },
+      "description": "Import media \u2014 uses real addMediaFromPath [media]",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "description": "Import a media file into the media panel without placing it on the timeline [media]",
+      "inputSchema": {
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "name": "importToMediaBin",
+      "annotations": {
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "name": "importToMediaPanel",
+      "description": "Import a media file into the Media Panel only (opening the panel if closed), as its Import button does [media]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "folderId": {
+            "type": "string",
+            "description": "Folder UUID to import into; omit for the panel's open folder"
+          },
+          "path": {
+            "type": "string",
+            "description": "Media path: assets/<file> for a bundled asset, or an absolute path"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      }
+    },
+    {
+      "name": "jobStatus",
+      "description": "Poll a job that outlived its request: waits briefly for it, then returns the final result, or running with progress [automation]",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "idempotentHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "description": "Jump playhead to the next clip boundary [playback]",
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "name": "jumpToNextClip"
+    },
+    {
+      "annotations": {
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false
+      },
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "description": "Jump playhead to the previous clip boundary [playback]",
+      "name": "jumpToPreviousClip"
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "name": "licensedMusicStatus",
+      "inputSchema": {
+        "type": "object",
+        "required": [],
+        "properties": {}
+      },
+      "description": "Per licensed-music clip: the alias's resolved asset (licensed flag, audioAssetID, availability, window completeness) and the library's managed rows for the song [inspection]"
+    },
+    {
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false
+      },
+      "description": "List the account's imported fonts with the md5 of each stored file [text]",
+      "name": "listAccountFonts"
+    },
+    {
+      "description": "List caption style preset names setCaptionStyle accepts, by category [inspection]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "name": "listCaptionStyles",
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "description": "List items of one catalog kind, with query / category filtering and cursor paging [inspection]",
+      "name": "listCatalog",
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "required": [
+          "kind",
+          "query",
+          "category",
+          "cursor",
+          "limit"
+        ],
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "kind": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "annotations": {
+        "idempotentHint": true,
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "name": "listCatalogKinds",
+      "description": "List every catalog kind listCatalog serves, with the tool and param that applies each kind [inspection]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "listEffects",
+      "description": "List catalog video effects applyEffect accepts, including none to clear [inspection]",
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": true
+      },
+      "inputSchema": {
+        "required": [],
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "name": "listFilters",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "description": "List catalog filters applyFilter accepts, including normal to clear [inspection]"
+    },
+    {
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": true
+      },
+      "inputSchema": {
+        "properties": {
+          "tab": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "query": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tab",
+          "query",
+          "limit"
+        ],
+        "type": "object"
+      },
+      "description": "List the product font catalog by tab [text]",
+      "name": "listFonts"
+    },
+    {
+      "description": "List music library tracks with full metadata. A query searches across tabs (it overrides tab); license filters to any/royaltyFree/licensed. Each track carries license {type, importPath} \u2014 royaltyFree wins when both server flags are true. [media]",
+      "name": "listMusicTracks",
+      "inputSchema": {
+        "properties": {
+          "tab": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "license": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "query",
+          "tab",
+          "license"
+        ]
+      },
+      "annotations": {
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false
+      }
+    },
+    {
+      "name": "listSoundEffects",
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "description": "List bundled sound-effect names; searchSoundEffects discovers the server catalog [media]"
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "annotations": {
+        "openWorldHint": false,
+        "idempotentHint": true,
+        "destructiveHint": false,
+        "readOnlyHint": true
+      },
+      "description": "List speed curve preset ids setSpeedCurve accepts [inspection]",
+      "name": "listSpeedCurvePresets"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "name": "listTTSVoices",
+      "description": "List all available text-to-speech voices [tts]",
+      "inputSchema": {
+        "properties": {},
+        "type": "object",
+        "required": []
+      }
+    },
+    {
+      "name": "listTeleprompterScriptKeys",
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "description": "List persisted teleprompter scripts by composition ID [voiceover]",
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      }
+    },
+    {
+      "description": "List text animation ids setTextAnimation accepts [inspection]",
+      "inputSchema": {
+        "type": "object",
+        "required": [],
+        "properties": {}
+      },
+      "name": "listTextAnimations",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "description": "List text style preset names applyTextPreset accepts, by category [inspection]",
+      "inputSchema": {
+        "type": "object",
+        "required": [],
+        "properties": {}
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "name": "listTextPresets"
+    },
+    {
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": true
+      },
+      "name": "listTransitionsCatalog",
+      "description": "List Mac-authorable transition filter ids addTransition accepts, including normal to remove [inspection]",
+      "inputSchema": {
+        "required": [],
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "description": "List all voiceover clips in the composition [voiceover]",
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": true
+      },
+      "name": "listVoiceoverClips",
+      "inputSchema": {
+        "type": "object",
+        "required": [],
+        "properties": {}
+      }
+    },
+    {
+      "name": "loudness",
+      "annotations": {
+        "idempotentHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "path"
+        ]
+      },
+      "description": "Integrated loudness (LUFS, ITU-R BS.1770) and sample peak of a clip's span, a library item or a file [analysis]"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "description": "List media-panel assets with name, duration, codec, and dynamicRange [inspection]",
+      "inputSchema": {
+        "required": [],
+        "properties": {
+          "includeReferenced": {
+            "type": "boolean",
+            "description": "Include assets already referenced by timeline clips (default false: unreferenced only)"
+          }
+        },
+        "type": "object"
+      },
+      "name": "mediaBin"
+    },
+    {
+      "description": "Get media status for all elements [inspection]",
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "idempotentHint": true,
+        "destructiveHint": false
+      },
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "name": "mediaStatus"
+    },
+    {
+      "name": "mergeCaptions",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "direction": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "direction"
+        ]
+      },
+      "description": "Merge a caption with an adjacent caption [captions]",
+      "annotations": {
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false
+      }
+    },
+    {
+      "inputSchema": {
+        "required": [
+          "id",
+          "toSeconds"
+        ],
+        "type": "object",
+        "properties": {
+          "toSeconds": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Move an element to a new start time [editing]",
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false
+      },
+      "name": "move"
+    },
+    {
+      "description": "Move an element to another layer at the same start time [editing]",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "toLayer": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "toLayer"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false
+      },
+      "name": "moveToLayer"
+    },
+    {
+      "name": "muteSoundEffect",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Mute sound effect \u2014 now zeroes real volume (was stub) [media]"
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id"
+        ]
+      },
+      "name": "muteTrack",
+      "description": "Mute track \u2014 real volume-0 write (stub echo dropped) [media]"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      },
+      "name": "newProject",
+      "inputSchema": {
+        "required": [],
+        "properties": {},
+        "type": "object"
+      },
+      "description": "Create and open a new project [navigation]"
+    },
+    {
+      "name": "openMediaManager",
+      "description": "Open media manager \u2014 launches the real media tool [media]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "annotations": {
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "description": "Open music library \u2014 now launches real media tool (was stub) [media]",
+      "name": "openMusicLibrary"
+    },
+    {
+      "name": "openProject",
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object"
+      },
+      "description": "Open an existing project by ID or name [navigation]"
+    },
+    {
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "name": "openSoundEffectsLibrary",
+      "description": "Open sound effects library \u2014 now launches real SFX tool (was stub) [media]",
+      "annotations": {
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false
+      }
+    },
+    {
+      "name": "openTeleprompter",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "description": "Open the teleprompter overlay [voiceover]"
+    },
+    {
+      "name": "openVolumePanel",
+      "inputSchema": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false
+      },
+      "description": "Open volume panel \u2014 real tool launch, UI-unit readback (scales fixed) [media]"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "description": "List a clip's operation entries, oldest first, with status and progress [inspection]",
+      "name": "operationEntries"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "name": "paste",
+      "description": "Paste clipboard elements at the playhead [editing]"
+    },
+    {
+      "inputSchema": {
+        "properties": {},
+        "type": "object",
+        "required": []
+      },
+      "name": "pause",
+      "description": "Pause playback [playback]",
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "annotations": {
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false
+      },
+      "name": "play",
+      "description": "Start playback [playback]"
+    },
+    {
+      "annotations": {
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "description": "Seek to the beginning and start playback [playback]",
+      "name": "playFromStart"
+    },
+    {
+      "name": "previewMusicTrack",
+      "inputSchema": {
+        "properties": {
+          "track": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "track"
+        ],
+        "type": "object"
+      },
+      "description": "Preview a catalog track by id or exact title through the product preview player [media]",
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "description": "Preview sound effect \u2014 plays the real preview for a catalog id/title (was stub) [media]",
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false
+      },
+      "name": "previewSoundEffect",
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "effect"
+        ],
+        "properties": {
+          "effect": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "previewVideo",
+      "description": "Start rendering a composition range (or a media-bin asset range with aliasId) to sampled frames + optional MP4; returns the resultId it will publish (poll previewVideoStatus, then fetch previewVideoFrames by id) [inspection]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "maxWidth": {
+            "description": "Maximum output width in pixels (default 720, max 1920)",
+            "type": "integer"
+          },
+          "aliasId": {
+            "type": "string",
+            "description": "Media-bin asset aliasId: render that asset's source range instead of the timeline"
+          },
+          "startSeconds": {
+            "description": "Range start in seconds (default: playhead, or 0 with aliasId)",
+            "type": "number"
+          },
+          "sourceStartSeconds": {
+            "type": "number",
+            "description": "Asset source start in seconds; with aliasId, overrides startSeconds (default 0)"
+          },
+          "includeClip": {
+            "description": "Also encode a trimmed MP4 clip (default true)",
+            "type": "boolean"
+          },
+          "durationSeconds": {
+            "type": "number",
+            "description": "Range duration in seconds (default 3, max 10)"
+          },
+          "clipMaxWidth": {
+            "description": "Maximum clip width in pixels for the MP4 encode only; sampled frames keep using maxWidth (default: maxWidth; clamped 160-1920, disclosed as requestedClipMaxWidth + clamped when moved). Average-bitrate clips target a 6 MiB (6291456-byte) budget, not a hard guarantee. When enabled, constant quality uses the configured export quality level. After encoding, previewVideoStatus verifies the actual sizeBytes and adds clipOverBudget: true + maxClipBytes to the clip entry only when it exceeds that budget (e.g. at the 400 kbps bitrate floor). Use a smaller clipMaxWidth (e.g. 540 for 10s) for reliably smaller clips. GET /previewVideo/clip serves the clip as raw binary and is Mac-local / agent-channel-unsafe; base64 clip delivery is EB-17's job, not this parameter.",
+            "type": "integer"
+          },
+          "frameCount": {
+            "type": "integer",
+            "description": "Sampled frames to return (default 6, max 12)"
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "previewVideoFrames",
+      "description": "Fetch a finished previewVideo render's frames by resultId [inspection]",
+      "inputSchema": {
+        "properties": {
+          "resultId": {
+            "type": "string",
+            "description": "Result id returned by the previewVideo POST and previewVideoStatus. Finished results are retained (max 4, up to 16 MiB of frame data, oldest evicted first); an unknown or evicted id returns an explicit error."
+          }
+        },
+        "required": [
+          "resultId"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      }
+    },
+    {
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {
+          "includeFrames": {
+            "description": "Return the old full shape ({result: ...} with inline base64 frames and clip metadata). Default (omitted/false): only lightweight fields \u2014 rendering, resultId, ok, error, frameCount, start, duration and the finished result's other small metadata (projectId, compositionDuration, visualDuration, mode, aliasId, clip) \u2014 no frame bytes. Fetch frames once via GET /previewVideoFrames?resultId=...",
+            "type": "boolean"
+          }
+        }
+      },
+      "name": "previewVideoStatus",
+      "description": "Poll previewVideo render state (lightweight by default; includeFrames=true for the full result) [inspection]",
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "readOnlyHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "description": "What a file holds: duration, whether it has audio and video, channels, sample rate, size and frame rate [analysis]",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "path"
+        ],
+        "type": "object"
+      },
+      "name": "probeMedia"
+    },
+    {
+      "name": "processAudio",
+      "inputSchema": {
+        "required": [
+          "id",
+          "chain",
+          "mode"
+        ],
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "chain": {
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Render a clip's or library item's audio through EQ, notches, voice isolation, gain and loudness normalisation, keeping the picture untouched [audio]"
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "name": "projectDynamicRange",
+      "description": "Get the open composition's dynamic range [settings]"
+    },
+    {
+      "name": "projects",
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "description": "List available projects with names and dates [navigation]"
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "destructiveHint": false
+      },
+      "description": "The quietest 10 ms near a time, for landing a cut between words [analysis]",
+      "name": "quietPoint",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "seconds": {
+            "type": "number"
+          },
+          "window": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "seconds",
+          "window"
+        ]
+      }
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "effect": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "duration"
+        ]
+      },
+      "name": "recordVoiceover",
+      "description": "Record voiceover \u2014 now imports count clips as real voiceover (was stub) [voiceover]",
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "required": [],
+        "properties": {}
+      },
+      "name": "redo",
+      "description": "Redo the last undone operation [editing]",
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "description": "Remove a beat marker by index from an audio element (timeline core) [editing]",
+      "name": "removeBeatMarker",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "markerId": {
+            "type": "string"
+          },
+          "index": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "index",
+          "markerId"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "removeCatalogItem",
+      "inputSchema": {
+        "properties": {
+          "instanceId": {
+            "type": "string"
+          },
+          "elementId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "elementId",
+          "instanceId"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "description": "Remove one applied catalog item (filter, LUT, effect) by instance id, without undoing other work [editing]"
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "description": "Remove music track \u2014 now actually deletes selected element (was stub) [media]",
+      "annotations": {
+        "destructiveHint": true,
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false
+      },
+      "name": "removeMusicTrack"
+    },
+    {
+      "annotations": {
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "name": "removeSpeedPanelCurves",
+      "description": "Clear the curves of the presented Speed panel's selection, as its Remove speed curve button does [tools]",
+      "inputSchema": {
+        "required": [],
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "time": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "time"
+        ],
+        "type": "object"
+      },
+      "description": "Remove the transform keyframe at a timeline time [editing]",
+      "name": "removeTransformKeyframe"
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "annotations": {
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false
+      },
+      "name": "renameProject",
+      "description": "Rename a project by ID [navigation]"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false
+      },
+      "description": "Move a main-lane clip to a position index [editing]",
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "position"
+        ],
+        "properties": {
+          "position": {
+            "type": "integer"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "name": "reorderClip"
+    },
+    {
+      "name": "replaceAudio",
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false
+      },
+      "description": "Replace a music clip's audio, as the audio tool's replace flow does [media]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "path"
+        ]
+      }
+    },
+    {
+      "description": "Replace a clip's media, as a media-panel drop onto the clip does [media]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "path"
+        ]
+      },
+      "name": "replaceElementMedia",
+      "annotations": {
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "replaceSoundEffect",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "description": "Replace sound effect \u2014 now swaps real media (was stub) [media]",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "effect": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "effect"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Start reversing a video clip without waiting for the transcode [tools]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "name": "reverseClip",
+      "annotations": {
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false
+      }
+    },
+    {
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "name": "rippleState",
+      "description": "Get the ripple tier toggles plus the magnet and snap flags [inspection]",
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "sampleFrames",
+      "annotations": {
+        "idempotentHint": true,
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "description": "Source frames of a clip, library item or file at given times, as PNGs (the unedited media; use frameSheet with no id, or captureFrame, for the edit) [analysis]",
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "path",
+          "times",
+          "maxEdge"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "times": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "maxEdge": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    {
+      "description": "Sample the playback output metering tap for N seconds and report peak levels; start playback first [inspection]",
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "seconds"
+        ],
+        "properties": {
+          "seconds": {
+            "type": "number"
+          }
+        }
+      },
+      "name": "sampleOutputLevel",
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "saveProject",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "description": "Save the current project composition to the library database [navigation]"
+    },
+    {
+      "inputSchema": {
+        "required": [
+          "tool"
+        ],
+        "properties": {
+          "tool": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "scrollToTool",
+      "description": "Scroll the right sidebar so the given tool panel is at the top (or closest) [tools]",
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "name": "searchMedia",
+      "description": "Search the project's imported timeline media by name [media]",
+      "inputSchema": {
+        "required": [
+          "query",
+          "kind"
+        ],
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "description": "Search music \u2014 now queries the real library search (was stub) [media]",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "name": "searchMusic",
+      "inputSchema": {
+        "required": [
+          "query"
+        ],
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "searchSoundEffects",
+      "inputSchema": {
+        "required": [
+          "query",
+          "category"
+        ],
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      },
+      "description": "Search the server sound-effects catalog or browse one category [media]"
+    },
+    {
+      "name": "seek",
+      "description": "Seek the playhead to a position. Pass 'seconds' (e.g. 2.5 = 2.5s into the timeline). Do NOT use 'time' \u2014 the parameter is called 'seconds'. [playback]",
+      "inputSchema": {
+        "required": [
+          "seconds"
+        ],
+        "properties": {
+          "seconds": {
+            "type": "number",
+            "description": "Target position in seconds (e.g. 0 = start, 2.5 = 2.5s in). NOT called 'time'."
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false
+      }
+    },
+    {
+      "name": "select",
+      "description": "Select the clip at the current playhead position [editing]",
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false
+      },
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "required": [],
+        "properties": {}
+      },
+      "name": "selectAll",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "description": "Select all elements across all tracks [editing]"
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "addToSelection": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "addToSelection"
+        ]
+      },
+      "description": "Select an element by its UUID [editing]",
+      "name": "selectById",
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "name": "selectSpeedPanelPreset",
+      "description": "DEPRECATED: prefer setSpeedCurve({id, preset}) \u2014 the direct path. This drives the Speed panel's internal callback, which is currently refused (it crashed the app twice via reflection). [tools]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "preset": {
+            "description": "Speed curve preset id. Values: listCatalog({kind: \"speedCurvePreset\"})",
+            "type": "string",
+            "x-catalog": "speedCurvePreset"
+          }
+        },
+        "required": [
+          "preset"
+        ]
+      },
+      "annotations": {
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false
+      },
+      "inputSchema": {
+        "required": [
+          "tab"
+        ],
+        "type": "object",
+        "properties": {
+          "tab": {
+            "description": "Speed panel tab",
+            "enum": [
+              "speed",
+              "curves"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "name": "selectSpeedTab",
+      "description": "Switch the presented Speed panel's tab, as its tab bar does [tools]"
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false
+      },
+      "name": "selectTool",
+      "description": "Activate a tool by identifier and show it in the sidebar [tools]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tool": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tool"
+        ]
+      }
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false
+      },
+      "name": "selectVolumeTab",
+      "description": "Switch the presented Volume panel's tab, as its tab bar does [tools]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tab": {
+            "enum": [
+              "volume",
+              "voiceEnhance",
+              "fade",
+              "audioFx"
+            ],
+            "type": "string",
+            "description": "Volume panel tab"
+          }
+        },
+        "required": [
+          "tab"
+        ]
+      }
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      },
+      "description": "Set the project aspect ratio (canvas shape) [settings]",
+      "name": "setAspectRatio",
+      "inputSchema": {
+        "properties": {
+          "ratio": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "ratio"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "setBeatDensity",
+      "description": "Set the beat-marker density filter on an audio element (timeline core) [editing]",
+      "inputSchema": {
+        "required": [
+          "id",
+          "density"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Audio element UUID (music, sound effect, voiceover)"
+          },
+          "density": {
+            "enum": [
+              "off",
+              "lowest",
+              "low",
+              "medium",
+              "high",
+              "extreme"
+            ],
+            "type": "string",
+            "description": "Density: off, lowest, low, medium, high, extreme (unknown\u2192off)"
+          },
+          "dryRun": {
+            "description": "Validate only: do not mutate",
+            "default": false,
+            "type": "boolean"
+          }
+        }
+      },
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "name": "setCanvas",
+      "description": "Set the project canvas aspect and/or frame rate in one undo step; transforms keep their normalized positions [editing]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "aspect": {
+            "type": "string",
+            "description": "Canvas aspect: 9:16, 16:9, 1:1 or 4:5"
+          },
+          "frameRate": {
+            "description": "Project frame rate: 24, 30 or 60",
+            "type": "integer"
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "description": "Set the highlight color on every caption [captions]",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "required": [
+          "color"
+        ],
+        "properties": {
+          "color": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "setCaptionHighlightColor"
+    },
+    {
+      "description": "Highlight exactly these words of a caption, as clicking words in the transcript does [captions]",
+      "inputSchema": {
+        "required": [
+          "id",
+          "words"
+        ],
+        "type": "object",
+        "properties": {
+          "words": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "name": "setCaptionHighlights",
+      "annotations": {
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false
+      }
+    },
+    {
+      "description": "Set caption style preset [captions]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "style": {
+            "type": "string",
+            "description": "Style preset name to apply. Values: listCatalog({kind: \"captionStyle\"})",
+            "x-catalog": "captionStyle"
+          },
+          "dryRun": {
+            "default": false,
+            "type": "boolean",
+            "description": "Validate only: do not mutate"
+          },
+          "id": {
+            "description": "ID of caption to style (omit to apply to all)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "style"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "name": "setCaptionStyle"
+    },
+    {
+      "description": "Grade a video clip or adjustment layer's color (exposure, contrast, saturation, ...) [editing]",
+      "name": "setColorGrade",
+      "inputSchema": {
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "temperature": {
+            "type": "number"
+          },
+          "clarity": {
+            "type": "number"
+          },
+          "tint": {
+            "type": "number"
+          },
+          "vibrance": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          },
+          "brightness": {
+            "type": "number"
+          },
+          "contrast": {
+            "type": "number"
+          },
+          "blacks": {
+            "type": "number"
+          },
+          "highlights": {
+            "type": "number"
+          },
+          "shadows": {
+            "type": "number"
+          },
+          "saturation": {
+            "type": "number"
+          },
+          "exposure": {
+            "type": "number"
+          },
+          "whites": {
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "description": "Set the hue or intensity of one of a clip's colour wheels (shadows, midtones, highlights, global) [color]",
+      "name": "setColorWheel",
+      "inputSchema": {
+        "required": [
+          "id",
+          "wheel"
+        ],
+        "type": "object",
+        "properties": {
+          "hue": {
+            "type": "number"
+          },
+          "wheel": {
+            "type": "string"
+          },
+          "intensity": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false
+      }
+    },
+    {
+      "name": "setCountdownEnabled",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "enabled"
+        ]
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false
+      },
+      "description": "Enable or disable the recording countdown [voiceover]"
+    },
+    {
+      "description": "Crop zooms the element into a normalized 0-1 rect; the element's on-canvas size is unchanged [tools]",
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "left",
+          "top",
+          "right",
+          "bottom"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "top": {
+            "type": "number"
+          },
+          "left": {
+            "type": "number"
+          },
+          "right": {
+            "type": "number"
+          },
+          "bottom": {
+            "type": "number"
+          }
+        }
+      },
+      "name": "setCrop",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "name": "setCurve",
+      "description": "Replace one channel of a clip's tone curve with the given knots; other channels are kept [color]",
+      "inputSchema": {
+        "properties": {
+          "channel": {
+            "type": "string"
+          },
+          "knots": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "channel",
+          "knots"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "description": "Set auto-ducking behavior on an audio element [tools]",
+      "inputSchema": {
+        "required": [
+          "id",
+          "behavior"
+        ],
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          },
+          "behavior": {
+            "type": "string"
+          }
+        }
+      },
+      "name": "setDucking",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "description": "Set a text element's emphasis style, e.g. `backgroundPill` for a background behind the text [editing]",
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Text element UUID"
+          },
+          "style": {
+            "x-catalog": "emphasisStyle",
+            "type": "string",
+            "description": "Emphasis style: none, outline, backgroundPill, etc. Values: listCatalog({kind: \"emphasisStyle\"})"
+          },
+          "dryRun": {
+            "type": "boolean",
+            "description": "Validate only: do not mutate",
+            "default": false
+          },
+          "color": {
+            "type": "string",
+            "description": "Emphasis color hex (#RRGGBB or #RRGGBBAA); omitted leaves the color unchanged"
+          }
+        },
+        "required": [
+          "id",
+          "style"
+        ]
+      },
+      "name": "setEmphasis"
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "quality": {
+            "type": "string"
+          },
+          "resolution": {
+            "type": "string"
+          },
+          "frameRate": {
+            "type": "integer"
+          },
+          "codec": {
+            "type": "string"
+          },
+          "aspectRatio": {
+            "type": "string"
+          },
+          "dynamicRange": {
+            "type": "string"
+          },
+          "bitrate": {
+            "type": "integer"
+          },
+          "resolutionType": {
+            "type": "string"
+          }
+        },
+        "required": []
+      },
+      "description": "Set encoder settings for the next export [export]",
+      "name": "setExportSettings",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false
+      },
+      "name": "setFade",
+      "description": "Set the audio fade in/out durations of an element [tools]",
+      "inputSchema": {
+        "required": [
+          "id",
+          "fadeIn",
+          "fadeOut"
+        ],
+        "type": "object",
+        "properties": {
+          "fadeIn": {
+            "type": "number"
+          },
+          "fadeOut": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "horizontal": {
+            "type": "boolean"
+          },
+          "vertical": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      },
+      "name": "setFlip",
+      "description": "Mirror an element horizontally and/or vertically [editing]"
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "fps": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "fps"
+        ]
+      },
+      "name": "setFrameRate",
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "description": "Set the project frame rate [settings]"
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "name": "setHSL",
+      "description": "Set hue, saturation or luminance for one colour band of a clip's HSL tool; other bands and fields are kept [color]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "band": {
+            "type": "string"
+          },
+          "luminance": {
+            "type": "number"
+          },
+          "hue": {
+            "type": "number"
+          },
+          "saturation": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "band"
+        ]
+      }
+    },
+    {
+      "annotations": {
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "description": "Set the easing preset on the media keyframe at a time [tools]",
+      "name": "setKeyframeEasing",
+      "inputSchema": {
+        "required": [
+          "id",
+          "seconds",
+          "preset"
+        ],
+        "type": "object",
+        "properties": {
+          "seconds": {
+            "type": "number"
+          },
+          "preset": {
+            "type": "integer"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false
+      },
+      "name": "setLayerVisibility",
+      "description": "Set a timeline layer visible or hidden by index [editing]",
+      "inputSchema": {
+        "required": [
+          "layer",
+          "visible"
+        ],
+        "properties": {
+          "visible": {
+            "type": "boolean"
+          },
+          "layer": {
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "inputSchema": {
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "true to enable looping, false to disable"
+          }
+        },
+        "type": "object",
+        "required": [
+          "enabled"
+        ]
+      },
+      "description": "Set looping on or off [playback]",
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "name": "setLoop"
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false
+      },
+      "description": "Set a parametric shape mask on an element; rectangle masks in place (size kept, outside transparent) [tools]",
+      "inputSchema": {
+        "properties": {
+          "invert": {
+            "type": "boolean",
+            "description": "Show content outside the mask instead",
+            "default": false
+          },
+          "dryRun": {
+            "description": "Validate only: do not mutate",
+            "default": false,
+            "type": "boolean"
+          },
+          "centerX": {
+            "minimum": 0,
+            "description": "Mask center X relative to content, 0-1",
+            "type": "number",
+            "maximum": 1
+          },
+          "shape": {
+            "x-catalog": "maskShape",
+            "description": "Shape: rectangle, ellipse, line, shutter, none (clears). Aliases: split\u2192line, clear\u2192none. Values: listCatalog({kind: \"maskShape\"})",
+            "type": "string",
+            "enum": [
+              "rectangle",
+              "ellipse",
+              "line",
+              "shutter",
+              "none"
+            ]
+          },
+          "cornerRadius": {
+            "description": "Corner radius relative to content shorter side",
+            "minimum": 0,
+            "type": "number"
+          },
+          "id": {
+            "description": "Element UUID to mask",
+            "type": "string"
+          },
+          "rotation": {
+            "description": "Rotation in degrees",
+            "type": "number"
+          },
+          "sizeW": {
+            "maximum": 1,
+            "description": "Mask width relative to content, 0-1",
+            "minimum": 0,
+            "type": "number"
+          },
+          "feather": {
+            "maximum": 1,
+            "type": "number",
+            "description": "Edge feather alpha",
+            "minimum": 0
+          },
+          "sizeH": {
+            "type": "number",
+            "description": "Mask height relative to content, 0-1",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "centerY": {
+            "type": "number",
+            "description": "Mask center Y relative to content, 0-1",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "shape"
+        ]
+      },
+      "name": "setMask"
+    },
+    {
+      "annotations": {
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false
+      },
+      "description": "Set the Media Panel type filter [editing]",
+      "name": "setMediaPanelFilter",
+      "inputSchema": {
+        "properties": {
+          "filter": {
+            "type": "string",
+            "description": "Filter: all, video, audio, images"
+          }
+        },
+        "type": "object",
+        "required": [
+          "filter"
+        ]
+      }
+    },
+    {
+      "name": "setMediaPanelSort",
+      "inputSchema": {
+        "properties": {
+          "criterion": {
+            "description": "Sort criterion: name, date_imported, date_created, type, duration",
+            "type": "string"
+          },
+          "ascending": {
+            "description": "Sort ascending (default true)",
+            "type": "boolean"
+          }
+        },
+        "type": "object",
+        "required": [
+          "criterion"
+        ]
+      },
+      "description": "Set the Media Panel sort through the real UI path (fires persist) [editing]",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "annotations": {
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "opacity"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "opacity": {
+            "type": "number"
+          }
+        }
+      },
+      "name": "setOpacity",
+      "description": "Set the opacity of an element [tools]"
+    },
+    {
+      "inputSchema": {
+        "properties": {
+          "range": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "range"
+        ],
+        "type": "object"
+      },
+      "description": "Set the project dynamic range (SDR/HDR picker); confirm with projectDynamicRange [settings]",
+      "name": "setProjectDynamicRange",
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "name": "setReversed",
+      "description": "Toggle reversed playback on a video element [tools]",
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "reversed"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "reversed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "description": "Set both ripple tier toggles [editing]",
+      "inputSchema": {
+        "properties": {
+          "tier1": {
+            "type": "boolean"
+          },
+          "tier2": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "tier1",
+          "tier2"
+        ],
+        "type": "object"
+      },
+      "name": "setRippleTiers"
+    },
+    {
+      "inputSchema": {
+        "properties": {
+          "volumeDb": {
+            "type": "number"
+          },
+          "enhanceVoice": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          },
+          "reduceNoise": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "volumeDb",
+          "reduceNoise",
+          "enhanceVoice"
+        ],
+        "type": "object"
+      },
+      "name": "setSound",
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false
+      },
+      "description": "Set a clip's volume in dB (boosts above 0 dB) and its Voice Enhance settings, as the Sound panel does [audio]"
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "enabled"
+        ]
+      },
+      "description": "Flip the presented Volume panel's on/off toggle for the selection, as its header switch does [tools]",
+      "name": "setSoundBypass",
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "inputSchema": {
+        "required": [
+          "id",
+          "speed"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "speed": {
+            "type": "number"
+          }
+        }
+      },
+      "name": "setSpeed",
+      "description": "Set the playback speed of an element [tools]",
+      "annotations": {
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "setSpeedCurve",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Element UUID",
+            "type": "string"
+          },
+          "preset": {
+            "type": "string",
+            "x-catalog": "speedCurvePreset",
+            "description": "Speed curve preset id. Values: listCatalog({kind: \"speedCurvePreset\"})"
+          }
+        },
+        "required": [
+          "id",
+          "preset"
+        ]
+      },
+      "description": "Apply a speed-ramp curve preset to a video element \u2014 the canonical speed-curve path (use over the DEPRECATED panel preset actions) [tools]",
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "name": "setTeleprompterText",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "scrollSpeed": {
+            "type": "number"
+          },
+          "fontSize": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "description": "Set the teleprompter text content [voiceover]",
+      "annotations": {
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false
+      }
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false
+      },
+      "name": "setTextAnimation",
+      "description": "Set a text element's entrance animation [editing]",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "description": "Text element UUID",
+            "type": "string"
+          },
+          "animation": {
+            "type": "string",
+            "x-catalog": "textAnimation",
+            "description": "Animation: none, typewriter, fadeIn, bounceIn, scaleIn, slideInLeft, slideInRight, ... Values: listCatalog({kind: \"textAnimation\"})"
+          },
+          "dryRun": {
+            "type": "boolean",
+            "description": "Validate only: do not mutate",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "animation"
+        ]
+      }
+    },
+    {
+      "name": "setTextFont",
+      "description": "Set a text element's font family [editing]",
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "family": {
+            "x-catalog": "font",
+            "description": "Font family or PostScript name, e.g. Helvetica Neue or HelveticaNeue-Bold. Values: listCatalog({kind: \"font\"}) \u2014 pass the item id (PostScript name)",
+            "type": "string"
+          },
+          "id": {
+            "description": "Text element UUID",
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "family"
+        ]
+      }
+    },
+    {
+      "description": "Move a text element to normalized canvas coordinates [editing]",
+      "inputSchema": {
+        "properties": {
+          "y": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "x",
+          "y"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "name": "setTextPosition"
+    },
+    {
+      "name": "setTextStyle",
+      "description": "Set a text element's size, bold, italic, color, or alignment [editing]",
+      "inputSchema": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "color": {
+            "type": "string"
+          },
+          "italic": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string"
+          },
+          "bold": {
+            "type": "boolean"
+          },
+          "size": {
+            "type": "number"
+          },
+          "alignment": {
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false
+      }
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "description": "Set text visibility \u2014 now backed by real opacity (was stub) [text]",
+      "name": "setTextVisibility",
+      "inputSchema": {
+        "properties": {
+          "visible": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "visible"
+        ]
+      }
+    },
+    {
+      "name": "setTitle",
+      "description": "Rename the current project [navigation]",
+      "annotations": {
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "description": "Pose an element's position, scale, and rotation [editing]",
+      "annotations": {
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "allowBeyondCanvas",
+          "keyframes"
+        ],
+        "properties": {
+          "scale": {
+            "type": "number"
+          },
+          "focusX": {
+            "type": "number"
+          },
+          "fitMode": {
+            "type": "string"
+          },
+          "allowBeyondCanvas": {
+            "type": "boolean"
+          },
+          "y": {
+            "type": "number"
+          },
+          "rotationDegrees": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number"
+          },
+          "focusY": {
+            "type": "number"
+          },
+          "keyframes": {
+            "type": "string"
+          }
+        }
+      },
+      "name": "setTransform"
+    },
+    {
+      "description": "Add or update one transform keyframe at a timeline time [editing]",
+      "name": "setTransformKeyframe",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "rotationDegrees": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          },
+          "y": {
+            "type": "number"
+          },
+          "time": {
+            "type": "number"
+          },
+          "easing": {
+            "type": "string"
+          },
+          "scale": {
+            "type": "number"
+          },
+          "x": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "time"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "setTransformKeyframes",
+      "annotations": {
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "description": "Replace a clip's keyframes with position, scale and rotation keyframes at clip-relative times [editing]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "keyframes": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "keyframes"
+        ]
+      }
+    },
+    {
+      "name": "setTransforms",
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "description": "Pose many elements in one undo step; per-item results, ok false if any item failed [editing]"
+    },
+    {
+      "name": "setVoiceEnhance",
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false
+      },
+      "description": "Commit both Voice Enhance amounts for the selection through the presented Volume panel [tools]",
+      "inputSchema": {
+        "required": [
+          "reduceNoise",
+          "enhanceVoice"
+        ],
+        "type": "object",
+        "properties": {
+          "enhanceVoice": {
+            "type": "number"
+          },
+          "reduceNoise": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    {
+      "name": "setVoiceoverVolume",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "volume": {
+            "type": "number"
+          },
+          "applyAll": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "volume",
+          "id"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "description": "Set voiceover volume \u2014 now writes real element volumes (was stub) [voiceover]"
+    },
+    {
+      "description": "Set the volume of an element as a linear gain fraction in 0...10 (0 = silent, 1 = unity/0 dB neutral, 10 = +20 dB max boost) [tools]",
+      "inputSchema": {
+        "required": [
+          "id",
+          "volume"
+        ],
+        "type": "object",
+        "properties": {
+          "volume": {
+            "description": "Volume as a linear gain fraction in 0...10 (0 = silent, 1 = unity/0 dB neutral, 10 = +20 dB max boost); same scale as /elements, `getAudioState`, and `exactElementValues`. Out-of-range or non-finite values are rejected.",
+            "type": "number"
+          },
+          "id": {
+            "description": "Element UUID",
+            "type": "string"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "name": "setVolume"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "name": "setZoom",
+      "description": "Set the zoom level [zoom]",
+      "inputSchema": {
+        "required": [
+          "level"
+        ],
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    {
+      "name": "showAdjust",
+      "description": "Show Adjust \u2014 scrolls right side panel to bring Adjust tool into view and opens panel with sliders at default [media]",
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      }
+    },
+    {
+      "name": "slipClip",
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "deltaSeconds"
+        ],
+        "properties": {
+          "deltaSeconds": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Slip a clip's content window without moving timeline bounds [editing]",
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "offset": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "offset"
+        ]
+      },
+      "name": "slipVoiceover",
+      "annotations": {
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false
+      },
+      "description": "Slip voiceover \u2014 now moves element via real moveElement (was stub) [voiceover]"
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "destructiveHint": false
+      },
+      "inputSchema": {
+        "required": [],
+        "properties": {},
+        "type": "object"
+      },
+      "description": "Read the presented Speed panel's tab, Curves tab visibility and reversed-clip state [inspection]",
+      "name": "speedPanel"
+    },
+    {
+      "description": "Split the selected clips, or the main-track clip if none is selected, at the playhead [editing]",
+      "name": "split",
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false
+      },
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "inputSchema": {
+        "properties": {
+          "times": {
+            "type": "array",
+            "description": "Up to 1000 times in seconds, any order: timeline time, or source time (detectShots sourceTime) when snap is sourceFrameCeil",
+            "items": {
+              "type": "number"
+            }
+          },
+          "snap": {
+            "description": "projectFrame (default), sourceFrameCeil (times are source seconds) or none (free-track cuts still frame-aligned)",
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "Element UUID to split"
+          }
+        },
+        "required": [
+          "id",
+          "times"
+        ],
+        "type": "object"
+      },
+      "name": "splitAt",
+      "description": "Split one element at many times in one undo step; playhead untouched, a selected element's pieces stay selected [editing]",
+      "annotations": {
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "splitCaption",
+      "description": "Split a caption element at the given time [captions]",
+      "inputSchema": {
+        "properties": {
+          "time": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "time"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "name": "splitClip",
+      "description": "Split a clip by id at its midpoint: seeks there, selects it, then splits at the playhead [editing]",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false
+      },
+      "description": "Build a two-panel layout from one element in one undo step: panel 1 is a muted copy on a new track above, a blur/colour background a muted filled copy below [editing]",
+      "name": "splitScreen",
+      "inputSchema": {
+        "required": [
+          "id",
+          "layout",
+          "panels",
+          "background",
+          "gap"
+        ],
+        "properties": {
+          "panels": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "gap": {
+            "type": "number"
+          },
+          "layout": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "name": "splitSoundEffect",
+      "annotations": {
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "inputSchema": {
+        "properties": {
+          "position": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "description": "Split sound effect \u2014 now splits the real element (was stub) [media]"
+    },
+    {
+      "description": "Start recording voiceover audio [voiceover]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "annotations": {
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false
+      },
+      "name": "startVoiceoverRecording"
+    },
+    {
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "annotations": {
+        "idempotentHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": true
+      },
+      "name": "state",
+      "description": "Get current editor state (time, duration, playing, clip count, boundaries) [inspection]"
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "frames": {
+            "type": "integer",
+            "description": "Number of frames to step (default 1). Negative values step backward."
+          },
+          "direction": {
+            "type": "string",
+            "description": "Direction: 'forward' or 'backward'. Overrides sign of frames if provided."
+          }
+        },
+        "required": []
+      },
+      "name": "step",
+      "description": "Step forward or backward by frames [playback]",
+      "annotations": {
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false
+      },
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "description": "Stop recording voiceover audio and save the clip [voiceover]",
+      "name": "stopVoiceoverRecording"
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "name": "title",
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "description": "Get the current project title [navigation]"
+    },
+    {
+      "inputSchema": {
+        "required": [
+          "enabled"
+        ],
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "name": "toggleApplyAll",
+      "description": "Toggle apply all \u2014 sets the voiceover panel mode (no product backing) [voiceover]",
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      }
+    },
+    {
+      "name": "toggleFavorite",
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Toggle favorite status on a project [navigation]",
+      "annotations": {
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "toggleKeyframe",
+      "inputSchema": {
+        "required": [
+          "id",
+          "property"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "property": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Toggle a media keyframe for a property at the playhead [tools]",
+      "annotations": {
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "description": "Add or remove the mask keyframe at the playhead through the open mask tool [tools]",
+      "inputSchema": {
+        "required": [
+          "active"
+        ],
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "annotations": {
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false
+      },
+      "name": "toggleMaskKeyframe"
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false
+      },
+      "name": "togglePin",
+      "description": "Toggle pinned status on a project [navigation]"
+    },
+    {
+      "name": "togglePlayback",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "description": "Toggle between play and pause [playback]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "tools",
+      "description": "List available tools in the sidebar [tools]",
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": [],
+        "properties": {}
+      }
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "name": "trackObject",
+      "description": "Track an object described in words through a clip with SAM 3; returns its normalized box (origin top-left) per sampled frame [ai]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "saveMasks": {
+            "type": "boolean"
+          },
+          "sampleEvery": {
+            "type": "number"
+          },
+          "prompt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "prompt",
+          "sampleEvery",
+          "saveMasks"
+        ]
+      }
+    },
+    {
+      "description": "Get all tracks with type, behavior, and element count [inspection]",
+      "name": "tracks",
+      "annotations": {
+        "openWorldHint": false,
+        "idempotentHint": true,
+        "destructiveHint": false,
+        "readOnlyHint": true
+      },
+      "inputSchema": {
+        "properties": {},
+        "type": "object",
+        "required": []
+      }
+    },
+    {
+      "name": "transcribeClip",
+      "description": "Transcribe a clip's audio with the captions model, in parallel 3-minute pieces for long recordings; returns each word with start and end (timeline seconds for a clip, source seconds for a library item), without adding captions. A library item goes on the main track first when the timeline holds no other footage, so the person sees it while it transcribes, and is taken off again if transcription fails; clipId is the item's clip on the timeline, for transcriptJumpCut; it also returns lines (phrases with their word ranges, for choosing transcriptJumpCut lines; not for showing the person) and the transcriptId transcriptJumpCut needs [ai]",
+      "annotations": {
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "language",
+          "mergeSplitWords"
+        ],
+        "properties": {
+          "language": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "mergeSplitWords": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    {
+      "name": "transitions",
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "description": "List all transitions on the composition, per track [inspection]"
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Element UUID",
+            "type": "string"
+          },
+          "side": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "description": "Which end to trim: left = in-point (left edge), right = out-point (right edge). Aliases: start\u2192left, end\u2192right."
+          },
+          "deltaSeconds": {
+            "description": "How many seconds to take off that end: positive shortens, negative lengthens. To make a 10 s element 3 s long, trim right by 7",
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "side",
+          "deltaSeconds"
+        ]
+      },
+      "annotations": {
+        "destructiveHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "name": "trim",
+      "description": "Trim an element's in or out point [editing]"
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "trim": {
+            "type": "number"
+          },
+          "delta": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          },
+          "side": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "side",
+          "delta"
+        ]
+      },
+      "name": "trimClip",
+      "description": "Trim clip \u2014 trims via adapter trimElement [media]",
+      "annotations": {
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false
+      }
+    },
+    {
+      "description": "Trim selected clip from playhead to end (remove content after playhead) [editing]",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "name": "trimEnd",
+      "annotations": {
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "trimEnd"
+        ],
+        "properties": {
+          "trimEnd": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "name": "trimMusicClip",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "description": "Trim music clip \u2014 now trims via real adapter (was stub) [media]"
+    },
+    {
+      "name": "trimStart",
+      "description": "Trim selected clip from start to playhead (remove content before playhead) [editing]",
+      "inputSchema": {
+        "properties": {},
+        "type": "object",
+        "required": []
+      },
+      "annotations": {
+        "openWorldHint": false,
+        "idempotentHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false
+      }
+    },
+    {
+      "inputSchema": {
+        "type": "object",
+        "required": [],
+        "properties": {}
+      },
+      "name": "undo",
+      "annotations": {
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false,
+        "readOnlyHint": false
+      },
+      "description": "Undo the last operation [editing]"
+    },
+    {
+      "description": "Unmute track \u2014 restores recorded gain (stub echo dropped) [media]",
+      "annotations": {
+        "idempotentHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "name": "unmuteTrack",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      }
+    },
+    {
+      "name": "updateCatalogItem",
+      "description": "Change one applied catalog item's intensity by instance id [editing]",
+      "annotations": {
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "idempotentHint": false
+      },
+      "inputSchema": {
+        "required": [
+          "elementId",
+          "instanceId",
+          "intensity"
+        ],
+        "properties": {
+          "instanceId": {
+            "type": "string"
+          },
+          "intensity": {
+            "type": "number"
+          },
+          "elementId": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "inputSchema": {
+        "required": [],
+        "type": "object",
+        "properties": {}
+      },
+      "name": "valueFields",
+      "description": "List the text each visible tool value field (MCEDraggableValue) shows [inspection]",
+      "annotations": {
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "annotations": {
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false
+      },
+      "name": "wait",
+      "inputSchema": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "seconds": {
+            "description": "Duration to wait in seconds (default 1.0)",
+            "type": "number"
+          }
+        }
+      },
+      "description": "Wait for a specified duration (server-side sleep for deterministic timing in batch mode) [utility]"
+    }
+  ]
+}
