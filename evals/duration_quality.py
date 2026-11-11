@@ -2,8 +2,8 @@
 import json,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from spliceforge.planner import planned_ranges,validate_plan
-from spliceforge.duration import require_duration
+from footagepilot.planner import planned_ranges,validate_plan
+from footagepilot.duration import require_duration
 
 
 def evaluate():

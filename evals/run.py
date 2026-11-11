@@ -8,8 +8,8 @@ import shutil
 import sys
 import time
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from spliceforge.__main__ import run, binary, render, probe, write, validate
-from spliceforge.transcript import transcribe, apply_selection
+from footagepilot.__main__ import run, binary, render, probe, write, validate
+from footagepilot.transcript import transcribe, apply_selection
 
 
 def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -21,7 +21,7 @@ def main():
     project_path=a.directory.resolve()/'project.json'
     if project_path.exists():raise ValueError('Use a fresh evaluation directory')
     source=a.source.resolve();duration=float(probe(source)['format']['duration'])
-    item={'schema_version':1,'source':str(source),'keep':[[0,duration]],'brand':{'name':'SpliceForge','accent':'#e5a35d'}}
+    item={'schema_version':1,'source':str(source),'keep':[[0,duration]],'brand':{'name':'FootagePilot','accent':'#e5a35d'}}
     write(project_path,item)
     started=time.monotonic();transcript=transcribe(project_path)
     # Known rejection phrase is an explicit fixture policy, not inferred editorial taste.
@@ -36,7 +36,7 @@ def main():
     write(project_path,item)
     records=[]
     for name,accent in [('first','#e5a35d'),('revision','#66c6ba')]:
-        item['brand']={'name':'SpliceForge' if name=='first' else 'SpliceForge Revised','accent':accent};write(project_path,item)
+        item['brand']={'name':'FootagePilot' if name=='first' else 'FootagePilot Revised','accent':accent};write(project_path,item)
         output=render(project_path);saved=a.directory/f'{name}.mp4';shutil.copyfile(output,saved)
         checks=json.loads((a.directory/'verification.json').read_text());checks.pop('command')
         audio=run([binary('ffmpeg'),'-v','error','-i',saved,'-map','0:a:0','-f','hash','-hash','sha256','-']).strip()

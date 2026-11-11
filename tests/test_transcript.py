@@ -1,5 +1,5 @@
 import unittest
-from spliceforge.transcript import selection_ranges
+from footagepilot.transcript import selection_ranges
 
 class TranscriptSelection(unittest.TestCase):
     def test_rejected_take_and_padding(self):

@@ -79,7 +79,7 @@ def render_graphics(project_path, cut, output, project):
         captions=word_captions_for_cut(alignment['words'],project['keep'])
     else:captions = captions_for_cut(rows,project['keep'])
     cards = []
-    with tempfile.TemporaryDirectory(prefix='spliceforge-film-') as tmp:
+    with tempfile.TemporaryDirectory(prefix='footagepilot-film-') as tmp:
         public = Path(tmp);shutil.copyfile(cut,public/'cut.mp4')
         for i, card in enumerate(project.get('storyboard',[])):
             start, length = card['start'],card['duration']
@@ -90,6 +90,6 @@ def render_graphics(project_path, cut, output, project):
             asset = f'card-{i}{image.suffix.lower()}';shutil.copyfile(image,public/asset)
             cards.append({'title':card['title'],'start':start,'duration':length,'asset':asset})
         props={'duration':duration,'brand':brand,'captions':captions,'cards':cards}
-        executable = os.environ.get('SPLICEFORGE_REMOTION') or str(Path(__file__).resolve().parents[1]/'node_modules/.bin/remotion')
-        run([executable,'render',Path(__file__).parent/'render/film.jsx','SpliceForge',output,'--public-dir',public,'--props',json.dumps(props),'--concurrency','2','--log','error'])
+        executable = os.environ.get('FOOTAGEPILOT_REMOTION') or str(Path(__file__).resolve().parents[1]/'node_modules/.bin/remotion')
+        run([executable,'render',Path(__file__).parent/'render/film.jsx','FootagePilot',output,'--public-dir',public,'--props',json.dumps(props),'--concurrency','2','--log','error'])
     return {'engine':'remotion','caption_groups':len(captions),'storyboard_cards':len(cards),'caption_timing':'ASR word timestamps; review required' if aligned else 'ASR-segment interpolation; review required','caption_warnings':[{'group':i,'reason':'Fast reading rate or short display'} for i,c in enumerate(captions) if c['end']-c['start']<1 or len(c['text'])/(c['end']-c['start'])>22]}

@@ -2,7 +2,7 @@
   "source": "Archival recording after MakeMyClip silence cleanup",
   "engine": "mlx-whisper",
   "model": "mlx-community/whisper-base.en-mlx",
-  "elapsed_seconds": 2.283345875010127,
+  "elapsed_seconds": 3.03810545799206,
   "words": [
     {
       "id": 0,

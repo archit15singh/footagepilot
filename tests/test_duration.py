@@ -2,9 +2,9 @@ import json,unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
-from spliceforge.duration import validate_budget
-from spliceforge.planner import apply_plan
-from spliceforge.__main__ import render
+from footagepilot.duration import validate_budget
+from footagepilot.planner import apply_plan
+from footagepilot.__main__ import render
 from evals.duration_quality import evaluate
 
 
@@ -23,7 +23,7 @@ class DurationBudget(unittest.TestCase):
             path.write_text(json.dumps({'source':str(source),'keep':[[0,10]],'duration_budget':{'min_seconds':0,'max_seconds':2}}));original=path.read_bytes()
             words={'source':str(source),'words':[{'text':'Sentence.','start':0,'end':5}]};raw=json.dumps(words).encode();(root/'words.json').write_bytes(raw)
             (root/'plan.json').write_text(json.dumps({'title':'Test','rationale':'Test','ranges':[{'first_word':0,'last_word':0,'reason':'Test'}],'words_sha256':hashlib.sha256(raw).hexdigest()}))
-            with patch('spliceforge.__main__.probe',return_value={'format':{'duration':'10'}}),patch('spliceforge.__main__.run') as run:
+            with patch('footagepilot.__main__.probe',return_value={'format':{'duration':'10'}}),patch('footagepilot.__main__.run') as run:
                 with self.assertRaisesRegex(ValueError,'outside budget'):apply_plan(path)
                 self.assertEqual(path.read_bytes(),original)
                 with self.assertRaisesRegex(ValueError,'outside budget'):render(path)

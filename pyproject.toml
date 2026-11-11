@@ -3,13 +3,16 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "spliceforge"
+name = "footagepilot"
 version = "0.1.0"
 description = "Local video editing with reviewable edits and verification evidence"
 requires-python = ">=3.11"
 
 [project.scripts]
-spliceforge = "spliceforge.__main__:main"
+footagepilot = "footagepilot.__main__:main"
 
 [tool.setuptools.package-data]
-spliceforge = ["web/*.html", "render/*.jsx"]
+footagepilot = ["web/*.html", "render/*.jsx"]
+
+[tool.setuptools.packages.find]
+include = ["footagepilot", "footagepilot.*"]

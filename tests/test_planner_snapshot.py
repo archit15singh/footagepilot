@@ -3,7 +3,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 from unittest.mock import patch
-from spliceforge.planner import plan
+from footagepilot.planner import plan
 
 
 class PlanningSnapshot(unittest.TestCase):
@@ -19,7 +19,7 @@ class PlanningSnapshot(unittest.TestCase):
                 elif mutation=='project':project.write_text(project.read_text()+'\n')
                 elif mutation=='source':source.write_bytes(b'changed source content')
                 return SimpleNamespace(returncode=0,stderr='')
-            with patch('spliceforge.__main__.probe',return_value={'format':{'duration':'10'}}),patch('spliceforge.planner.subprocess.run',side_effect=model):
+            with patch('footagepilot.__main__.probe',return_value={'format':{'duration':'10'}}),patch('footagepilot.planner.subprocess.run',side_effect=model):
                 if mutation:
                     with self.assertRaisesRegex(ValueError,'inputs changed'):plan(project,'Keep the sentence')
                     self.assertFalse((root/'plan.json').exists())

@@ -10,10 +10,10 @@ def transcribe(project_path, language='en'):
     project = json.loads(project_path.read_text())
     validate(project)
     whisper = binary('whisper')
-    model = os.environ.get('SPLICEFORGE_WHISPER_MODEL')
+    model = os.environ.get('FOOTAGEPILOT_WHISPER_MODEL')
     if not model or not Path(model).is_file():
-        raise ValueError('Set SPLICEFORGE_WHISPER_MODEL to a local whisper.cpp model')
-    with tempfile.TemporaryDirectory(prefix='spliceforge-asr-') as directory:
+        raise ValueError('Set FOOTAGEPILOT_WHISPER_MODEL to a local whisper.cpp model')
+    with tempfile.TemporaryDirectory(prefix='footagepilot-asr-') as directory:
         audio = Path(directory) / 'speech.wav'
         output = Path(directory) / 'transcript'
         run([binary('ffmpeg'), '-y', '-i', project['source'], '-vn', '-ar', '16000', '-ac', '1', '-c:a', 'pcm_s16le', audio])

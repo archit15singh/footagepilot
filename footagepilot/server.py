@@ -82,7 +82,7 @@ def serve(directory, port=8765):
             except (BrokenPipeError, ConnectionResetError):pass
 
         def do_POST(self):
-            if not self.allowed() or self.headers.get('X-SpliceForge-Token') != token:
+            if not self.allowed() or self.headers.get('X-FootagePilot-Token') != token:
                 return self.reply(403, {'error':'Invalid request token or host'})
             if not lock.acquire(blocking=False):return self.reply(409, {'error':'An operation is already running'})
             handed_off = False
@@ -94,7 +94,7 @@ def serve(directory, port=8765):
                     if project.exists():raise ValueError('Project exists; launch a different project directory to import another recording')
                     source = Path(data['source']).expanduser().resolve()
                     duration = float(probe(source)['format']['duration'])
-                    item = {'schema_version':1,'source':str(source),'keep':[[0,duration]],'brand':{'name':'SpliceForge','accent':'#e5a35d'}}
+                    item = {'schema_version':1,'source':str(source),'keep':[[0,duration]],'brand':{'name':'FootagePilot','accent':'#e5a35d'}}
                     validate(item);write(project,item)
                 elif self.path == '/api/selection':
                     transcript_path = directory/'transcript.json'
@@ -137,7 +137,7 @@ def serve(directory, port=8765):
         def log_message(self, *args):pass
 
     server = ThreadingHTTPServer(('127.0.0.1',port),Handler)
-    print(f'SpliceForge: http://127.0.0.1:{port}',flush=True)
+    print(f'FootagePilot: http://127.0.0.1:{port}',flush=True)
     try:server.serve_forever()
     except KeyboardInterrupt:pass
     finally:server.server_close()

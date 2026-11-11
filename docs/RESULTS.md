@@ -1,8 +1,8 @@
 > Historical segment-based evaluation. For the expanded word-level, headless-planned real-footage pipeline, see [current findings](REAL-E2E-RESULTS.md).
 
-# SpliceForge qualitative evaluation — in progress
+# FootagePilot qualitative evaluation — in progress
 
-SpliceForge already supports a local workflow from recording import through ASR, explicit speech selections, branded captions and image-card composition, export and technical checks. Its strongest property is reviewability: the transcript, selected ranges and design are editable files shared by CLI and workbench. Its weakest property is editorial autonomy: ASR timestamps and explicit selection rules do not infer the best story.
+FootagePilot already supports a local workflow from recording import through ASR, explicit speech selections, branded captions and image-card composition, export and technical checks. Its strongest property is reviewability: the transcript, selected ranges and design are editable files shared by CLI and workbench. Its weakest property is editorial autonomy: ASR timestamps and explicit selection rules do not infer the best story.
 
 ## Evidence collected
 

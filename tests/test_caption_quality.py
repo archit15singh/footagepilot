@@ -1,6 +1,6 @@
 import unittest
 from evals.caption_quality import evaluate
-from spliceforge.graphics import word_captions_for_cut
+from footagepilot.graphics import word_captions_for_cut
 
 
 class CaptionQuality(unittest.TestCase):

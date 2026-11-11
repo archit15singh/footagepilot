@@ -1,6 +1,6 @@
 # Current pipeline
 
-The functional pipeline is implemented in spliceforge/pipeline.py. It runs MakeMyClip cleanup, alignment.py, planner.py, word-level apply_plan, both renderer adapters and audio.py. See [the real run](REAL-E2E-RESULTS.md) for current verification and limits. The CLI is the primary interface; the earlier browser workbench remains available without further UI changes.
+The functional pipeline is implemented in footagepilot/pipeline.py. It runs MakeMyClip cleanup, alignment.py, planner.py, word-level apply_plan, both renderer adapters and audio.py. See [the real run](REAL-E2E-RESULTS.md) for current verification and limits. The CLI is the primary interface; the earlier browser workbench remains available without further UI changes.
 
 # Architecture and boundaries
 

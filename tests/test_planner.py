@@ -1,6 +1,6 @@
 import unittest
-from spliceforge.planner import validate_plan
-from spliceforge.graphics import word_captions_for_cut
+from footagepilot.planner import validate_plan
+from footagepilot.graphics import word_captions_for_cut
 
 class WordPlans(unittest.TestCase):
     def test_rejects_invented_or_reordered_words(self):
@@ -16,6 +16,6 @@ class WordPlans(unittest.TestCase):
 
     def test_cli_rejects_provider_selection(self):
         import subprocess,sys
-        result=subprocess.run([sys.executable,'-m','spliceforge','plan','missing.json','--brief','Test','--backend','claude'],capture_output=True,text=True)
+        result=subprocess.run([sys.executable,'-m','footagepilot','plan','missing.json','--brief','Test','--backend','claude'],capture_output=True,text=True)
         self.assertEqual(result.returncode,2)
         self.assertIn('unrecognized arguments',result.stderr)

@@ -6,7 +6,7 @@ this candidate when it does not reduce active boundaries on the locked edit.
 import argparse,array,hashlib,json,math,subprocess,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from spliceforge.__main__ import binary
+from footagepilot.__main__ import binary
 
 
 def evaluate(source):

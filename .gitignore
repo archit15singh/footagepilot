@@ -3,3 +3,5 @@ __pycache__/
 node_modules
 projects/
 .DS_Store
+build/
+*.egg-info/

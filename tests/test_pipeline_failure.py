@@ -2,7 +2,7 @@ import json,unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
-from spliceforge.pipeline import produce
+from footagepilot.pipeline import produce
 
 
 class PipelineFailure(unittest.TestCase):
@@ -18,7 +18,7 @@ class PipelineFailure(unittest.TestCase):
                     def mix(video,output,settings,duration):
                         if fail_at=='mix':raise ValueError('Injected mix failure')
                         output.write_bytes(b'mixed');return {}
-                    with patch('spliceforge.pipeline.align'),patch('spliceforge.pipeline.plan'),patch('spliceforge.pipeline.apply_plan'),patch('spliceforge.pipeline.render',side_effect=render),patch('spliceforge.pipeline.mix_audio',side_effect=mix),patch('spliceforge.pipeline.binary',return_value='ffmpeg'),patch('spliceforge.pipeline.run'),patch('spliceforge.pipeline.probe',return_value={'format':{'duration':'2'},'streams':[]}):
+                    with patch('footagepilot.pipeline.align'),patch('footagepilot.pipeline.plan'),patch('footagepilot.pipeline.apply_plan'),patch('footagepilot.pipeline.render',side_effect=render),patch('footagepilot.pipeline.mix_audio',side_effect=mix),patch('footagepilot.pipeline.binary',return_value='ffmpeg'),patch('footagepilot.pipeline.run'),patch('footagepilot.pipeline.probe',return_value={'format':{'duration':'2'},'streams':[]}):
                         with self.assertRaisesRegex(ValueError,'Injected'):produce(path,'Test',False)
                     current=json.loads(path.read_text());self.assertIn('audio',current);self.assertEqual(current['audio'],audio)
                     self.assertEqual(current['source'],original['source']);self.assertEqual(current['keep'],original['keep'])

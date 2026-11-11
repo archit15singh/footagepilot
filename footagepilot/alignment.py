@@ -6,8 +6,8 @@ from .__main__ import validate,write,binary
 
 def align(project_path):
     project=json.loads(project_path.read_text());duration=validate(project)
-    python=os.environ.get('SPLICEFORGE_ALIGN_PYTHON','python3')
-    model=os.environ.get('SPLICEFORGE_ALIGN_MODEL','mlx-community/whisper-base.en-mlx')
+    python=os.environ.get('FOOTAGEPILOT_ALIGN_PYTHON','python3')
+    model=os.environ.get('FOOTAGEPILOT_ALIGN_MODEL','mlx-community/whisper-base.en-mlx')
     script='''import json,sys,mlx_whisper
 r=mlx_whisper.transcribe(sys.argv[1],path_or_hf_repo=sys.argv[2],word_timestamps=True,language="en")
 open(sys.argv[3],"w").write(json.dumps(r))
