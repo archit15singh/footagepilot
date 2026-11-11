@@ -28,13 +28,13 @@ def plan(project_path,brief):
     started=time.monotonic()
     with tempfile.TemporaryDirectory(prefix='spliceforge-planner-') as temp:
         root=Path(temp);schema=root/'schema.json';schema.write_text(json.dumps(SCHEMA));output=root/'plan.json'
-        command=[os.environ.get('SPLICEFORGE_CODEX','codex'),'exec','--ignore-user-config','--ephemeral','--skip-git-repo-check','--sandbox','read-only','--output-schema',str(schema),'-o',str(output),'-']
+        command=[os.environ.get('SPLICEFORGE_CODEX','codex'),'exec','--model','gpt-6.1-sol','-c','model_reasoning_effort="low"','--ignore-user-config','--ephemeral','--skip-git-repo-check','--sandbox','read-only','--output-schema',str(schema),'-o',str(output),'-']
         result=subprocess.run(command,input=prompt,cwd=root,capture_output=True,text=True,timeout=600)
         (project_path.parent/'planner-codex.log').write_text(result.stderr)
         if result.returncode:raise ValueError('Headless planner failed: '+result.stderr[-2000:])
         payload=json.loads(output.read_text())
     validate_plan(payload,words)
-    payload.update(backend='codex',brief=brief,elapsed_seconds=time.monotonic()-started,words_sha256=hashlib.sha256((project_path.parent/'words.json').read_bytes()).hexdigest())
+    payload.update(backend='codex',model='gpt-6.1-sol',reasoning_effort='low',brief=brief,elapsed_seconds=time.monotonic()-started,words_sha256=hashlib.sha256((project_path.parent/'words.json').read_bytes()).hexdigest())
     write(project_path.parent/'plan.json',payload);return payload
 
 
