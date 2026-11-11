@@ -23,7 +23,7 @@ FootagePilot puts the input first: existing footage. Pilot communicates directed
 | FootageFlow | Clear input/workflow association | Already used by [a footage-management product](https://www.footageflow.app/). |
 | Clipwright | Suggests crafted clips | Already used by [an AI-assisted browser editor](https://www.clipwright.app/) and [an agent video backend](https://clipwright.io/). |
 
-On the check date, the PyPI `/pypi/footagepilot/json` and npm `/footagepilot` registry endpoints returned HTTP 404; GitHub repository-name search returned zero matches and `archit15singh/footagepilot` returned HTTP 404. These are bounded checks, not reservations or a guarantee against every naming conflict. No package or domain was purchased/published.
+Before the repository rename on the check date, the PyPI `/pypi/footagepilot/json` and npm `/footagepilot` registry endpoints returned HTTP 404; GitHub repository-name search returned zero matches and `archit15singh/footagepilot` returned HTTP 404. These are bounded checks, not reservations or a guarantee against every naming conflict. No package or domain was purchased/published.
 
 ## Migration
 
@@ -35,12 +35,12 @@ On the check date, the PyPI `/pypi/footagepilot/json` and npm `/footagepilot` re
 | Workbench request header | `X-SpliceForge-Token` | `X-FootagePilot-Token` |
 | Remotion composition | `SpliceForge` | `FootagePilot` |
 | GitHub repository | `archit15singh/spliceforge` | `archit15singh/footagepilot` |
-| Main local workspace | `/Users/singh/projects/spliceforge` | `/Users/singh/projects/footagepilot` |
+| Main local workspace | `~/projects/spliceforge` | `~/projects/footagepilot` |
 
-Update commands, imports and exported environment variables to the current names. No legacy module or environment aliases are introduced. Project JSON schema and media formats remain unchanged. Historical Git commits, screenshots, media and measured evidence are retained as originally recorded; hashes referring to an older lockfile are historical measurements, not rewritten claims about the renamed lockfile.
+Update commands, imports and exported environment variables to the current names. No legacy module or environment aliases are introduced. Project JSON schema and media formats remain unchanged. The former local workspace path redirects to the canonical folder solely to preserve absolute media paths in archived local projects; this is not a legacy Python module or environment-variable alias. Historical Git commits, screenshots, media and measured evidence are retained as originally recorded; hashes referring to an older lockfile are historical measurements, not rewritten claims about the renamed lockfile.
 
 The previous name appears in this migration record intentionally. Archived linked worktree branches retain their historical source snapshots. Naming changes do not authorize rewriting sent messages, old releases or unrelated personal profiles.
 
 ## Verification
 
-[Rename verification](RENAME-VERIFICATION.json) records 27 passing tests, an isolated wheel/CLI check, live workbench HTTP checks and an actual twelve-stage real-footage run producing four fully decoded/hash-verified videos. Both renderer frames were inspected for the new visible name. Codex selected a different valid 27.80-second excerpt; re-transcription is evaluated against its 101 actual selected tokens, not the old gallery text. Source model and reasoning settings remain Codex 6.1 Sol / low. Packaging discovery is explicitly limited to the Python package; local media and Node dependencies are excluded from the wheel. GitHub and workspace migration are verified after the source change passes CI.
+[Rename verification](RENAME-VERIFICATION.json) records 27 passing tests, an isolated wheel/CLI check, live workbench HTTP checks and an actual twelve-stage real-footage run producing four fully decoded/hash-verified videos. Both renderer frames were inspected for the new visible name. Codex selected a different valid 27.80-second excerpt; re-transcription is evaluated against its 101 actual selected tokens, not the old gallery text. Source model and reasoning settings remain Codex 6.1 Sol / low. Packaging discovery is explicitly limited to the Python package; local media and Node dependencies are excluded from the wheel. GitHub repository/public visibility, old-URL redirection, canonical workspace, linked worktrees, tab and local catalog were verified after migration. Both renderers also exported and decoded a three-second real-footage check from the moved main workspace.
