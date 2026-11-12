@@ -1,0 +1,55 @@
+{
+  "trial": "second-reference-landscape",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "planner_seconds": 60.655748291,
+  "native_app": "DaVinci Resolve 21.2.0.6 free",
+  "observed_queue_seconds": 2,
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "frames": 420,
+  "seconds": 14,
+  "shots": 12,
+  "title_layers": 0,
+  "panels": 0,
+  "composition_samples": 36,
+  "cut_offsets_frames": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "audio": {
+    "sample_rate": 1000,
+    "correlation": 0.99982,
+    "rms_gain_ratio": 0.99968,
+    "mean_absolute_error": 0.002702,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "decode": "passed",
+  "native_movie_sha256": "a7a573e16851a84aec069dbb55d98f0f0fd201d3227cfad158404f3afd8b153d",
+  "precursors": {
+    "044": "compiler rejected unused zero title span; fixed after regression",
+    "045": "six shots prepared; not rendered"
+  },
+  "interventions": [
+    "Authored landscape/no-title adaptation and10\u201314shot budget",
+    "Actual GUI Lua assembly and observed native queue completion",
+    "No manual model-plan edits"
+  ],
+  "creative_verdict": "unreviewed",
+  "limits": [
+    "Portrait-source crops can truncate subjects",
+    "Upright adaptation of sideways reference, not exact orientation",
+    "No matched camera choreography, grade, bloom, speed ramps or verified music beats",
+    "Source locations repeat; no controlled creative ranking"
+  ]
+}
