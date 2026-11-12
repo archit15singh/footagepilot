@@ -1,6 +1,6 @@
 import tempfile,unittest
 from pathlib import Path
-from footagepilot.visual import compile_plan,canvas_options,shot_budget,schema
+from footagepilot.visual import compile_plan,canvas_options,shot_budget,schema,plan_visual
 
 class VisualCanvasTests(unittest.TestCase):
     def test_landscape_can_compile_without_any_on_screen_title(self):
@@ -27,3 +27,10 @@ class VisualCanvasTests(unittest.TestCase):
             spec={'assets':[{'id':'a','path':'a.jpg'}],'music':'music.wav','music_timing':{'bpm':120,'provenance':'authored'},'min_shots':10}
             plan={'title':'Metadata','shots':[{'asset_id':'a','beats':2,'fit':'fill','zoom':0}]*2}
             with self.assertRaisesRegex(ValueError,'requested budget'):compile_plan(plan,spec,root)
+
+    def test_canvas_preview_flag_rejects_non_boolean_before_planning(self):
+        import json
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);spec=root/'spec.json';spec.write_text(json.dumps({'canvas_previews':'true'}))
+            with self.assertRaisesRegex(ValueError,'canvas_previews must be boolean'):plan_visual(spec,root/'output')
+            self.assertFalse((root/'output').exists())
