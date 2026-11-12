@@ -1,0 +1,83 @@
+{
+  "passed": true,
+  "positive": {
+    "status": "frame-citations-validated",
+    "frame_count": 18,
+    "observation_count": 5,
+    "scope": "Checks citations and epistemic labels, not semantic truth or creative fidelity"
+  },
+  "negative_controls": [
+    {
+      "control": "fabricated-frame",
+      "rejected": true,
+      "reason": "Reference observation cites unknown frames"
+    },
+    {
+      "control": "motion-as-visible",
+      "rejected": true,
+      "reason": "Temporal techniques require an inferred label from sparse frames"
+    }
+  ],
+  "observed_techniques": [
+    {
+      "technique": "title",
+      "confidence": "visible",
+      "cited_frame_count": 2
+    },
+    {
+      "technique": "full_frame",
+      "confidence": "visible",
+      "cited_frame_count": 4
+    },
+    {
+      "technique": "cut",
+      "confidence": "inferred",
+      "cited_frame_count": 5
+    },
+    {
+      "technique": "mask_reveal",
+      "confidence": "inferred",
+      "cited_frame_count": 3
+    },
+    {
+      "technique": "collage",
+      "confidence": "visible",
+      "cited_frame_count": 3
+    }
+  ],
+  "shots_with_citations": 9,
+  "limits": [
+    "Model classifications are claims, not validated semantic truth.",
+    "Cited frames remain sparse; no continuous motion, listening or creative preference verdict."
+  ],
+  "date": "2026-11-12",
+  "planner": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "low",
+    "elapsed_seconds": 58.567
+  },
+  "manual_reference_checks": [
+    "Inspected cited title-card frame: text on black matches the title observation.",
+    "Inspected cited collage frame: three top-row tiles visible; model explicitly adapts to four quadrants.",
+    "Inspected cited partial image frame: spatial cropping visible, animated progression remains uncertain."
+  ],
+  "creative_verdict": "unreviewed",
+  "next_fidelity_gap": "Current compiler forces complete four-quadrant collages; reference uses growing asymmetric rows. A matching native layout needs implementation and evaluation.",
+  "native_followup": {
+    "application": "Free Resolve21.2.0.6",
+    "duration": 15.5,
+    "fps": 30.0,
+    "composition_samples": 35,
+    "minimum_correlation": 0.99862,
+    "audio": {
+      "sample_rate": 1000,
+      "correlation": 0.99958,
+      "rms_gain_ratio": 0.99984,
+      "mean_absolute_error": 0.001153,
+      "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+    },
+    "queue": "Completed in 00:00:02 observed through computer use",
+    "editable_DRP": true,
+    "creative_verdict": "unreviewed"
+  }
+}
