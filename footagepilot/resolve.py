@@ -228,22 +228,38 @@ def title_matches(job, media):
     return rows
 
 
+def title_timing_band(job,index,height,number=None):
+    """Partition simultaneous title regions at their planned centre midpoints."""
+    title=job['titles'][index];centre=title['y']*height;radius=max(3,4*title['size']*height/job['height'])
+    top=max(0,math.floor(centre-radius));bottom=min(height,math.ceil(centre+radius)+1)
+    for i,other in enumerate(job['titles']):
+        overlap=max(title['start'],other['start'])<min(title['start']+title['frames'],other['start']+other['frames'])
+        active=number is not None and other['start']<=number<other['start']+other['frames']
+        if i==index or not (overlap or active):continue
+        other_centre=other['y']*height
+        if abs(other_centre-centre)<1:return None
+        midpoint=math.ceil((centre+other_centre)/2)
+        if other_centre>centre:bottom=min(bottom,midpoint)
+        else:top=max(top,midpoint)
+    if not top<=centre<bottom or bottom-top<max(3,1.32*title['size']*height/job['height']):return None
+    return top,bottom
+
+
 def title_timing_matches(job, media):
     """Check entry/exit frames in isolated title bands, not speech or OCR."""
     width=160;height=round(width*job['height']/job['width']);height+=height%2
     rows=[]
     for index,t in enumerate(job.get('titles',[])):
-        radius=max(3,4*t['size']*height/job['height']);centre=t['y']*height
         for number in sorted({max(0,t['start']-1),t['start'],t['start']+t['frames']//2,t['start']+t['frames']-1,min(job['frames']-1,t['start']+t['frames'])}):
-            others=[other for other in job.get('titles',[]) if other is not t and other['start']<=number<other['start']+other['frames'] and abs(other['y']-t['y'])*height<radius+4*other['size']*height/job['height']]
-            if others:
-                rows.append({'title':index+1,'frame':number,'status':'ambiguous-overlapping-title-band'});continue
+            band=title_timing_band(job,index,height,number)
+            if band is None:
+                rows.append({'title':index+1,'frame':number,'status':'ambiguous-nonisolated-title-region'});continue
             expected=expected_frame(job,number,width,height);actual=sample_frame(media,number,job['fps'],width,height)
-            changed=sum(sum(abs(expected[(y*width+x)*3+k]-actual[(y*width+x)*3+k]) for k in range(3))/3>.2 for y in range(max(0,int(centre-radius)),min(height,int(centre+radius+1))) for x in range(width))
+            changed=sum(sum(abs(expected[(y*width+x)*3+k]-actual[(y*width+x)*3+k]) for k in range(3))/3>.2 for y in range(*band) for x in range(width))
             active=t['start']<=number<t['start']+t['frames'];minimum=max(3,len(t['text'].strip()))
             if active and changed<minimum:raise ValueError(f'Title {index+1} missing at planned frame {number}')
             if not active and changed>=minimum:raise ValueError(f'Title {index+1} band appears outside planned timing at frame {number}')
-            rows.append({'title':index+1,'frame':number,'expected_active':active,'changed_pixels':changed,'status':'passed'})
+            rows.append({'title':index+1,'frame':number,'expected_active':active,'changed_pixels':changed,'region_y':list(band),'status':'passed'})
     return rows
 
 
