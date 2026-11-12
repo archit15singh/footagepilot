@@ -4,7 +4,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 from .__main__ import write
 from .reference import analyze_reference
-from .visual import plan_visual
+from .visual import plan_visual,plate_catalog
 from .edits import render_edit
 from .learning import check_sources
 from .music_timing import analysis_options,extract_cues
@@ -31,6 +31,7 @@ def recreate(spec_path,output,token_file=None,backend="edits"):
     if backend not in ("edits","resolve"):raise ValueError("Unknown native editor backend")
     if output.exists():raise ValueError('Use a new recreation directory; previous evidence is preserved')
     snapshot=spec_path.read_bytes();spec=json.loads(snapshot);base=spec_path.parent
+    catalog=plate_catalog({**spec,'native_backend':backend})
     use_reference='music_from_reference' in spec
     if use_reference and (spec['music_from_reference'] is not True or 'music' in spec or backend!='resolve'):raise ValueError('Use music_from_reference=true with Resolve and no separate music path')
     music_options=analysis_options(spec,backend)
@@ -53,7 +54,7 @@ def recreate(spec_path,output,token_file=None,backend="edits"):
         stage('download-analyze-reference',lambda:analyze_reference(spec['reference_url'],output/'reference'))
         spec['reference']=str(output/'reference/analysis.json')
     else:spec['reference']=str((base/spec['reference']).resolve())
-    for asset in spec['assets']:asset['path']=str((base/asset['path']).resolve())
+    for asset in spec['assets']+catalog:asset['path']=str((base/asset['path']).resolve())
     if use_reference:
         soundtrack=stage('select-reference-soundtrack',lambda:reference_soundtrack(Path(spec['reference'])))
         spec['music']=soundtrack['media'];del spec['music_from_reference']

@@ -1,0 +1,80 @@
+{
+  "planner": {
+    "backend": "codex",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "low",
+    "elapsed_seconds": 97.55823150000651,
+    "main_asset_count": 9,
+    "plate_asset_count": 2,
+    "chosen_plate": "soft-glare",
+    "cut_after_shot": 5,
+    "pre_frames": 9,
+    "post_frames": 9,
+    "opacity": 0.16,
+    "source_start": 0.2
+  },
+  "native": {
+    "shots": 11,
+    "frames": 420,
+    "fps": 30,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "plate_start": 221,
+    "cut_frame": 230,
+    "plate_frames": 18,
+    "visual_samples": 38,
+    "plate_checks": [
+      {
+        "plate": 1,
+        "frame": 225,
+        "active_channels": 8761,
+        "expected_contribution": 0.06563681051087926,
+        "mean_absolute_error": 0.006702195589914953,
+        "maximum_error": 0.03281840525543963,
+        "correlation": 0.9987642955338821
+      },
+      {
+        "plate": 1,
+        "frame": 229,
+        "active_channels": 9660,
+        "expected_contribution": 0.08308987653259656,
+        "mean_absolute_error": 0.006924666050563446,
+        "maximum_error": 0.04154493826629828,
+        "correlation": 0.9968262570943494
+      },
+      {
+        "plate": 1,
+        "frame": 234,
+        "active_channels": 7462,
+        "expected_contribution": 0.050630366338493604,
+        "mean_absolute_error": 0.007773696177510847,
+        "maximum_error": 0.025315183169246802,
+        "correlation": 0.9993967607456746
+      }
+    ],
+    "audio": {
+      "sample_rate": 1000,
+      "correlation": 0.99982,
+      "rms_gain_ratio": 0.99968,
+      "mean_absolute_error": 0.002702,
+      "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+    },
+    "movie_sha256": "eccf69bd12a167f4311d3ba2177b3d2c8f2dbc7ad23f910542043e484b464600",
+    "drp_sha256": "c376a59e59e68688e5a8db343c7a1db322e07f6bdd8e605acae47b082f292726",
+    "application": "DaVinci Resolve free Mac App Store 21.2.0.6",
+    "render_queue": "Completed in 00:00:02 (render only)",
+    "execution": "Unmodified generated native Lua; no manual model-plan changes"
+  },
+  "broad_missing_expectation_passed": true,
+  "actual_no_plate_control_rejected": true,
+  "control_error": "Screen plate 1 differs in its active pixels at frame 225",
+  "control_kind": "FFmpeg concatenation of the exact prepared main shots with no plate; negative control only, not a native product export",
+  "creative_acceptance": "unreviewed",
+  "scope": "One supplied-asset choice and native Screen export; not automatic stock acquisition, refraction recreation or listening/creative acceptance",
+  "tests": 111,
+  "inputs": "Nine original personal travel video sources and two original authored effect clips; reference and all media remain private/local",
+  "controls": "First no-plate control failed construction on proxy SAR mismatch; corrected helper normalizes SAR only in the control. Actual native export unchanged.",
+  "no_plate_control_visual_samples": 33
+}
