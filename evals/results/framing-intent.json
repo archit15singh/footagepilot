@@ -1,0 +1,35 @@
+{
+  "focus_only_changes": [
+    {
+      "shot": 12,
+      "field": "focus_y",
+      "before": 0.5,
+      "after": 0.8
+    }
+  ],
+  "native_visual_samples": 40,
+  "control_rejected": true,
+  "control_error": "Export differs visually from prepared composition at frame 382; inspect offline media, order, layout, transition and colour",
+  "audio": {
+    "sample_rate": 1000,
+    "correlation": 0.99982,
+    "rms_gain_ratio": 0.99968,
+    "mean_absolute_error": 0.002702,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "movie_sha256": "7b7200870dbf8898a9204fe751c99a918122ac3b5c22f414ea8207e2132bb8de",
+  "drp_sha256": "ce0d430061abbf3349cbfb273a2e09d96ab6adeb5eeefa930bbe58ec81f9bd7f",
+  "creative_acceptance": "unreviewed",
+  "scope": "Controlled replay with original brief; not a fresh story-plan benchmark",
+  "date": "2026-11-12",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "refinement_seconds": 18.617005,
+  "native_queue_seconds": 2,
+  "subject_observation": "Walker head, torso and walking posture visible in three rendered samples; arch apex lost; feet close to lower edge; source softness remains.",
+  "interventions": [
+    "Native console required saved-workspace restart.",
+    "Relative-output direct preparation failed to import; replacement prepared job uses absolute native paths.",
+    "No manual model-choice edits; only ending focus changes."
+  ]
+}

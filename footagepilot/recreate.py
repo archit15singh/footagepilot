@@ -19,7 +19,9 @@ def framing_options(spec,backend):
     shots=value.get('shots','bookends');axis=value.get('axis','y')
     if axis not in ('x','y'):raise ValueError('Framing review axis must be x or y')
     if shots!='bookends' and (not isinstance(shots,list) or not 1<=len(shots)<=3 or any(type(i) is not int or not 1<=i<=60 for i in shots) or len(set(shots))!=len(shots)):raise ValueError('Framing review shots must be bookends or 1–3 unique shot numbers')
-    return {'shots':shots,'axis':axis}
+    brief=spec.get('brief','')
+    if not isinstance(brief,str) or len(brief)>12000:raise ValueError('Framing brief must be text of at most 12000 characters')
+    return {'shots':shots,'axis':axis,'brief':brief}
 
 
 def review_plan_framing(manifest,options,output):
@@ -36,7 +38,7 @@ def review_plan_framing(manifest,options,output):
         output.mkdir(parents=True)
         result={'manifest':str(manifest),'status':'skipped-contained-bookends','shots':[],'skipped_shots':skipped}
         write(output/'review.json',result);return result
-    result=refine_framing(manifest,shots,options['axis'],output)
+    result=refine_framing(manifest,shots,options['axis'],output,brief=options.get('brief',''))
     return {**result,'status':'bounded-crops-reviewed','selection':selection,'skipped_shots':skipped}
 
 

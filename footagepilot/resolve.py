@@ -35,6 +35,7 @@ def console_program(source):
 def prepare(manifest, output, render=False):
     """Prepare sources; native Resolve constructs cuts, layers, Text+ and dissolves."""
     import re
+    output=output.resolve()
     from .learning import check_sources
     registry=Path(__file__).resolve().parent.parent/'docs/resolve/sources.json'
     if not registry.exists() or check_sources(registry)['needs_research']:raise ValueError('Resolve research is missing or stale; review official guides and installed API before preparing a job')

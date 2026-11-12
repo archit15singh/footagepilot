@@ -92,6 +92,20 @@ class ResolveTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'overlap'):prepare(manifest,root/'job')
             self.assertFalse((root/'job').exists())
 
+    def test_relative_output_produces_portable_native_paths(self):
+        import os
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);(root/'a.jpg').write_bytes(b'input')
+            manifest=root/'edit.json';manifest.write_text(json.dumps({'shots':[{'path':'a.jpg','duration':1}]}))
+            relative=Path(os.path.relpath(root/'job',Path.cwd()))
+            def render(cmd):Path(cmd[-1]).write_bytes(b'prepared')
+            with patch('footagepilot.resolve.probe',return_value={'streams':[{'codec_type':'video'}]}),patch('footagepilot.resolve.run',side_effect=render),patch('footagepilot.resolve.binary',return_value='ffmpeg'):
+                result=prepare(manifest,relative,render=True)
+            self.assertTrue(Path(result['job']).is_absolute())
+            job=json.loads(Path(result['job']).read_text())
+            self.assertTrue(all(Path(row['path']).is_absolute() for row in job['shots']))
+            self.assertIn(str(root/'job'),Path(result['console']).read_text())
+
     def test_styled_job_keeps_native_features_and_single_line_console(self):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td);(root/'a.jpg').write_bytes(b'input')
