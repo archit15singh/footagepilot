@@ -1,0 +1,140 @@
+{
+  "zero_origin_proxy_count": 13,
+  "origins": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "prior_native_rejected": "Screen plate 1 differs in its active pixels at frame 90",
+  "native_visual_samples": 40,
+  "plate_checks": [
+    {
+      "plate": 1,
+      "frame": 90,
+      "active_channels": 16895,
+      "expected_contribution": 0.12175609526647559,
+      "mean_absolute_error": 0.005376737360218072,
+      "maximum_error": 0.06087804763323779,
+      "correlation": 0.9995611178936166
+    },
+    {
+      "plate": 1,
+      "frame": 95,
+      "active_channels": 13125,
+      "expected_contribution": 0.09357253399242049,
+      "mean_absolute_error": 0.008119820464656454,
+      "maximum_error": 0.046786266996210246,
+      "correlation": 0.9993916244391903
+    },
+    {
+      "plate": 1,
+      "frame": 100,
+      "active_channels": 9084,
+      "expected_contribution": 0.0692096468671823,
+      "mean_absolute_error": 0.007009922850863005,
+      "maximum_error": 0.03460482343359115,
+      "correlation": 0.999283965992468
+    }
+  ],
+  "audio": {
+    "sample_rate": 1000,
+    "correlation": 0.99982,
+    "rms_gain_ratio": 0.99968,
+    "mean_absolute_error": 0.002702,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "movie_sha256": "c1b623a94d868f91ebdc092243072089eda5c76e2a335314b03fe735b5d64979",
+  "creative_acceptance": "unreviewed",
+  "scope": "Sampled native plate correspondence and proxy timestamps; not continuous subject safety or listening.",
+  "date": "2026-11-12",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "planner_seconds": 84.614412,
+  "framing_seconds": 25.557457,
+  "frame_count": 420,
+  "fps": 30,
+  "canvas": [
+    1920,
+    1080
+  ],
+  "native_queue_seconds": 2,
+  "focus_changes": [
+    {
+      "shot": 1,
+      "field": "focus_y",
+      "before": 0.5,
+      "after": 0.65
+    },
+    {
+      "shot": 12,
+      "field": "focus_y",
+      "before": 0.43,
+      "after": 0.58
+    }
+  ],
+  "interventions": [
+    "Native console dispatch required saved-workspace restart.",
+    "First native run rejected by unchanged plate QA.",
+    "Same reviewed manifest prepared and rendered again after zero-origin timestamp fix; no manual model-plan edits."
+  ],
+  "limits": [
+    "Opening last sampled hat remains clipped.",
+    "Static crop samples do not establish continuous subject safety."
+  ],
+  "fresh_final_code_run": {
+    "status": "verified-export",
+    "planner_seconds": 71.894421,
+    "framing_seconds": 26.415892,
+    "native_queue_seconds": 2,
+    "visual_samples": 40,
+    "plate_checks": [
+      {
+        "plate": 1,
+        "frame": 115,
+        "active_channels": 16914,
+        "expected_contribution": 0.1215237862735233,
+        "mean_absolute_error": 0.005506339076887913,
+        "maximum_error": 0.06076189313676165,
+        "correlation": 0.9994660425153248
+      },
+      {
+        "plate": 1,
+        "frame": 119,
+        "active_channels": 12617,
+        "expected_contribution": 0.08581843540767528,
+        "mean_absolute_error": 0.008407600468991253,
+        "maximum_error": 0.04290921770383764,
+        "correlation": 0.9993897163122901
+      },
+      {
+        "plate": 1,
+        "frame": 124,
+        "active_channels": 10086,
+        "expected_contribution": 0.07133752283228519,
+        "mean_absolute_error": 0.0076457925889636714,
+        "maximum_error": 0.03566876141614259,
+        "correlation": 0.9993390882511394
+      }
+    ],
+    "audio": {
+      "sample_rate": 1000,
+      "correlation": 0.99982,
+      "rms_gain_ratio": 0.99968,
+      "mean_absolute_error": 0.002702,
+      "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+    },
+    "movie_sha256": "9982dfe9e7f740d924246b9398ff3315a628a808a1878fc2f95a65f87a334417",
+    "native_subject_observation": "Opening head retained across beginning/middle/last samples; lower body cropped later. Ending prioritizes illuminated arch and largely excludes pedestrian.",
+    "preference": "unreviewed"
+  }
+}
