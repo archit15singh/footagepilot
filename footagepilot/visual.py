@@ -7,6 +7,7 @@ from .reference_evidence import select_frames,validate_observations
 from .layout import validate_panels
 from .music_timing import validate_timing,position,span
 from .source_previews import preview_windows,window_sheet
+from .reference_review import iteration_notes
 
 def object_schema(properties):
     return {'type':'object','additionalProperties':False,'properties':properties,'required':list(properties)}
@@ -158,6 +159,7 @@ def plan_visual(spec_path,output):
     evidence_frames=select_frames(reference,ref_path.parent)
     files=[(ref_path.parent/f['file']).resolve() for f in evidence_frames]+[spec_path,ref_path,contact,(base/spec['music']).resolve()]+[(base/a['path']).resolve() for a in assets]
     feedback,review_files=review_notes(spec,base);files+=review_files
+    suggestions,model_files=iteration_notes(spec,base);files+=model_files
     hashes={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
     # Validate tempo/budget before spending model usage or mutating Edits.
     timing=validate_timing(spec['music_timing'],zero=True)
@@ -188,8 +190,9 @@ def plan_visual(spec_path,output):
             prompt+='When music_timing contains cues, every field named beats/start_beat refers to CUE INTERVAL COUNTS / CUE INDICES, not seconds or musical beats. For example, a shot starting at index2 and lasting3intervals runs from cues[2] to cues[5]. All indices must fit the supplied cue array. Intervals are uneven and may be skipped by choosing longer holds. Do not invent BPM or call onset candidates verified beats. Otherwise use the supplied BPM grid.\n'
             prompt+='Resolve title_sequence may contain up to eight original short lines with integer start_beat/beats and normalized y. An empty array keeps the single title. Use staggered entries held together on separated rows to adapt a progressive reference title card; keep simultaneous rows at least .13 apart. Native title appearances are hard cuts at those beats, not a character write-on or an inferred music beat. Use only the authored/reviewed supplied timing grid.\n'
             prompt+='Resolve title_font must be one of the supplied installed family names. Choose typography from visible reference evidence, including serif versus sans serif; exact font identity is uncertain from pixels. Never claim an exact match without evidence.\n'
+            prompt+='Model revision suggestions are frame-cited hypotheses, not user preferences or verified facts. Consider only supported changes grounded in the supplied reference/source images, preserve uncertainty, and retain independent creative judgment. Human review notes take precedence. Never assert acceptance.\n'
             prompt+='Allowed transitions: '+', '.join(transitions_for(spec))+'. A wipe_left is a left-to-right spatial mask reveal, not camera motion; choose it only for an explicit brief or observed visual grammar.\n'
-            prompt+=json.dumps({'brief':spec.get('brief',''),'installed_title_fonts':fonts,'reference_evidence_frames':evidence_frames,'recorded_human_reviews':feedback,'assets':asset_descriptions,'music_timing':timing,'duration_budget':[spec.get('min_seconds',10),spec.get('max_seconds',20)],'reference_duration':reference['duration'],'scene_change_candidates':reference['scene_changes'],'audio_analysis_limit':reference['audio']['method']})
+            prompt+=json.dumps({'brief':spec.get('brief',''),'installed_title_fonts':fonts,'reference_evidence_frames':evidence_frames,'recorded_human_reviews':feedback,'model_revision_suggestions':suggestions,'assets':asset_descriptions,'music_timing':timing,'duration_budget':[spec.get('min_seconds',10),spec.get('max_seconds',20)],'reference_duration':reference['duration'],'scene_change_candidates':reference['scene_changes'],'audio_analysis_limit':reference['audio']['method']})
             command=[os.environ.get('FOOTAGEPILOT_CODEX','codex'),'exec','--model','gpt-6.1-sol','-c','model_reasoning_effort="low"','--ignore-user-config','--ephemeral','--skip-git-repo-check','--sandbox','read-only','--output-schema',str(contract),'-o',str(response)]
             for image in images:command+=['--image',str(image)]
             result=subprocess.run(command+['-'],input=prompt,cwd=temp,text=True,capture_output=True,timeout=600);(output/'planner.log').write_text(result.stderr)

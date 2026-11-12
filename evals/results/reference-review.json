@@ -1,0 +1,53 @@
+{
+  "passed": true,
+  "reviewer_model": "gpt-6.1-sol",
+  "review_seconds": 31.321963167007198,
+  "reference_frames": 18,
+  "candidate_frames": 12,
+  "model_findings": 4,
+  "human_acceptance": "unreviewed",
+  "manually_checked_observation": "Reference top row versus baseline centered panel strip confirmed by inspecting cited images.",
+  "targeted_revision": "Top-aligned three-column row and later second-row panel",
+  "planner_seconds": 65.82495204200677,
+  "review_record_bound_to_plan": true,
+  "panel_centres": [
+    [
+      0.16,
+      0.16
+    ],
+    [
+      0.5,
+      0.16
+    ],
+    [
+      0.84,
+      0.16
+    ],
+    [
+      0.84,
+      0.49
+    ]
+  ],
+  "duration": 14.0,
+  "output_sha256": "0bcc3ccb656e736b619950ea38a63dbfa87620efb3f7b207987ba5698f94b9f6",
+  "native_queue_render_seconds": 2,
+  "native_visual_samples": 43,
+  "title_timing_samples": 10,
+  "negative_control": {
+    "control": "missing-final-panel",
+    "rejected": true,
+    "reason": "Export differs visually from prepared composition at frame 287",
+    "intervention": "First two attempts hit H264/empty decoder exceptions on unchanged prepared panels. Panel hashes/full decodes were checked. A subsequent instrumented recheck of the same control (no movie regeneration) produced the expected visual rejection. Decoder exceptions were not counted as successful rejection."
+  },
+  "interventions": [
+    "First narrower sampling omitted reference collage; reviewer disclosed uncertainty. Expanded to six distributed windows before reuse.",
+    "Explicit revision brief prioritized the confirmed layout mismatch; plan changed other choices too, so not a controlled single-factor quality trial.",
+    "No model plan edits before native preparation."
+  ],
+  "limits": [
+    "Citations/labels do not establish semantic truth.",
+    "No listening, exact camera-match or creative acceptance claim.",
+    "Native source-selection and typography changes need independent human review.",
+    "Intermittent decoder exceptions were observed during the negative-control recheck and remain a reliability limitation."
+  ]
+}
