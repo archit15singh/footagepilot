@@ -1,4 +1,5 @@
 import hashlib,json,tempfile,unittest
+from decimal import Decimal,ROUND_HALF_UP
 from pathlib import Path
 from unittest.mock import patch
 from footagepilot.music_timing import validate_timing,position,span,marker_times
@@ -7,6 +8,14 @@ from footagepilot.resolve import prepare
 
 
 class MusicTimingTests(unittest.TestCase):
+    def test_cue_spans_do_not_lose_half_frame_boundaries(self):
+        timing={'cues':[0,.91,1.32,1.76,2.62,3.05,3.48,4.33,4.77,5.2]}
+        elapsed=Decimal(0);frames=[]
+        for start,length in [(0,2),(2,3),(5,4)]:
+            elapsed+=Decimal(str(span(timing,start,length)))
+            frames.append(int((elapsed*30).quantize(Decimal(1),rounding=ROUND_HALF_UP)))
+        self.assertEqual(frames,[40,92,156])
+
     def cues(self,path):return {'mode':'onset_candidates','cues':[0,.37,1.1,2.4,4],'source_sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'provenance':'measured transients, not beats'}
 
     def test_nonuniform_coordinates_and_music_binding(self):

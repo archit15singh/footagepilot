@@ -1,5 +1,6 @@
 """Explicit timing coordinates: authored tempo or source-bound audio cue candidates."""
 import array,hashlib,math,subprocess,sys
+from decimal import Decimal
 from pathlib import Path
 from .__main__ import binary,probe,write
 
@@ -41,7 +42,8 @@ def position(timing,index):
 
 def span(timing,start,length):
     if type(length) not in (int,float) or not math.isfinite(length) or length<=0:raise ValueError('Invalid timing span')
-    return position(timing,start+length)-position(timing,start)
+    # Preserve decimal cue coordinates before the native frame quantization.
+    return float(Decimal(str(position(timing,start+length)))-Decimal(str(position(timing,start))))
 
 
 def marker_times(timing,duration):
