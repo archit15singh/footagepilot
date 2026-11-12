@@ -1,0 +1,14 @@
+{
+  "reference": "reference/analysis.json",
+  "brief": "Adapt the reference's framing and pacing into a travel photo memory, keeping a strong opening and ending.",
+  "assets": [
+    {"id": "hero", "path": "assets/hero.jpg"},
+    {"id": "street", "path": "assets/street.jpg"},
+    {"id": "people", "path": "assets/people.jpg"},
+    {"id": "detail", "path": "assets/detail.jpg"}
+  ],
+  "music": "assets/score.wav",
+  "music_timing": {"bpm": 120, "offset": 0, "provenance": "Replace with the source of this track's timing grid; do not invent certainty"},
+  "min_seconds": 12,
+  "max_seconds": 16
+}

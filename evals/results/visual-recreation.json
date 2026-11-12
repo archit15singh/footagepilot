@@ -1,0 +1,58 @@
+{
+  "passed": true,
+  "stages": [
+    {
+      "name": "research-freshness",
+      "status": "passed"
+    },
+    {
+      "name": "visual-codex-plan",
+      "status": "passed"
+    },
+    {
+      "name": "native-edits-render",
+      "status": "passed"
+    }
+  ],
+  "planner": {
+    "backend": "codex",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "low",
+    "elapsed_seconds": 33.8383004579955
+  },
+  "duration": 14.0,
+  "main_shots": 9,
+  "panels": 4,
+  "transitions": 0,
+  "output_sha256": "59dada040ff452b369ccb677d3eecaeeb101aea4a51ee59a5ec60f289a08dc6d",
+  "decode": "passed",
+  "preference": "unreviewed",
+  "scope": "Existing reference analysis \u2192 actual visual Codex planning \u2192 actual native Edits export; private input/output media excluded",
+  "full_download_run": {
+    "passed": true,
+    "stages": [
+      {
+        "name": "research-freshness",
+        "status": "passed"
+      },
+      {
+        "name": "download-analyze-reference",
+        "status": "passed"
+      },
+      {
+        "name": "visual-codex-plan",
+        "status": "passed"
+      },
+      {
+        "name": "native-edits-render",
+        "status": "passed"
+      }
+    ],
+    "duration": 14.0,
+    "model": "gpt-6.1-sol",
+    "planner_seconds": 31.611620458003017,
+    "shots": 10,
+    "panels": 4,
+    "output_sha256": "56aca925366a540b189a6d2a19c861c7174267760681ff3346661a4334cef92e"
+  }
+}

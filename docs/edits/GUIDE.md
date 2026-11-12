@@ -62,3 +62,18 @@ Native transition support: manifests may supply `transitions: [{"after_shot": 8,
 For a known timing grid, add `music_timing: {"bpm": 120, "offset": 0, "provenance": "timing from the source score"}`. This inserts explicit native beat markers; it is not a claim that every transient is a beat. The live original score had a half-second authoring grid, and the revised shot boundaries were planned on that grid. Use listening or trusted annotations to establish phrasing. For an estimated BPM, retain the estimate and uncertainty in your plan instead of calling it verified.
 
 Refresh the live automation inventory with `python3 -m footagepilot edits-tools --token-file /private/path/token --output projects/capabilities-new.json`. Compare that snapshot with the checked-in version before using untested tools. The current GUI remains the fallback for setup, sandbox imports and unsupported parameters.
+
+## Visual planner and end-to-end command
+
+`visual-plan` runs headless Codex `gpt-6.1-sol` at low reasoning with the reference contact sheet and a thumbnail of each identified asset. It receives scene/audio-candidate metadata and an explicit music grid, not an alleged listening experience. Its output contains observations, uncertainties, asset IDs, beat-count holds, reasons, cut/dissolve choices and optional simultaneous quadrant panels. Compilation rejects unknown assets, overlapping/incomplete collages and invalid durations before Edits mutates a project. Model output is never executable shell code.
+
+```sh
+python3 -m footagepilot visual-plan projects/visual-spec.json --output projects/new-plan
+python3 -m footagepilot recreate projects/visual-spec.json --token-file /private/path/token --output projects/new-recreation
+```
+
+Use [visual-spec.json](../../examples/visual-spec.json) as a starting point. Paths resolve relative to the spec. `reference` points to an existing analysis.json; alternatively `reference_url` makes `recreate` download/analyse that reel first. Keep the track's tempo provenance honest: estimates need review, and fixed tempo cannot represent tempo changes. The current planner requires a zero-offset grid and 2–20 visual assets. It plans still-image grammar; selected clips can be supplied as prepared visual assets, but motion-aware source in/out selection is not implemented.
+
+`recreate` writes a run ledger with freshness, optional download/analysis, visual planning and native-render stages. A failed stage remains failed; rerun into a fresh directory after correcting the cause. It never promotes creative preference automatically. This is a full one-run path, not a cache/resume engine.
+
+To revisit a chosen private collection, add `saved_collection_url` to your local spec and run `python3 -m footagepilot inspiration-open projects/visual-spec.json`. It opens the collection in Brave; the agent then uses computer use to select references and records `reference_url` locally. Neither authentication nor saved collection membership is guessed or scraped automatically. No URLs from a user's saved list belong in public examples.
