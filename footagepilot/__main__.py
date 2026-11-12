@@ -162,7 +162,7 @@ def main():
     visual=commands.add_parser('visual-plan');visual.add_argument('spec',type=Path);visual.add_argument('--output',type=Path,required=True)
     recreate=commands.add_parser('recreate');recreate.add_argument('spec',type=Path);recreate.add_argument('--output',type=Path,required=True);recreate.add_argument('--token-file',type=Path)
     saved=commands.add_parser('inspiration-open');saved.add_argument('spec',type=Path)
-    rp=commands.add_parser('resolve-prepare');rp.add_argument('manifest',type=Path);rp.add_argument('--output',type=Path,required=True)
+    rp=commands.add_parser('resolve-prepare');rp.add_argument('manifest',type=Path);rp.add_argument('--output',type=Path,required=True);rp.add_argument('--render',action='store_true',help='Include a native render request after assembly checks')
     rv=commands.add_parser('resolve-verify');rv.add_argument('job',type=Path);rv.add_argument('media',type=Path);rv.add_argument('--output',type=Path,required=True)
     commands.add_parser('doctor')
     web = commands.add_parser('serve'); web.add_argument('directory', type=Path); web.add_argument('--port', type=int, default=8765)
@@ -170,7 +170,7 @@ def main():
     try:
         if args.command == 'resolve-prepare':
             from .resolve import prepare
-            print(json.dumps(prepare(args.manifest.resolve(),args.output.resolve()),indent=2))
+            print(json.dumps(prepare(args.manifest.resolve(),args.output.resolve(),args.render),indent=2))
         elif args.command == 'resolve-verify':
             from .resolve import verify
             print(json.dumps(verify(args.job.resolve(),args.media.resolve(),args.output.resolve()),indent=2))

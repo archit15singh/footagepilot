@@ -2,6 +2,9 @@
 import hashlib
 import json
 import math
+import array
+import subprocess
+import sys
 from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 from .__main__ import binary, probe, run, write
@@ -20,7 +23,7 @@ def lua(value):
     raise ValueError('Unsupported Lua data')
 
 
-def prepare(manifest, output):
+def prepare(manifest, output, render=False):
     """Render individual image shots, then generate a checked native assembly job.
 
     First version deliberately supports straight cuts and full-frame footage only.
@@ -77,12 +80,55 @@ def prepare(manifest, output):
         write(output/'job.json',job)
         template=(Path(__file__).parent/'resolve_job.lua').read_text()
         payload={k:job[k] for k in ('fps','width','height','frames','shots','music','beats')}
-        payload.update(name='FootagePilot-'+output.name,target=str(output),custom_name='resolve-output')
+        payload.update(name='FootagePilot-'+output.name,target=str(output),custom_name='resolve-output',render=render)
         (output/'console.lua').write_text('do local cfg='+lua(payload)+'; '+template+' end\n')
         (output/'render.lua').write_text((Path(__file__).parent/'resolve_render.lua').read_text())
         return {'job':str(output/'job.json'),'console':str(output/'console.lua'),'status':job['status'],'next':'Paste console.lua into Resolve Workspace > Console (Lua). Inspect native media, then render. Run resolve-verify on the actual output.'}
     except Exception as error:
         write(output/'failure.json',{'stage':'prepare','error':str(error)});raise
+
+
+def similarity(expected, actual):
+    if len(expected)!=len(actual) or not expected:raise ValueError('Incomparable media samples')
+    left=sum(expected)/len(expected);right=sum(actual)/len(actual)
+    xx=sum((x-left)**2 for x in expected);yy=sum((y-right)**2 for y in actual)
+    mae=sum(abs(a-b) for a,b in zip(expected,actual))/len(expected)
+    correlation=sum((a-left)*(b-right) for a,b in zip(expected,actual))/math.sqrt(xx*yy) if xx*yy>1e-15 else (1. if mae<1e-6 else 0.)
+    return mae,correlation
+
+
+def raw(command):
+    result=subprocess.run([str(x) for x in command],capture_output=True)
+    if result.returncode:raise ValueError(result.stderr.decode(errors='replace')[-2000:])
+    return result.stdout
+
+
+def visual_matches(job, media):
+    ff=binary('ffmpeg');rows=[]
+    def frame(path,number):
+        data=raw([ff,'-v','error','-ss',number/job['fps'],'-i',path,'-frames:v','1','-vf','scale=64:64,format=rgb24','-f','rawvideo','-'])
+        if len(data)!=64*64*3:raise ValueError('Missing verification frame')
+        return [v/255 for v in data]
+    for index,shot in enumerate(job['shots']):
+        for offset in sorted({min(1,shot['frames']-1),shot['frames']//2,max(0,shot['frames']-2)}):
+            mae,corr=similarity(frame(shot['path'],offset),frame(media,shot['start']+offset))
+            rows.append({'shot':index+1,'frame':shot['start']+offset,'mean_absolute_error':round(mae,5),'correlation':round(corr,5)})
+            if mae>.08 or corr<.90:raise ValueError(f"Export differs visually from prepared shot {index+1} at frame {shot['start']+offset}; inspect offline media, order, timing and colour")
+    return rows
+
+
+def audio_match(expected, media):
+    def samples(path):
+        values=array.array('f');values.frombytes(raw([binary('ffmpeg'),'-v','error','-i',path,'-map','0:a:0','-ac','1','-ar','1000','-f','f32le','-']))
+        if sys.byteorder!='little':values.byteswap()
+        return values
+    a,b=samples(expected),samples(media);length=min(len(a),len(b))
+    if abs(len(a)-len(b))>50 or length<100:raise ValueError('Soundtrack duration differs from prepared audio')
+    mae,corr=similarity(a[:length],b[:length])
+    reference_rms=math.sqrt(sum(v*v for v in a[:length])/length);actual_rms=math.sqrt(sum(v*v for v in b[:length])/length)
+    gain_ratio=actual_rms/reference_rms if reference_rms>1e-6 else (1. if actual_rms<1e-5 else math.inf)
+    if corr<.90 or not .8<=gain_ratio<=1.25:raise ValueError('Soundtrack waveform does not match prepared music; inspect timing, gain and audio routing')
+    return {'sample_rate':1000,'correlation':round(corr,5),'rms_gain_ratio':round(gain_ratio,5),'mean_absolute_error':round(mae,6),'scope':'Numerical soundtrack correspondence; not a listening or musical taste verdict'}
 
 
 def verify(job_path, media, output):
@@ -97,5 +143,8 @@ def verify(job_path, media, output):
     if (stream['width'],stream['height'])!=(job['width'],job['height']) or abs(fps-job['fps'])>.01 or abs(duration-job['frames']/job['fps'])>1.5/job['fps']:raise ValueError('Export dimensions, FPS or duration differ from job')
     if job.get('music') and not any(s['codec_type']=='audio' for s in meta['streams']):raise ValueError('Music missing from export')
     if hashlib.sha256(media.read_bytes()).hexdigest()!=digest:raise ValueError('Export changed during verification')
-    result={'technical_pass':True,'sha256':digest,'frames_expected':job['frames'],'duration':duration,'fps':fps,'decode':'passed','native_origin':'Requires retained console evidence and project inspection; cannot be established from an MP4 alone.','creative_verdict':'unreviewed','limits':['No listening, beat perception, crop or storytelling verdict. A decodable Media Offline slate can still pass technical checks; inspect output frames.']}
+    frames=visual_matches(job,media)
+    audio=audio_match(job['music'],media) if job.get('music') else None
+    if hashlib.sha256(media.read_bytes()).hexdigest()!=digest:raise ValueError('Export changed during correspondence checks')
+    result={'visual_samples':frames,'audio_correspondence':audio,'technical_pass':True,'sha256':digest,'frames_expected':job['frames'],'duration':duration,'fps':fps,'decode':'passed','native_origin':'Requires retained console evidence and project inspection; cannot be established from an MP4 alone.','creative_verdict':'unreviewed','limits':['Sampled correspondence is not exhaustive perceptual review, listening or storytelling acceptance.']}
     output.parent.mkdir(parents=True,exist_ok=True);write(output,result);return result

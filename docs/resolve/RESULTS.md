@@ -1,21 +1,39 @@
 # Resolve integration evidence
 
-12 November 2026. Same private album assets and the 14-second visual-planner shot selection used by the Edits trial. Personal media and machine-specific logs remain local.
+12 November 2026. Same private album assets, ten-shot selection, 14-second target and authored 120 BPM score used for the matched Edits cut-only trial. Media, operation details and DRP remain local.
 
 | Stage | Observed result |
 | --- | --- |
-| Install and launch | Free App Store Resolve opened; native Lua reported 21.2.0.6 and product name DaVinci Resolve |
-| Internal project API | Current project name query succeeded |
-| Raw image import | API returned one item; native viewer showed Media Offline. Failed |
-| GUI recovery | Import Media dialog stopped responding; repeated computer-use timeouts after reconnection. User assistance requested |
-| FootagePilot preparation | Ten separate 1080×1920/30 image clips plus prepared WAV generated for a deliberately cut-only 14-second comparison |
-| Native assembly/export | Not completed; generated job is labelled prepared-not-executed |
-| Creative comparison | No Resolve ranking or user preference verdict available |
+| Native application | Free Mac App Store DaVinci Resolve 21.2.0.6 |
+| Initial failure | JPEG import returned Media Offline; native picker became unresponsive |
+| Recovery | macOS Force Quit/relaunch; import prepared MP4 through picker; grant only the job folder |
+| API correction | Dictionary import returned nil; path-list import succeeded. Full prepared-clip append preserved exact duration |
+| Timeline | Ten separately editable video clips, one audio clip, 28 native timing markers; 420 frames |
+| Native render | Deliver queue showed Completed in 00:00:02; this is native render time only, not end-to-end time |
+| Export | 14.0 seconds, 1080×1920, 30 FPS, H264 video and audio; full decode passed |
+| Editable artifact | Native DRP exported locally; project also saved in Resolve |
+| Visual correspondence | 30 samples across all shots; minimum correlation 0.99957, maximum normalized mean absolute error 0.01179 |
+| Audio correspondence | Correlation 0.99958; RMS ratio 0.99986 versus prepared track; no listening assessment |
+| Negative controls | Repeated first shot rejected for wrong visual content; 200 ms delayed music rejected for waveform mismatch |
+| Tests | 41 passing unit tests, compile/diff checks; known-cut/onset and silence diagnostic also passes |
 
-Edits has a verified full native export including titles, collage and a transition in the preceding trial; this Resolve v1 adapter rejects those features. Comparing those different outputs as equivalent would be misleading. The cut-only job is a narrower test of timeline assembly, marker timing and delivery. Baked crop/zoom/audio preparation is disclosed; it is not native keyframe or Fairlight automation.
+Reproduce preparation checks with `evals/resolve_preparation.py`; test an actual native export and its negative controls with `evals/resolve_native.py`. Sanitized results are in `evals/results/resolve-native.json`. An MP4 does not establish native provenance alone: the native timeline, queue completion and DRP were separately observed.
 
-Resume by recovering Resolve, running the generated console job, checking native timeline properties, exporting and inspecting both positive and negative controls. A final decode check alone cannot detect an offline-media render. Keep the first failed import evidence instead of removing it from the report.
+## Qualitative comparison
 
-The selected public masking reel was downloaded successfully (13.211 seconds, 1272×720). Its initial analysis failed on limited-range JPEG encoding, then on a sample after the last decodable video frame. Explicit full-range JPEG conversion and conservative video-end clamping fixed both failures. The corrected run produced 15 frames, three visual-change candidates and 48 RMS-onset candidates; the contact sheet was inspected. These onsets are not musical beat labels.
+| Dimension | Edits | Resolve hybrid |
+| --- | --- | --- |
+| Current implemented readiness | Higher: verified native photos, titles, collage, keyframes and dissolve | Cut-only first version, now native export verified |
+| Matched cut-only output | 14.0-second native export | 14.0-second native export |
+| Editable representation | Native elements and project | Individual native clips, audio and timeline markers; DRP |
+| Animation in this trial | Native Edits transforms | Crop/zoom baked into separate prepared clips |
+| Automation friction observed | Local MCP executes the native workflow directly | GUI bootstrap/folder grant/console required; recovery and API mismatches added substantial setup effort |
+| Creative quality | Awaiting user review | Awaiting user review; no superiority claim |
 
-All ten prepared shot clips independently decode and contain exactly 420 frames in total (14 seconds at 30 FPS). The same deliberately cut-only manifest also produced an actual Edits export of 14.0 seconds. The Resolve native side remains pending. Unit suite: 39 passing tests, including Lua data escaping, unsupported-effect rejection, input-change rejection and cumulative frame rounding.
+For implemented readiness on this task: **Edits first, Resolve second**. This is an engineering judgment about shipped scope and interventions, not a scored creative benchmark or a ranking of the editors’ professional capabilities. No comparable end-to-end timing was retained, so the two-second Resolve queue result cannot support a speed ranking.
+
+The earlier fully styled Edits variation has titles/collage/transitions; the matched cut-only variation deliberately omits them on both sides. Do not describe the styled variation and Resolve v1 as equivalent. The full requested Resolve rebuild still needs native titles/layers/transitions, planner routing, and recreation/quality iteration against saved references. The rejected slideshow feedback remains valid; a successful native roundtrip does not resolve taste.
+
+## Research-driven correction
+
+The public masking reference downloaded successfully (13.211 seconds, 1272×720). Its initial analysis failed on limited-range JPEG encoding, then on a sample after the last decodable video frame. Full-range JPEG conversion and video-end clamping fixed both. The corrected run produced 15 frames, three visual-change candidates and 48 RMS-onset candidates; the contact sheet shows local grading masks. Those onsets are not musical beat labels. Retained sanitized reference evidence is in `evals/results/resolve-reference.json`.
