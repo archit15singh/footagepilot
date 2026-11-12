@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "source_kind": "selected retained reference audio with six original moving trip clips",
+  "source_selection_hash_bound": true,
+  "manual_plan_edits": false,
+  "reference_duration": 13.837,
+  "duration": 13.5,
+  "frames": 405,
+  "cue_coordinates": 25,
+  "planner_seconds": 67.2411938340083,
+  "native_queue_render_seconds": 1,
+  "visual_samples": 44,
+  "title_timing_samples": 10,
+  "audio_correspondence": {
+    "sample_rate": 1000,
+    "correlation": 0.99992,
+    "rms_gain_ratio": 0.99992,
+    "mean_absolute_error": 0.001429,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "cut_offsets_frames": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "output_sha256": "d4f186f97956e69fc84b5ce492d69214c90685bc585be250ed959df51e3a6d7d",
+  "creative_acceptance": "unreviewed",
+  "frame_inspection": "Walking opening, progressive gold serif title card, field/garden cuts, top-row collage with second-row arrival, then cave-boat entry/interior. Sparse contact-sheet samples missed the short second title entry; dedicated timing checks cover it.",
+  "interventions": [
+    "Initial reference-audio run037 prepared with a cut at91instead of92frames due binary-float cue-span subtraction. Kept prepared/unrendered; not credited as native success.",
+    "A failing half-frame regression established the arithmetic error; decimal endpoint subtraction fixed it without changing rounding policy or QA thresholds.",
+    "New complete038run replanned and prepared after the fix; no model-plan edits. Original reference/media stayed unchanged.",
+    "Temporary-path expectation in the new unit test initially missed macOS /var\u2192/private/var resolution; test corrected to compare resolved paths."
+  ],
+  "limits": [
+    "Uses full reference audio, which may include voices/SFX; no stem separation or song identification.",
+    "Same recording from time zero improves source/timing fidelity only; no listening, beat/downbeat/phrase or musical-fit verdict.",
+    "Different fresh plans, not a controlled creative comparison.",
+    "Small regular serif title and sparse source previews still limit style fidelity; no human preference recorded.",
+    "Raw reference/audio/generated movie remain local, not in public commits."
+  ]
+}

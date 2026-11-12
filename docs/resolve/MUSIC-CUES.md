@@ -30,3 +30,21 @@ Run `python3 -m evals.music_cues --output NEW_DIRECTORY` for known uneven-pulse 
 
 
 Research checked12November2026: Blackmagic’s [Fairlight overview](https://www.blackmagicdesign.com/products/davinciresolve/fairlight) describes waveform editing and its integration with picture. It supports inspecting audio timing; it does not validate FootagePilot’s RMS heuristic or establish that a transient is a musical beat. The current official Fairlight PDF could not be retrieved by the web reader because of its size; no new PDF-derived capability is claimed. Automatic orchestration retains the same detector and uncertainty as the separately tested command. Recheck vendor guidance and live behavior after version changes.
+
+
+## Use the selected reference audio locally
+
+A recreation specification can select the analyzed reference soundtrack explicitly instead of a separate music path:
+
+```json
+{"music_from_reference":true,"music_analysis":{"max_duration":13.5,"min_gap":0.35},"min_seconds":13.5,"max_seconds":13.5}
+```
+
+Keep `reference` (completed analysis) or `reference_url` and the source assets. Omit `music`. This Resolve-only option requires the exact retained `media.mp4` hash to match its completed analysis and that analysis to report audio present. The run records `select-reference-soundtrack` with media/analysis fingerprints before cue measurement. Generated `visual-spec.json` resolves an ordinary source path, which is also bound into planner/native-job input hashes. Different or replaced reference media fails explicitly.
+
+This uses existing reference audio from time zero. It does not isolate music from voices/effects, identify a song, stretch/loop the track or borrow timing from a different recording. Choose a budget that fits the actual source duration; the normal short-track gate still applies. External tracks remain supported through `music`. The feature selects a source for local analysis/recreation; it does not publish the reference audio or generated movie. Keep the source, derivatives and raw run artifacts in ignored `projects/`.
+
+Research checked12November2026: Blackmagic’s [Edit guide overview](https://www.blackmagicdesign.com/products/davinciresolve/edit) documents waveform overlays for locating spikes/silent regions and markers for notes. These support inspection and explicit timing, not a claim that RMS peaks identify beats or that an agent heard the track. Recheck after app/version changes; this new source-selection path is FootagePilot behavior and must be established by its actual native run, not inferred from the vendor page.
+
+
+Cue-span arithmetic preserves decimal endpoint differences before frame conversion. The reference-audio trial exposed `3.05-1.32` becoming `1.7299999999999998`, which could put the next cut at91instead of92frames at30FPS. Decimal subtraction now preserves1.73; final frame placement still uses the existing half-up rule. The corresponding regression first failed with `[40,91,156]` and now yields `[40,92,156]`. This corrects quantization of supplied coordinates; it does not improve transient/beat classification.
