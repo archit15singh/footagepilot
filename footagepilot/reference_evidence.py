@@ -3,10 +3,12 @@ import math,re
 from pathlib import Path
 
 
-def select_frames(reference,root,windows=6):
+def select_frames(reference,root,windows=6,times=None):
     duration=reference['duration'];frames=reference.get('frames',[])
     if type(duration) not in (int,float) or not math.isfinite(duration) or duration<=0:raise ValueError('Invalid reference duration')
     if not frames:raise ValueError('Reference needs timestamped frame evidence')
+    times=[] if times is None else times
+    if not isinstance(times,list) or len(times)>2 or any(type(t) not in (int,float) or not math.isfinite(t) or not 0<=t<=duration for t in times):raise ValueError('Use at most two reference focus times within duration')
     rows=[]
     for i,row in enumerate(frames):
         at=row.get('time');name=row.get('file','')
@@ -23,6 +25,8 @@ def select_frames(reference,root,windows=6):
         for offset in (-.08,0,.08):
             row=min(rows,key=lambda r:abs(r['time']-(centre+offset)))
             selected[row['id']]=row
+    for target in times:
+        row=min(rows,key=lambda r:abs(r['time']-target));selected[row['id']]=row
     return sorted(selected.values(),key=lambda r:r['time'])
 
 

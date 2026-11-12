@@ -76,6 +76,8 @@ local ok,err=pcall(function()
     text:SetInput('Size',row.size/270);text:SetInput('Center',{row.x,1-row.y})
     text:SetInput('Red1',row.color[1]);text:SetInput('Green1',row.color[2]);text:SetInput('Blue1',row.color[3])
     assert(text:GetInput('Font')==(row.font or 'Helvetica Neue'),'Native title font readback mismatch')
+    assert(text:GetInput('Style')==(row.bold and 'Bold' or 'Regular'),'Native title weight readback mismatch')
+    assert(math.abs(text:GetInput('Size')-row.size/270)<0.00001,'Native title size readback mismatch')
     assert(text:GetInput('StyledText')==row.text,'Native title text readback mismatch')
     mo.Input=text.Output
   end

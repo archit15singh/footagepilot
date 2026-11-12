@@ -12,6 +12,10 @@ class ReferenceEvidenceTests(unittest.TestCase):
             chosen=select_frames({'duration':10,'frames':frames,'scene_changes':[2,5,8]},root)
             self.assertLessEqual(len(chosen),18);self.assertEqual([r['time'] for r in chosen],sorted(r['time'] for r in chosen))
             self.assertTrue({4.9,5.,5.1}.issubset({r['time'] for r in chosen}))
+            focused=select_frames({'duration':10,'frames':frames,'scene_changes':[2,5,8]},root,times=[1.0])
+            self.assertIn(1.0,[r['time'] for r in focused]);self.assertLessEqual(len(focused),20)
+            for times in ([11],[float('nan')],[1,2,3]):
+                with self.assertRaisesRegex(ValueError,'focus times'):select_frames({'duration':10,'frames':frames},root,times=times)
             with self.assertRaisesRegex(ValueError,'Invalid reference frame'):select_frames({'duration':10,'frames':[{'time':0,'file':'../secret.jpg'}]},root)
 
     def test_unknown_citations_and_temporal_overclaims_rejected(self):

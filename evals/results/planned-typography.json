@@ -1,0 +1,75 @@
+{
+  "passed": true,
+  "planner_seconds": 66.62811762500496,
+  "reference_frame_count": 19,
+  "focus_frame_supplied": true,
+  "size": 40,
+  "bold": true,
+  "native_parameter_readback": "Font/Style/Size/StyledText assertions passed before render",
+  "duration": 13.5,
+  "output_sha256": "4e40ea6189dbe1cd26288352409cb2944f24a0c1623504e522ab6c98ca36e0f6",
+  "queue_render_seconds": 2,
+  "visual_samples": 45,
+  "title_checks": [
+    {
+      "title": 1,
+      "frame": 26,
+      "changed_pixels": 1054,
+      "bbox": [
+        110,
+        235,
+        210,
+        257
+      ],
+      "expected_minimum_height": 15.68,
+      "scope": "Contrast/size evidence; native text readback is checked during construction, not OCR"
+    },
+    {
+      "title": 2,
+      "frame": 40,
+      "changed_pixels": 1547,
+      "bbox": [
+        73,
+        321,
+        246,
+        343
+      ],
+      "expected_minimum_height": 15.68,
+      "scope": "Contrast/size evidence; native text readback is checked during construction, not OCR"
+    }
+  ],
+  "title_timing_status_counts": {
+    "passed": 4,
+    "ambiguous-overlapping-title-band": 5
+  },
+  "previous_same_word_title": {
+    "title": 1,
+    "frame": 78,
+    "changed_pixels": 294,
+    "bbox": [
+      130,
+      238,
+      189,
+      254
+    ],
+    "expected_minimum_height": 10.97,
+    "scope": "Contrast/size evidence; native text readback is checked during construction, not OCR"
+  },
+  "audio": {
+    "sample_rate": 1000,
+    "correlation": 0.99992,
+    "rms_gain_ratio": 0.99992,
+    "mean_absolute_error": 0.001429,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "interventions": [
+    "First039plan used distributed samples only and chose56bold. Retained prepared/unrendered; clearer title frame was found missing from the attached evidence.",
+    "Added bounded reference_times; fresh040run included the1-second title frame and chose40bold. No manual model-plan edits.",
+    "An attempted additional gold-component diagnostic could not decode the reference still through the video QA sampler; no reference pixel-size metric credited."
+  ],
+  "limits": [
+    "No controlled whole-film ranking or human acceptance.",
+    "Five timing samples are ambiguous due overlapping conservative bands; they are not passed checks.",
+    "Native readback and glyph size are not OCR or proof of exact reference typography."
+  ]
+}
