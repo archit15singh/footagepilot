@@ -1,0 +1,97 @@
+{
+  "trial": "selected-original-source-archive",
+  "imported_videos": 5,
+  "imported_bytes": 550111352,
+  "archive_bytes": 550196394,
+  "original_video_stream_decode_count": 5,
+  "inventory": "Metadata/provenance only; semantic selection remains computer-use plus preview review",
+  "display_dimensions": [
+    [
+      2160,
+      3840
+    ],
+    [
+      2160,
+      3840
+    ],
+    [
+      2160,
+      3840
+    ],
+    [
+      2160,
+      3840
+    ],
+    [
+      2160,
+      3840
+    ]
+  ],
+  "planner_model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "planner_seconds": 77.536657125,
+  "assets_offered": 9,
+  "new_source_assets_used": 4,
+  "shots": 12,
+  "frames": 420,
+  "seconds": 14,
+  "width": 1920,
+  "height": 1080,
+  "native_queue_seconds": {
+    "expanded_precursor": 2,
+    "corrected_ending": 1
+  },
+  "native_samples": 36,
+  "cut_offsets_frames": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "ending_refinement_seconds": 15.995719208,
+  "controlled_refinement": {
+    "focus_only_changes": [
+      {
+        "shot": 12,
+        "field": "focus_y",
+        "before": 0.43,
+        "after": 0.58
+      }
+    ],
+    "native_visual_samples": 36,
+    "control_rejected": true,
+    "control_error": "Export differs visually from prepared composition at frame 359; inspect offline media, order, layout, transition and colour",
+    "audio": {
+      "sample_rate": 1000,
+      "correlation": 0.99982,
+      "rms_gain_ratio": 0.99968,
+      "mean_absolute_error": 0.002702,
+      "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+    },
+    "movie_sha256": "0f2546b0d8b544ebeab11f1a377ee44187ed65920de516455c1a48c0bd1cd7d6",
+    "drp_sha256": "ce56900adc2153f457a059666e55535b466c602016072967d537f94246260e50",
+    "creative_acceptance": "unreviewed",
+    "scope": "Focus-only structure and sampled rendered correspondence; not subject detection or a creative score"
+  },
+  "interventions": [
+    "Selected five trip videos through signed-in Photos UI after inspecting thumbnails",
+    "Rejected a moon/sky landscape sample; unintended UI selection cleared before final selection",
+    "Authored a new road/mountain/night-ending brief; removed the old cave-ending requirement",
+    "Retained expanded precursor with poor bridge framing, then applied model-selected shot12 focus_y .43\u2192.58",
+    "Native Console still required saved app restart; switching Edit page and creating a project without restart did not recover it",
+    "Existing bootstrap was reopened after restart, and exact cuts-only job dispatch rendered both exports"
+  ],
+  "qualitative": [
+    "Road/mountain footage adds scene contrast absent from earlier pool",
+    "Corrected ending retains traveler head and bridge arch in inspected frame; foreground body still cropped",
+    "Some architecture/sculpture frames remain soft, roads tilt, and day-to-night shift is abrupt",
+    "No matched grade/camera choreography or human preference; changed sources/brief/plan prevent a controlled overall ranking"
+  ]
+}
