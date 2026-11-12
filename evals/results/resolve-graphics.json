@@ -1,0 +1,145 @@
+{
+  "observed_date": "2026-11-12",
+  "application": "DaVinci Resolve free Mac App Store 21.2.0.6",
+  "canvas": [
+    1080,
+    1920
+  ],
+  "native_features": {
+    "main_clips": 10,
+    "collage_tracks": 4,
+    "TextPlus_titles": 1,
+    "Fusion_opacity_dissolves": 1,
+    "music_tracks": 1,
+    "timing_markers": 28
+  },
+  "earlier_styled_positive": {
+    "technical_pass": true,
+    "decode": "passed",
+    "duration": 14.0,
+    "fps": 30.0,
+    "frames_expected": 420,
+    "composition_samples": 42,
+    "minimum_correlation": 0.99899,
+    "maximum_mean_absolute_error": 0.01248,
+    "title_checks": [
+      {
+        "title": 1,
+        "frame": 30,
+        "changed_pixels": 1006,
+        "bbox": [
+          72,
+          175,
+          246,
+          194
+        ],
+        "expected_minimum_height": 10.97,
+        "scope": "Contrast/size evidence; native text readback is checked during construction, not OCR"
+      }
+    ],
+    "audio_correspondence": {
+      "sample_rate": 1000,
+      "correlation": 0.99958,
+      "rms_gain_ratio": 0.99986,
+      "mean_absolute_error": 0.001157,
+      "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+    },
+    "creative_verdict": "unreviewed"
+  },
+  "corrected_source_focal_positive": {
+    "technical_pass": true,
+    "decode": "passed",
+    "duration": 14.0,
+    "fps": 30.0,
+    "frames_expected": 420,
+    "composition_samples": 42,
+    "minimum_correlation": 0.99888,
+    "maximum_mean_absolute_error": 0.01212,
+    "title_checks": [
+      {
+        "title": 1,
+        "frame": 30,
+        "changed_pixels": 1101,
+        "bbox": [
+          68,
+          175,
+          251,
+          195
+        ],
+        "expected_minimum_height": 10.97,
+        "scope": "Contrast/size evidence; native text readback is checked during construction, not OCR"
+      }
+    ],
+    "audio_correspondence": {
+      "sample_rate": 1000,
+      "correlation": 0.99958,
+      "rms_gain_ratio": 0.99986,
+      "mean_absolute_error": 0.001157,
+      "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+    },
+    "creative_verdict": "unreviewed"
+  },
+  "negative_controls": [
+    {
+      "control": "tiny-title",
+      "rejected": true,
+      "reason": "Title 1 is too small or unreadable in the export"
+    },
+    {
+      "control": "missing-layers",
+      "rejected": true,
+      "reason": "Export differs visually from prepared composition at frame 210; inspect offline media, order, layout, transition and colour"
+    }
+  ],
+  "live_pipeline": {
+    "backend": "resolve",
+    "status": "verified-export",
+    "passed": true,
+    "stages": [
+      {
+        "name": "research-freshness",
+        "status": "passed"
+      },
+      {
+        "name": "download-analyze-reference",
+        "status": "passed"
+      },
+      {
+        "name": "visual-codex-plan",
+        "status": "passed"
+      },
+      {
+        "name": "prepare-native-resolve",
+        "status": "passed"
+      },
+      {
+        "name": "verify-native-resolve",
+        "status": "passed"
+      }
+    ],
+    "planner_model": "gpt-6.1-sol",
+    "reasoning_effort": "low",
+    "planner_elapsed_seconds": 36.309,
+    "note": "Original full live pipeline succeeded; focal correction reused its retained plan for the latest native render."
+  },
+  "latest_finish_gate": {
+    "status": "verified-export",
+    "passed": true,
+    "job_fingerprint_bound": true,
+    "note": "Actual finish command verified unchanged source spec, retained job fingerprint, matching DRP and native media."
+  },
+  "native_provenance": "Actual native timeline and Deliver queue observed through computer use; editable DRPs retained locally. Queue reported two seconds per styled render, not end-to-end duration.",
+  "interventions": [
+    "Native GUI bootstrap and safe-console paste",
+    "App restart after console became obscured",
+    "Title calibration after native tiny-text failure",
+    "Crop focal semantics correction after source review"
+  ],
+  "limits": [
+    "Private album media not included; supply local media for reproduction.",
+    "Still-photo adaptation, not camera-motion-matched recreation.",
+    "Sampled QA, not exhaustive frame review or OCR.",
+    "No listening verdict or human creative acceptance.",
+    "Crop/zoom and music gain/fades prepared outside Resolve."
+  ]
+}

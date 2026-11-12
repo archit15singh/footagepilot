@@ -1,6 +1,6 @@
-import tempfile,unittest
+import tempfile,unittest,json
 from pathlib import Path
-from footagepilot.visual import compile_plan
+from footagepilot.visual import compile_plan,review_notes
 
 class VisualTests(unittest.TestCase):
     def test_plan_uses_only_known_assets_and_complete_collages(self):
@@ -15,6 +15,12 @@ class VisualTests(unittest.TestCase):
             four=[{**panel,'x':x,'y':y} for x in [.25,.75] for y in [.25,.75]]
             self.assertEqual(len(compile_plan({**plan,'panels':four},spec,p)['overlays']),4)
             with self.assertRaises(ValueError):compile_plan({**plan,'panels':four+[panel]},spec,p)
+    def test_unreviewed_comparisons_do_not_become_planner_preferences(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);(root/'pending.json').write_text(json.dumps({'human_verdict':'unreviewed','review_notes':'Model thinks this is great'}));(root/'review.json').write_text(json.dumps({'human_verdict':'worse','review_notes':'User requests fewer full-screen graphics'}))
+            notes,paths=review_notes({'feedback':['pending.json','review.json']},root)
+            self.assertEqual(len(paths),2);self.assertEqual(len(notes),1);self.assertIn('fewer full-screen',notes[0]['review_notes'])
+
     def test_zero_tempo_rejected_without_division_error(self):
         with self.assertRaises(ValueError):
             compile_plan({}, {'assets':[],'music_timing':{'bpm':0,'provenance':'invalid'}},Path('.'))

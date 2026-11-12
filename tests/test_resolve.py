@@ -38,9 +38,21 @@ class ResolveTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td);(root/'a.jpg').write_bytes(b'input')
             manifest=root/'edit.json'
-            manifest.write_text(json.dumps({'shots':[{'path':'a.jpg','duration':1}], 'titles':[{'text':'keep me','start':0,'duration':1}]}))
-            with self.assertRaisesRegex(ValueError,'not yet implemented'):prepare(manifest,root/'job')
+            manifest.write_text(json.dumps({'shots':[{'path':'a.jpg','duration':1}], 'overlays':[{'path':'a.jpg','start':0,'duration':1,'x':.5,'y':.5,'scale':1}]}))
+            with self.assertRaisesRegex(ValueError,'quadrant panels'):prepare(manifest,root/'job')
             self.assertFalse((root/'job').exists())
+
+    def test_styled_job_keeps_native_features_and_single_line_console(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);(root/'a.jpg').write_bytes(b'input')
+            manifest=root/'edit.json';manifest.write_text(json.dumps({'shots':[{'path':'a.jpg','duration':1}]*2,'titles':[{'text':'A -- title','start':0,'duration':1,'size':28,'color':'#25372F'}],'overlays':[{'path':'a.jpg','start':1,'duration':1,'x':x,'y':y,'scale':.5} for x in (.25,.75) for y in (.25,.75)],'transitions':[{'after_shot':0,'filter':'transition_dissolve','duration':.1}]}))
+            def fake_run(cmd):Path(cmd[-1]).write_bytes(b'prepared')
+            with patch('footagepilot.resolve.probe',return_value={'streams':[{'codec_type':'video'}]}),patch('footagepilot.resolve.run',side_effect=fake_run),patch('footagepilot.resolve.binary',return_value='ffmpeg'):
+                prepare(manifest,root/'job',render=True)
+            job=json.loads((root/'job/job.json').read_text());script=(root/'job/console.lua').read_text()
+            self.assertEqual((len(job['titles']),len(job['overlays']),len(job['transitions'])),(1,4,1))
+            self.assertEqual(job['transitions'][0]['start'],27)
+            self.assertEqual(script.count('\n'),1);self.assertIn('A -- title',script);self.assertIn('TextPlus',script)
 
     def test_cumulative_frame_rounding_and_hashed_preparation(self):
         with tempfile.TemporaryDirectory() as td:
