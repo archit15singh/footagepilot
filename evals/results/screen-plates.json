@@ -1,0 +1,104 @@
+{
+  "native_visual_samples": 41,
+  "all_plate_frame_samples": [
+    {
+      "frame": 86,
+      "mean_absolute_error": 0.043959992851307195,
+      "correlation": 0.9986007827774305
+    },
+    {
+      "frame": 87,
+      "mean_absolute_error": 0.03178603369196944,
+      "correlation": 0.9950458217367047
+    },
+    {
+      "frame": 88,
+      "mean_absolute_error": 0.03003343722216215,
+      "correlation": 0.9951151597926051
+    },
+    {
+      "frame": 89,
+      "mean_absolute_error": 0.03016991380268406,
+      "correlation": 0.9970275642708661
+    },
+    {
+      "frame": 90,
+      "mean_absolute_error": 0.030280945692462036,
+      "correlation": 0.998162451043763
+    },
+    {
+      "frame": 91,
+      "mean_absolute_error": 0.03041084615142013,
+      "correlation": 0.9985718773490018
+    },
+    {
+      "frame": 92,
+      "mean_absolute_error": 0.025539055178597173,
+      "correlation": 0.9982785570079896
+    },
+    {
+      "frame": 93,
+      "mean_absolute_error": 0.024869016348880238,
+      "correlation": 0.9981762138059653
+    },
+    {
+      "frame": 94,
+      "mean_absolute_error": 0.023455757513636582,
+      "correlation": 0.9980726437421851
+    },
+    {
+      "frame": 95,
+      "mean_absolute_error": 0.023235396429558342,
+      "correlation": 0.9980190582778298
+    },
+    {
+      "frame": 96,
+      "mean_absolute_error": 0.024612598294526142,
+      "correlation": 0.9982798551453906
+    },
+    {
+      "frame": 97,
+      "mean_absolute_error": 0.033660449857026147,
+      "correlation": 0.9991327655105297
+    }
+  ],
+  "missing_plate_rejected": true,
+  "missing_plate_error": "Export differs visually from prepared composition at frame 90; inspect offline media, order, layout, transition and colour",
+  "normal_blend_control": {
+    "mean_absolute_error": 0.21021162045547384,
+    "correlation": 0.7581363232806421,
+    "rejected": true
+  },
+  "audio": {
+    "sample_rate": 1000,
+    "correlation": 0.99982,
+    "rms_gain_ratio": 0.99968,
+    "mean_absolute_error": 0.002702,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "movie_sha256": "7b4d92248cc8d529b335bf0799140e7e604061b84cefa69a7b000050decf28de",
+  "drp_sha256": "c35fca924a64f8d7b2b7b5af05cc1c720f7dc5d2ed143bb7cde9de5fdec1ade3",
+  "creative_acceptance": "unreviewed",
+  "scope": "One controlled native Screen plate at fractional opacity; sampled RGB model, not all blend modes, reference matching or musical judgment",
+  "input": "Retained twelve-shot original travel film, 14 seconds, landscape 1920x1080/30FPS; private media and reference remain local",
+  "baseline_invariants": {
+    "manifest_except_plates": "identical",
+    "shot_timing": "identical",
+    "prepared_shot_hashes": "all twelve identical",
+    "prepared_music_hash": "identical"
+  },
+  "native": {
+    "application": "DaVinci Resolve free Mac App Store 21.2.0.6",
+    "project": "editable DRP",
+    "render_queue": "Completed in 00:00:01 (render only)",
+    "execution": "Unmodified generated console.lua, including version guard and native property readbacks"
+  },
+  "plate": {
+    "start_frame": 86,
+    "frames": 12,
+    "opacity": 0.75,
+    "blend": "screen",
+    "kind": "original diagonal light-band calibration fixture, not glass-shatter recreation"
+  },
+  "tests": 104
+}

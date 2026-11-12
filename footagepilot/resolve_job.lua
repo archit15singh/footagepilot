@@ -2,6 +2,10 @@
 local function require_ok(value, name) assert(value, 'FootagePilot failed: '..name); return value end
 _FP=nil
 local ok,err=pcall(function()
+  if #(cfg.plates or {})>0 then
+    local version=resolve:GetVersion()
+    assert(version[1]==21 and version[2]==2,'Screen enum requires recalibration on this Resolve version')
+  end
   local pm=resolve:GetProjectManager()
   local project=require_ok(pm:CreateProject(cfg.name), 'create fresh project (choose a new job name)')
   _FP={project=project,config=cfg,stage='project'}
@@ -65,6 +69,14 @@ local ok,err=pcall(function()
       merge.Blend:SetExpression(progress)
     end
     mo.Input=merge.Output
+  end
+  for i,row in ipairs(cfg.plates or {}) do
+    assert(row.blend=='screen','Unsupported motion plate blend')
+    local item=add_layer(row,'Screen plate '..i)
+    -- Resolve 21.2 calibrated in an isolated project: native Inspector reads Screen.
+    require_ok(item:SetProperties({CompositeEnabled=true,CompositeMode=5,Opacity=row.opacity*100}),'Screen composite')
+    local props=item:GetProperties()
+    assert(props.CompositeEnabled and props.CompositeMode==5 and math.abs(props.Opacity-row.opacity*100)<0.001,'Screen composite readback mismatch')
   end
   for i,row in ipairs(cfg.titles or {}) do
     local item=add_layer(row,'Title '..i)

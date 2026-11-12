@@ -102,6 +102,11 @@ def prepare(manifest, output, render=False):
             extra={'source_start':handle,'source_path':str(path),'continuity':'pre-cut source frames continue into unchanged main excerpt'}
         else:pending.append([binary('ffmpeg'),'-v','error','-n','-i',incoming['path'],'-an','-vf',f'trim=end_frame=1,loop=-1:1:0,setpts=N/({fps}*TB)','-r',fps,'-frames:v',count,'-c:v','libx264','-crf','18','-pix_fmt','yuv420p',target])
         transitions.append({'path':str(target),'start':incoming['start']-count,'frames':count,'after_shot':row['after_shot'],'filter':row.get('filter','transition_dissolve'),**extra})
+    plates=[]
+    for i,row in enumerate(data.get('plates',[])):
+        start,count=frames(row.get('start',0)),layer_frames(row)
+        if count<1 or start+count>cursor:raise ValueError('Rounded plate exceeds timeline')
+        plates.append({'path':source(row,count,output/f'plate-{i+1:03d}.mp4'),'start':start,'frames':count,'blend':'screen','opacity':row.get('opacity',1)})
     titles=[]
     for i,row in enumerate(data.get('titles',[])):
         count=layer_frames(row)
@@ -115,7 +120,7 @@ def prepare(manifest, output, render=False):
         if float(probe(path)['format']['duration'])+.5/fps<cursor/fps:raise ValueError('Music is shorter than timeline')
         music=output/'music.wav';pending.append([binary('ffmpeg'),'-v','error','-n','-i',path,'-t',cursor/fps,'-af',f'volume={data.get("music_gain",.65)},afade=t=in:d=0.1,afade=t=out:st={max(0,cursor/fps-.3)}:d=0.3','-c:a','pcm_s16le',music])
     output.mkdir(parents=True)
-    job={'project_name':'FootagePilot-'+output.name[:32]+'-'+uuid.uuid4().hex[:8],'schema_version':2,'status':'prepared-not-executed','fps':fps,'width':w,'height':h,'frames':cursor,'shots':shots,'overlays':overlays,'backgrounds':backgrounds,'titles':titles,'transitions':transitions,'music':str(music) if music else None,'beats':[],'inputs':inputs,'manifest_sha256':hashlib.sha256(snapshot).hexdigest(),'limits':['Source crop/zoom and audio gain/fades are prepared per clip. Resolve constructs editable layers, Text+ and animated-opacity dissolves or rectangle-mask reveals.','Panel proxies are reframed to box aspect then normalized to the canvas; native independent-axis scaling restores their intended proportions.','Transition begins before the cut and reaches full incoming image on the last pre-cut frame. Moving dissolve uses source handles; legacy dissolve/wipe pre-roll freezes its first frame.','Preparing a job does not prove native execution or creative acceptance.']}
+    job={'project_name':'FootagePilot-'+output.name[:32]+'-'+uuid.uuid4().hex[:8],'schema_version':2,'status':'prepared-not-executed','fps':fps,'width':w,'height':h,'frames':cursor,'shots':shots,'overlays':overlays,'plates':plates,'backgrounds':backgrounds,'titles':titles,'transitions':transitions,'music':str(music) if music else None,'beats':[],'inputs':inputs,'manifest_sha256':hashlib.sha256(snapshot).hexdigest(),'limits':['Source crop/zoom and audio gain/fades are prepared per clip. Resolve constructs editable layers, Text+ and animated-opacity dissolves or rectangle-mask reveals.','Panel proxies are reframed to box aspect then normalized to the canvas; native independent-axis scaling restores their intended proportions.','Transition begins before the cut and reaches full incoming image on the last pre-cut frame. Moving dissolve uses source handles; legacy dissolve/wipe pre-roll freezes its first frame.','Screen plates are full-canvas black-backed layers above transitions and below titles; list order defines stacked blending. Native enum 5 was calibrated on Resolve 21.2 only.','Preparing a job does not prove native execution or creative acceptance.']}
     timing=data.get('music_timing')
     if timing:
         job['beats']=sorted({frames(t) for t in marker_times(timing,float(elapsed))})
@@ -127,9 +132,9 @@ def prepare(manifest, output, render=False):
         for path,digest in inputs.items():
             if hashlib.sha256(Path(path).read_bytes()).hexdigest()!=digest:raise ValueError('Source changed during preparation')
         if manifest.read_bytes()!=snapshot:raise ValueError('Manifest changed during preparation')
-        paths=[Path(s['path']) for group in (shots,overlays,backgrounds,titles,transitions) for s in group]+([music] if music else [])
+        paths=[Path(s['path']) for group in (shots,overlays,backgrounds,titles,transitions,plates) for s in group]+([music] if music else [])
         job['prepared_hashes']={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths};write(output/'job.json',job)
-        template=(Path(__file__).parent/'resolve_job.lua').read_text();payload={k:job[k] for k in ('fps','width','height','frames','shots','music','beats','overlays','titles','transitions','backgrounds')}
+        template=(Path(__file__).parent/'resolve_job.lua').read_text();payload={k:job[k] for k in ('fps','width','height','frames','shots','music','beats','overlays','titles','transitions','backgrounds','plates')}
         payload.update(timing_label=job.get('timing_label'),name=job['project_name'],target=str(output),custom_name='resolve-output',render=render)
         (output/'console.lua').write_text('do local cfg='+lua(payload)+'; '+console_program(template)+' end\n');(output/'render.lua').write_text(console_program((Path(__file__).parent/'resolve_render.lua').read_text())+'\n')
         return {'job':str(output/'job.json'),'console':str(output/'console.lua'),'status':job['status'],'next':'Run console.lua inside Resolve; inspect native queue/output and run resolve-verify. Native render requested.' if render else 'Run console.lua inside Resolve, inspect, then run render.lua and resolve-verify.'}
@@ -177,6 +182,12 @@ def expected_frame(job, number, width=64, height=64):
             if row.get('filter','transition_dissolve')=='transition_wipe_left':
                 result=[incoming[i] if (i//3)%width<alpha*width else v for i,v in enumerate(result)]
             else:result=[a*(1-alpha)+b*alpha for a,b in zip(result,incoming)]
+    for row in job.get('plates',[]):
+        if row['start']<=number<row['start']+row['frames']:
+            if row['blend']!='screen':raise ValueError('Unsupported plate blend in job')
+            plate=sample_frame(row['path'],number-row['start'],job['fps'],width,height)
+            opacity=row['opacity']
+            result=[a+opacity*b*(1-a) for a,b in zip(result,plate)]
     return result
 
 
@@ -193,7 +204,7 @@ def visual_matches(job, media):
     rows=[];samples=set()
     for shot in job['shots']:
         samples.update(shot['start']+n for n in {min(1,shot['frames']-1),shot['frames']//2,max(0,shot['frames']-2)})
-    for row in job.get('overlays',[])+job.get('transitions',[])+job.get('backgrounds',[]):
+    for row in job.get('overlays',[])+job.get('transitions',[])+job.get('backgrounds',[])+job.get('plates',[]):
         samples.update(row['start']+round((row['frames']-1)*fraction) for fraction in (0,.25,.5,.75,1))
     for number in sorted(samples):
         expected=expected_frame(job,number);actual=sample_frame(media,number,job['fps']);bands=title_band(job,number,64)
@@ -205,7 +216,11 @@ def visual_matches(job, media):
         resolution=256
         number=row['start']+row['frames']//2;actual=sample_frame(media,number,job['fps'],resolution,resolution);left,top,right,bottom=rectangle(row)
         x,y=round(left*resolution),round(top*resolution);pw,ph=round(right*resolution)-x,round(bottom*resolution)-y
-        expected=sample_frame(row['path'],number-row['start'],job['fps'],pw,ph);bands=title_band(job,number,resolution);region=[];reference=[]
+        expected=sample_frame(row['path'],number-row['start'],job['fps'],pw,ph)
+        if any(p['start']<=number<p['start']+p['frames'] for p in job.get('plates',[])):
+            composited=expected_frame(job,number,resolution,resolution)
+            expected=[v for yy in range(ph) for v in composited[((y+yy)*resolution+x)*3:((y+yy)*resolution+x+pw)*3]]
+        bands=title_band(job,number,resolution);region=[];reference=[]
         # Exclude the resampling edge; verify the actual panel interior.
         for yy in range(1,ph-1):
             if not any(lo<=y+yy<=hi for lo,hi in bands):
