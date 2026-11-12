@@ -5,9 +5,27 @@ import tempfile
 import unittest
 from unittest.mock import patch
 import zipfile
-from footagepilot.recreate import recreate,finish_resolve
+from footagepilot.recreate import recreate,finish_resolve,reference_soundtrack
 
 class ResolveRecreationTests(unittest.TestCase):
+    def test_reference_audio_is_bound_to_analyzed_media(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);media=root/'media.mp4';media.write_bytes(b'analyzed source');analysis=root/'analysis.json'
+            record={'decode':'passed','audio':{'present':True},'source_sha256':hashlib.sha256(media.read_bytes()).hexdigest()};analysis.write_text(json.dumps(record))
+            self.assertEqual(reference_soundtrack(analysis)['media'],str(media.resolve()))
+            media.write_bytes(b'replaced source')
+            with self.assertRaisesRegex(ValueError,'changed since analysis'):reference_soundtrack(analysis)
+            record['audio']['present']=False;analysis.write_text(json.dumps(record))
+            with self.assertRaisesRegex(ValueError,'with audio'):reference_soundtrack(analysis)
+
+    def test_reference_audio_request_is_explicit_and_unambiguous(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);spec=root/'spec.json'
+            for backend,extra in [('edits',{}),('resolve',{'music':'track.wav'}),('resolve',{'music_from_reference':False})]:
+                spec.write_text(json.dumps({'music_from_reference':True,**extra}))
+                with self.assertRaisesRegex(ValueError,'music_from_reference=true'):recreate(spec,root/'run',backend=backend)
+                self.assertFalse((root/'run').exists())
+
     def test_music_request_cannot_override_timing_or_open_edits(self):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td);spec=root/'spec.json'

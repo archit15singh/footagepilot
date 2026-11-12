@@ -10,6 +10,15 @@ from .learning import check_sources
 from .music_timing import analysis_options,extract_cues
 
 
+def reference_soundtrack(analysis_path):
+    """Select only the exact media retained by a completed reference analysis."""
+    analysis=json.loads(analysis_path.read_text());media=analysis_path.parent/'media.mp4'
+    if analysis.get('decode')!='passed' or not analysis.get('audio',{}).get('present'):raise ValueError('Reference soundtrack needs completed analysis with audio')
+    digest=hashlib.sha256(media.read_bytes()).hexdigest()
+    if digest!=analysis.get('source_sha256'):raise ValueError('Reference media changed since analysis')
+    return {'media':str(media.resolve()),'source_sha256':digest,'analysis_sha256':hashlib.sha256(analysis_path.read_bytes()).hexdigest(),'scope':'Existing reference audio from time zero; not separated music, an identified song or listening evidence'}
+
+
 def open_saved(spec_path):
     spec=json.loads(spec_path.read_text());url=spec['saved_collection_url'];parsed=urlsplit(url)
     if parsed.scheme!='https' or parsed.hostname not in ('instagram.com','www.instagram.com') or parsed.username or parsed.password or parsed.port or not re.fullmatch(r'/[A-Za-z0-9_.]+/saved/(?:[A-Za-z0-9_-]+/\d+/)?',parsed.path):raise ValueError('Expected an Instagram saved collection URL')
@@ -22,6 +31,8 @@ def recreate(spec_path,output,token_file=None,backend="edits"):
     if backend not in ("edits","resolve"):raise ValueError("Unknown native editor backend")
     if output.exists():raise ValueError('Use a new recreation directory; previous evidence is preserved')
     snapshot=spec_path.read_bytes();spec=json.loads(snapshot);base=spec_path.parent
+    use_reference='music_from_reference' in spec
+    if use_reference and (spec['music_from_reference'] is not True or 'music' in spec or backend!='resolve'):raise ValueError('Use music_from_reference=true with Resolve and no separate music path')
     music_options=analysis_options(spec,backend)
     output.mkdir(parents=True)
     state={'passed':False,'backend':backend,'stages':[],'preference':'unreviewed','spec_path':str(spec_path),'spec_sha256':hashlib.sha256(snapshot).hexdigest()}
@@ -43,7 +54,10 @@ def recreate(spec_path,output,token_file=None,backend="edits"):
         spec['reference']=str(output/'reference/analysis.json')
     else:spec['reference']=str((base/spec['reference']).resolve())
     for asset in spec['assets']:asset['path']=str((base/asset['path']).resolve())
-    spec['music']=str((base/spec['music']).resolve())
+    if use_reference:
+        soundtrack=stage('select-reference-soundtrack',lambda:reference_soundtrack(Path(spec['reference'])))
+        spec['music']=soundtrack['media'];del spec['music_from_reference']
+    else:spec['music']=str((base/spec['music']).resolve())
     if music_options is not None:
         def analyze_music():
             result=extract_cues(Path(spec['music']),output/'music-cues.json',**music_options)
