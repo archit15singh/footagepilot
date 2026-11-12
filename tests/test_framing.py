@@ -48,6 +48,29 @@ class FramingTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError,'evidence changed'):refine_framing(manifest,[1],'y',output)
             self.assertFalse((output/'edit.json').exists());self.assertTrue((output/'failure.json').exists())
 
+    def test_plate_paths_rebase_and_changed_plate_blocks_framing_output(self):
+        from unittest.mock import patch
+        from types import SimpleNamespace
+        import hashlib
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);(root/'source.jpg').write_bytes(b'still');plate=root/'plate.mp4';manifest=root/'edit.json'
+            manifest.write_text(json.dumps({'shots':[{'path':'source.jpg','duration':1}],
+                'plates':[{'path':'plate.mp4','start':0,'duration':.4,'opacity':.5}]}))
+            def render(cmd):Path(cmd[-1]).write_bytes(b'jpeg')
+            for changed in (False,True):
+                plate.write_bytes(b'plate');output=root/str(changed)
+                def model(cmd,**kwargs):
+                    Path(cmd[cmd.index('-o')+1]).write_text(json.dumps({'choices':[{'shot':1,'option':'option-0','reason':'Keep','uncertainty':'Three samples'}]}))
+                    if changed:plate.write_bytes(b'replaced')
+                    return SimpleNamespace(returncode=0,stderr='')
+                with patch('footagepilot.framing.binary',return_value='ffmpeg'),patch('footagepilot.framing.run',side_effect=render),patch('footagepilot.framing.subprocess.run',side_effect=model):
+                    if changed:
+                        with self.assertRaisesRegex(ValueError,'evidence changed'):refine_framing(manifest,[1],'y',output)
+                    else:
+                        refine_framing(manifest,[1],'y',output)
+                        revised=json.loads((output/'edit.json').read_text());self.assertEqual(revised['plates'][0]['path'],str(plate.resolve()))
+                        record=json.loads((output/'refinement.json').read_text());self.assertEqual(record['input_hashes'][str(plate.resolve())],hashlib.sha256(b'plate').hexdigest())
+
     def test_evaluation_rejects_native_jobs_from_other_manifests(self):
         from evals.framing_refinement import evaluate
         with tempfile.TemporaryDirectory() as td:

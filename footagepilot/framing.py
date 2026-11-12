@@ -37,7 +37,7 @@ def refine_framing(manifest,shots,axis,output):
     alternatives={i:options_for(data['shots'][i-1],axis) for i in shots}
     files={manifest.resolve()}
     # Rebase all media paths before writing a manifest in a different directory.
-    for row in data['shots']+data.get('overlays',[]):
+    for row in data['shots']+data.get('overlays',[])+data.get('plates',[]):
         row['path']=str((manifest.parent/row['path']).resolve());files.add(Path(row['path']))
     if data.get('music'):data['music']=str((manifest.parent/data['music']).resolve());files.add(Path(data['music']))
     hashes={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}

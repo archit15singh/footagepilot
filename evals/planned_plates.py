@@ -5,6 +5,15 @@ from footagepilot.__main__ import binary,run
 from footagepilot.resolve import verify,plate_matches,visual_matches
 
 
+def make_no_plate_control(job,missing):
+    if any(job.get(k) for k in ('titles','backgrounds','overlays','transitions')):raise ValueError('No-plate control needs a cuts-only base')
+    inputs=[v for shot in job['shots'] for v in ('-i',shot['path'])]
+    normalize=';'.join(f'[{i}:v]setsar=1,setpts=PTS-STARTPTS[s{i}]' for i in range(len(job['shots'])))
+    graph=normalize+';'+''.join(f'[s{i}]' for i in range(len(job['shots'])))+f"concat=n={len(job['shots'])}:v=1:a=0[v]"
+    run([binary('ffmpeg'),'-v','error','-n',*inputs,'-filter_complex',graph,'-map','[v]','-an','-c:v','libx264','-crf','18','-pix_fmt','yuv420p',missing])
+    return missing
+
+
 def evaluate(directory,output):
     if output.exists():raise ValueError('Use a fresh planned-plate evaluation directory')
     state=json.loads((directory/'run.json').read_text());plan=json.loads((directory/'plan/plan.json').read_text())
@@ -14,10 +23,7 @@ def evaluate(directory,output):
     if any(job.get(k) for k in ('titles','backgrounds','overlays','transitions')):raise ValueError('No-plate control currently supports a cuts-only base')
     output.mkdir(parents=True);media=Path(state['output'])
     native=verify(job_path,media,output/'native.json')
-    missing=output/'missing-plate-control.mp4';inputs=[v for shot in job['shots'] for v in ('-i',shot['path'])]
-    normalize=';'.join(f'[{i}:v]setsar=1,setpts=PTS-STARTPTS[s{i}]' for i in range(len(job['shots'])))
-    graph=normalize+';'+''.join(f'[s{i}]' for i in range(len(job['shots'])))+f"concat=n={len(job['shots'])}:v=1:a=0[v]"
-    run([binary('ffmpeg'),'-v','error','-n',*inputs,'-filter_complex',graph,'-map','[v]','-an','-c:v','libx264','-crf','18','-pix_fmt','yuv420p',missing])
+    missing=make_no_plate_control(job,output/'missing-plate-control.mp4')
     absent=copy.deepcopy(job);absent['plates']=[]
     control_samples=visual_matches(absent,missing)
     try:plate_matches(job,missing)

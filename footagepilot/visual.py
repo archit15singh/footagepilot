@@ -224,6 +224,7 @@ def review_notes(spec,base):
 def plan_visual(spec_path,output):
     if output.exists():raise ValueError('Use a new visual-plan output directory')
     snapshot=spec_path.read_bytes();spec=json.loads(snapshot);base=spec_path.parent
+    if spec.get('plate_presets'):raise ValueError('Use recreate to fetch reviewed plate presets before visual planning')
     aspect,show_titles=canvas_options(spec)
     counts=shot_budget(spec)
     canvas_previews=spec.get('canvas_previews',False)

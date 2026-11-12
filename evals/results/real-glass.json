@@ -1,0 +1,499 @@
+{
+  "tests": 120,
+  "application": "DaVinci Resolve free Mac App Store21.2.0.6",
+  "controlled_glass_strengths": {
+    "source": {
+      "credit": "OpenStudioMarburg, Philipps-Universit\u00e4t Marburg",
+      "license": "CC0-1.0",
+      "page": "https://www.uni-marburg.de/en/fb12/research-groups/grafikmultimedia/research/studio",
+      "source_sha256": "8014be86ef8e29c92194b086974cd6a32444b8165fbc6adfb8f34b9e7755f247",
+      "derived_sha256": "2abe7510ad0c2eeb5c064e2ef476f010dd30248844b46804fca09722631536e4",
+      "recipe": {
+        "source_start": 0,
+        "duration": 1,
+        "crop": [
+          480,
+          120,
+          640,
+          360
+        ],
+        "width": 1920,
+        "height": 1080,
+        "fps": 30,
+        "fade_in": [
+          0.12,
+          0.12
+        ],
+        "fade_out": [
+          0.6,
+          0.2
+        ]
+      }
+    },
+    "base_invariants": "Main clip hashes, timing, canvas, FPS, total frames and prepared soundtrack identical",
+    "opacity_only_pair": true,
+    "control_base_visual_samples": 33,
+    "variants": [
+      {
+        "opacity": 0.45,
+        "movie_sha256": "e3aaf3602e83b4b2a8646faa22577004b9cc8284b60f337474e0c253cc5d7833",
+        "drp_sha256": "130f873e234de5fcb2bd4ee48b84c53d26e86edcfdca041b5e21483acf8f983f",
+        "visual_samples": 38,
+        "plate_checks": [
+          {
+            "plate": 1,
+            "frame": 225,
+            "active_channels": 15504,
+            "expected_contribution": 0.08956431826054043,
+            "mean_absolute_error": 0.005705008076198368,
+            "maximum_error": 0.04478215913027021,
+            "correlation": 0.9994854353686634
+          },
+          {
+            "plate": 1,
+            "frame": 229,
+            "active_channels": 14489,
+            "expected_contribution": 0.10646892894048486,
+            "mean_absolute_error": 0.005817751095111489,
+            "maximum_error": 0.05323446447024243,
+            "correlation": 0.9994551378369537
+          },
+          {
+            "plate": 1,
+            "frame": 234,
+            "active_channels": 9720,
+            "expected_contribution": 0.05673395061728396,
+            "mean_absolute_error": 0.006736538890550171,
+            "maximum_error": 0.02836697530864198,
+            "correlation": 0.999273879022282
+          }
+        ],
+        "dense_effect_frames": [
+          {
+            "frame": 221,
+            "mae": 0.007356132557189542,
+            "correlation": 0.9995164898872636
+          },
+          {
+            "frame": 222,
+            "mae": 0.007223178697796521,
+            "correlation": 0.9994696978334778
+          },
+          {
+            "frame": 223,
+            "mae": 0.006876529985462322,
+            "correlation": 0.9995172567353945
+          },
+          {
+            "frame": 224,
+            "mae": 0.006672112288542868,
+            "correlation": 0.9994593708223842
+          },
+          {
+            "frame": 225,
+            "mae": 0.006702937083994137,
+            "correlation": 0.9995092032359824
+          },
+          {
+            "frame": 226,
+            "mae": 0.0068288057027345245,
+            "correlation": 0.9994259981239432
+          },
+          {
+            "frame": 227,
+            "mae": 0.006961223785623318,
+            "correlation": 0.9994444974158812
+          },
+          {
+            "frame": 228,
+            "mae": 0.006891143693230969,
+            "correlation": 0.9994387261749781
+          },
+          {
+            "frame": 229,
+            "mae": 0.006880669018526529,
+            "correlation": 0.999521393198731
+          },
+          {
+            "frame": 230,
+            "mae": 0.007332780473555844,
+            "correlation": 0.9996341057550311
+          },
+          {
+            "frame": 231,
+            "mae": 0.007380075797169359,
+            "correlation": 0.9996633687679936
+          },
+          {
+            "frame": 232,
+            "mae": 0.007507632468581796,
+            "correlation": 0.999598248236258
+          },
+          {
+            "frame": 233,
+            "mae": 0.0074698823769703965,
+            "correlation": 0.9996103909200862
+          },
+          {
+            "frame": 234,
+            "mae": 0.007328813211865628,
+            "correlation": 0.9996223056400739
+          },
+          {
+            "frame": 235,
+            "mae": 0.007424287120638696,
+            "correlation": 0.9996361446422088
+          },
+          {
+            "frame": 236,
+            "mae": 0.007372973285515186,
+            "correlation": 0.9996284691644457
+          },
+          {
+            "frame": 237,
+            "mae": 0.007347256951953575,
+            "correlation": 0.9996939770037249
+          },
+          {
+            "frame": 238,
+            "mae": 0.006932758922349576,
+            "correlation": 0.9996996762192667
+          }
+        ],
+        "source_range_checks": [
+          {
+            "prepared_frame": 0,
+            "asset_frame": 6,
+            "mae": 0.0,
+            "correlation": 1.0
+          },
+          {
+            "prepared_frame": 9,
+            "asset_frame": 15,
+            "mae": 0.00038488051470588245,
+            "correlation": 0.9999621013081831
+          },
+          {
+            "prepared_frame": 17,
+            "asset_frame": 23,
+            "mae": 0.00010435814950980392,
+            "correlation": 0.999706477512862
+          }
+        ],
+        "audio": {
+          "sample_rate": 1000,
+          "correlation": 0.99982,
+          "rms_gain_ratio": 0.99968,
+          "mean_absolute_error": 0.002702,
+          "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+        },
+        "missing_glass_rejected": true,
+        "control_error": "Screen plate 1 differs in its active pixels at frame 225",
+        "brightest_plate_frame": 231,
+        "cut_frame": 230,
+        "brightness_offset_frames": 1,
+        "timing_scope": "Maximum mean prepared-plate RGB intensity versus the cue-aligned cut; not an audible impact or verified beat"
+      },
+      {
+        "opacity": 0.75,
+        "movie_sha256": "be6af134e43db7f208f684ad8f2cfa310ef17e4d242874d85a56e5ac4b074872",
+        "drp_sha256": "9006a720bca1b8f7e193aaa1fbafa4b079fd27548219655c2c8f29291e78bde0",
+        "visual_samples": 38,
+        "plate_checks": [
+          {
+            "plate": 1,
+            "frame": 225,
+            "active_channels": 17774,
+            "expected_contribution": 0.1335919728530548,
+            "mean_absolute_error": 0.005079498727389604,
+            "maximum_error": 0.0667959864265274,
+            "correlation": 0.9995269127535087
+          },
+          {
+            "plate": 1,
+            "frame": 229,
+            "active_channels": 16530,
+            "expected_contribution": 0.15877663414392482,
+            "mean_absolute_error": 0.005262115436545068,
+            "maximum_error": 0.07938831707196241,
+            "correlation": 0.9995335068932544
+          },
+          {
+            "plate": 1,
+            "frame": 234,
+            "active_channels": 13312,
+            "expected_contribution": 0.07602388128964821,
+            "mean_absolute_error": 0.006357778847540148,
+            "maximum_error": 0.038011940644824105,
+            "correlation": 0.9991658317114156
+          }
+        ],
+        "dense_effect_frames": [
+          {
+            "frame": 221,
+            "mae": 0.007356132557189542,
+            "correlation": 0.9995164898872636
+          },
+          {
+            "frame": 222,
+            "mae": 0.007134623514693868,
+            "correlation": 0.9994175866639933
+          },
+          {
+            "frame": 223,
+            "mae": 0.0068042358257641294,
+            "correlation": 0.9994662810629743
+          },
+          {
+            "frame": 224,
+            "mae": 0.006636091362096309,
+            "correlation": 0.9994127020613418
+          },
+          {
+            "frame": 225,
+            "mae": 0.006510122871912245,
+            "correlation": 0.9994794499174005
+          },
+          {
+            "frame": 226,
+            "mae": 0.006750661929906767,
+            "correlation": 0.9993450249647956
+          },
+          {
+            "frame": 227,
+            "mae": 0.006865355459739042,
+            "correlation": 0.9993312231653851
+          },
+          {
+            "frame": 228,
+            "mae": 0.006762951561598905,
+            "correlation": 0.9993485681422064
+          },
+          {
+            "frame": 229,
+            "mae": 0.006720437677215494,
+            "correlation": 0.9994837801022526
+          },
+          {
+            "frame": 230,
+            "mae": 0.007336735532908016,
+            "correlation": 0.999549043929951
+          },
+          {
+            "frame": 231,
+            "mae": 0.007351533214388697,
+            "correlation": 0.9995702560443962
+          },
+          {
+            "frame": 232,
+            "mae": 0.007510004978553922,
+            "correlation": 0.9994637287959757
+          },
+          {
+            "frame": 233,
+            "mae": 0.007355477385500769,
+            "correlation": 0.9994909080600843
+          },
+          {
+            "frame": 234,
+            "mae": 0.007051303134611687,
+            "correlation": 0.9995375258076817
+          },
+          {
+            "frame": 235,
+            "mae": 0.007146593069672722,
+            "correlation": 0.999534235661031
+          },
+          {
+            "frame": 236,
+            "mae": 0.007155749516411957,
+            "correlation": 0.9995353547986052
+          },
+          {
+            "frame": 237,
+            "mae": 0.006983094880875143,
+            "correlation": 0.9996441222813685
+          },
+          {
+            "frame": 238,
+            "mae": 0.00666140558168733,
+            "correlation": 0.9996665907053793
+          }
+        ],
+        "source_range_checks": [
+          {
+            "prepared_frame": 0,
+            "asset_frame": 6,
+            "mae": 0.0,
+            "correlation": 1.0
+          },
+          {
+            "prepared_frame": 9,
+            "asset_frame": 15,
+            "mae": 0.00038488051470588245,
+            "correlation": 0.9999621013081831
+          },
+          {
+            "prepared_frame": 17,
+            "asset_frame": 23,
+            "mae": 0.00010435814950980392,
+            "correlation": 0.999706477512862
+          }
+        ],
+        "audio": {
+          "sample_rate": 1000,
+          "correlation": 0.99982,
+          "rms_gain_ratio": 0.99968,
+          "mean_absolute_error": 0.002702,
+          "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+        },
+        "missing_glass_rejected": true,
+        "control_error": "Screen plate 1 differs in its active pixels at frame 225",
+        "brightest_plate_frame": 231,
+        "cut_frame": 230,
+        "brightness_offset_frames": 1,
+        "timing_scope": "Maximum mean prepared-plate RGB intensity versus the cue-aligned cut; not an audible impact or verified beat"
+      }
+    ],
+    "creative_acceptance": "unreviewed"
+  },
+  "automatic_preset": {
+    "planner": {
+      "backend": "codex",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "low",
+      "elapsed_seconds": 89.32530308399873,
+      "main_asset_count": 9,
+      "plate_asset_count": 1,
+      "chosen_plate": "marburg-glass",
+      "cut_after_shot": 2,
+      "pre_frames": 9,
+      "post_frames": 15,
+      "opacity": 0.65,
+      "source_start": 0.1
+    },
+    "native": {
+      "shots": 12,
+      "frames": 420,
+      "fps": 30,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "plate_start": 108,
+      "cut_frame": 117,
+      "plate_frames": 24,
+      "visual_samples": 40,
+      "plate_checks": [
+        {
+          "plate": 1,
+          "frame": 114,
+          "active_channels": 9586,
+          "expected_contribution": 0.09966101997554586,
+          "mean_absolute_error": 0.006808261567534933,
+          "maximum_error": 0.04983050998777293,
+          "correlation": 0.9991579458111574
+        },
+        {
+          "plate": 1,
+          "frame": 120,
+          "active_channels": 15572,
+          "expected_contribution": 0.13433292827463758,
+          "mean_absolute_error": 0.006398044212875111,
+          "maximum_error": 0.06716646413731879,
+          "correlation": 0.9992330681610437
+        },
+        {
+          "plate": 1,
+          "frame": 125,
+          "active_channels": 11738,
+          "expected_contribution": 0.07465024049035755,
+          "mean_absolute_error": 0.006213684147983243,
+          "maximum_error": 0.037325120245178776,
+          "correlation": 0.9989685363166702
+        }
+      ],
+      "audio": {
+        "sample_rate": 1000,
+        "correlation": 0.99982,
+        "rms_gain_ratio": 0.99968,
+        "mean_absolute_error": 0.002702,
+        "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+      },
+      "movie_sha256": "160ffaca4a2cf27282c00dd166d3c89d94ec4d678de73f283c7dbd03b83fe81f",
+      "drp_sha256": "c57752fd0c4ffb92e01508a0ad3b069595981ab73170c41f05b9fc913456581c"
+    },
+    "broad_missing_expectation_passed": true,
+    "no_plate_control_visual_samples": 36,
+    "actual_no_plate_control_rejected": true,
+    "control_error": "Screen plate 1 differs in its active pixels at frame 114",
+    "control_kind": "FFmpeg concatenation of the exact prepared main shots with no plate; negative control only, not a native product export",
+    "creative_acceptance": "unreviewed",
+    "scope": "One supplied-asset choice and native Screen export; not automatic stock acquisition, refraction recreation or listening/creative acceptance"
+  },
+  "corrected_automatic_ending": {
+    "focus_only_changes": [
+      {
+        "shot": 12,
+        "field": "focus_y",
+        "before": 0.43,
+        "after": 0.58
+      }
+    ],
+    "native_visual_samples": 40,
+    "control_rejected": true,
+    "control_error": "Export differs visually from prepared composition at frame 382; inspect offline media, order, layout, transition and colour",
+    "audio": {
+      "sample_rate": 1000,
+      "correlation": 0.99982,
+      "rms_gain_ratio": 0.99968,
+      "mean_absolute_error": 0.002702,
+      "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+    },
+    "movie_sha256": "bd4cc9680b70c6612fdd5f3e98fcd8694874978e2b643394d1008a3bbaea98d1",
+    "drp_sha256": "9472ea40574278aefa960e7a6c9b36b5a8bf68b464b45393f8e1ed4a32ad2f2c",
+    "creative_acceptance": "unreviewed",
+    "scope": "Focus-only structure and sampled rendered correspondence; not subject detection or a creative score",
+    "plate_checks": [
+      {
+        "plate": 1,
+        "frame": 114,
+        "active_channels": 9586,
+        "expected_contribution": 0.09966101997554586,
+        "mean_absolute_error": 0.006808261567534933,
+        "maximum_error": 0.04983050998777293,
+        "correlation": 0.9991579458111574
+      },
+      {
+        "plate": 1,
+        "frame": 120,
+        "active_channels": 15572,
+        "expected_contribution": 0.13433292827463758,
+        "mean_absolute_error": 0.006398044212875111,
+        "maximum_error": 0.06716646413731879,
+        "correlation": 0.9992330681610437
+      },
+      {
+        "plate": 1,
+        "frame": 125,
+        "active_channels": 11738,
+        "expected_contribution": 0.07465024049035755,
+        "mean_absolute_error": 0.006213684147983243,
+        "maximum_error": 0.037325120245178776,
+        "correlation": 0.9989685363166702
+      }
+    ]
+  },
+  "live_fetches": {
+    "source_sha256": "8014be86ef8e29c92194b086974cd6a32444b8165fbc6adfb8f34b9e7755f247",
+    "derived_sha256": "2abe7510ad0c2eeb5c064e2ef476f010dd30248844b46804fca09722631536e4",
+    "two_cli_fetches_identical": true
+  },
+  "native_render_queue_seconds": {
+    "glass_45": 2,
+    "glass_75": 1,
+    "automatic_65_precursor": 2,
+    "corrected_65": 1
+  },
+  "qualitative_limit": "Photographed shard texture is closer in category than glare/bands. Exact reference asset identity, refraction of underlying footage, camera/grade matching, listening and human preference remain unverified."
+}
