@@ -37,3 +37,6 @@ The planner now consumes timestamped frames around selected change candidates an
 
 
 Resolve music-cue progress: `music-cues` proposes source-hash-bound RMS onset candidates; visual plans can use their uneven cue intervals for cuts, titles and panels. See [music timing](resolve/MUSIC-CUES.md). This advances variable holds without a known BPM; phrase identification and listening-based acceptance in priority3 remain unproven.
+
+
+For iterative recreation, `review-reference` now compares actual candidate/reference frames and emits hash-bound model suggestions. A new spec may include `model_reviews` to pass them to Codex planning; human feedback remains separate and takes precedence. See [reference review and limits](resolve/REFERENCE-REVIEW.md). Frame citations and a revised export do not establish creative acceptance.
