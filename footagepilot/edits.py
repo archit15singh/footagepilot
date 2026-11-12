@@ -52,7 +52,7 @@ def validate_edit(data, base):
         if not path.is_file():raise ValueError('Shot file missing')
         if shot.get('fit','fill') not in ('fill','contain'):raise ValueError('Unknown shot fit')
         if not number(shot.get('scale',1),.1,3) or not number(shot.get('zoom',0),0,.2):raise ValueError('Invalid scale/zoom')
-        for key in ('x','y'):
+        for key in ('x','y','focus_x','focus_y'):
             if not number(shot.get(key,.5),0,1):raise ValueError('Position must be 0–1')
     total=sum(s['duration'] for s in data['shots'])
     if total>180:raise ValueError('Recreation must be at most 180 seconds')
