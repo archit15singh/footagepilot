@@ -46,7 +46,8 @@
     "Initial run stopped because reference_url triggered missing yt-dlp. New spec explicitly selected retained reference analysis; original failed run kept.",
     "First two verification attempts failed in FFmpeg tiny-panel extraction. Seek changes and single-thread decoding did not fix it. Scalar CPU path produced48stable diagnostic samples, then72real panel regression samples. No movie regeneration or QA threshold changes.",
     "Resolve console focus recovered by restarting the agent-owned project. AX input setValue worked; coordinate click did not.",
-    "No manual model-plan edits before native preparation."
+    "No manual model-plan edits before native preparation.",
+    "Initial short-track fixture was incorrectly assumed shorter than20s; the actual score is42s and correctly reached planning. That diagnostic worker was stopped, its failed log retained, and a real5s source then rejected against the14s budget before planning."
   ],
   "tool_versions": {
     "ffmpeg": "9.0 ARM64",
@@ -57,5 +58,6 @@
     "This removes manual coordinate copying; native console execution/queue observation still uses computer use.",
     "Scalar sampling addresses the observed build-specific failures; not a universal decoder guarantee.",
     "Different fresh plan, not a controlled creative-quality comparison; no human acceptance or listening claim."
-  ]
+  ],
+  "short_track_failed_before_planning": true
 }
