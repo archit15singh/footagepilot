@@ -48,3 +48,30 @@ class LayoutTests(unittest.TestCase):
         contract=schema(['a'],video_ranges=True,fonts=['Didot','Baskerville'])
         self.assertEqual(contract['properties']['title_font']['enum'],['Didot','Baskerville'])
         self.assertIn('title_font',contract['required'])
+
+    def test_sequence_titles_preserve_staggered_entries_and_reject_collision(self):
+        import tempfile
+        from pathlib import Path
+        from footagepilot.visual import compile_plan
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);(root/'a.jpg').touch();(root/'score.wav').touch()
+            spec={'native_backend':'resolve','assets':[{'id':'a','path':'a.jpg'}],'music':'score.wav','music_timing':{'bpm':120,'provenance':'authored'},'min_seconds':2,'max_seconds':8}
+            rows=[{'text':'Look','start_beat':0,'beats':4,'y':.35},{'text':'A little closer','start_beat':1,'beats':3,'y':.5},{'text':'There is more','start_beat':2,'beats':2,'y':.65}]
+            plan={'title':'Travel','shots':[{'asset_id':'a','beats':4,'fit':'fill','zoom':0}]*2,'panels':[],'title_sequence':rows}
+            edit=compile_plan(plan,spec,root)
+            self.assertEqual([t['start'] for t in edit['titles']],[0,.5,1])
+            self.assertEqual([t['start']+t['duration'] for t in edit['titles']],[2,2,2])
+            with self.assertRaisesRegex(ValueError,'separated'):compile_plan({**plan,'title_sequence':[rows[0],{**rows[1],'y':.36}]},spec,root)
+            with self.assertRaisesRegex(ValueError,'beat timeline'):compile_plan({**plan,'title_sequence':[{**rows[0],'beats':99}]},spec,root)
+
+    def test_title_frame_checks_reject_early_entry_or_missing_line(self):
+        from footagepilot.resolve import title_timing_matches
+        job={'fps':30,'width':1080,'height':1920,'frames':60,'titles':[{'text':'Look','start':15,'frames':30,'size':28,'y':.5}]}
+        # Isolate pixel timing from renderer integration: all changed pixels are in title band.
+        blank=[0.]*(160*284*3)
+        def rendered(path,n,*args):return [1.]*len(blank) if 15<=n<45 else blank
+        with patch('footagepilot.resolve.expected_frame',return_value=blank),patch('footagepilot.resolve.sample_frame',side_effect=rendered):
+            self.assertEqual(len(title_timing_matches(job,'render')),5)
+        for bad in ([1.]*len(blank),blank):
+            with patch('footagepilot.resolve.expected_frame',return_value=blank),patch('footagepilot.resolve.sample_frame',return_value=bad):
+                with self.assertRaises(ValueError):title_timing_matches(job,'render')

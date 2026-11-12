@@ -1,0 +1,69 @@
+{
+  "passed": true,
+  "planner": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "low",
+    "elapsed_seconds": 71.71932116699463
+  },
+  "duration": 14.0,
+  "sha256": "21a15f78cc6e1666336d7b8608dd1a6ab11891b220bbd4aa66fb60b10f78c575",
+  "visual_samples": 53,
+  "minimum_correlation": 0.96837,
+  "title_timing_samples": 14,
+  "title_events": [
+    {
+      "start_frame": 0,
+      "end_frame_exclusive": 60,
+      "nearest_grid_frame": 0,
+      "offset_frames": 0
+    },
+    {
+      "start_frame": 15,
+      "end_frame_exclusive": 60,
+      "nearest_grid_frame": 15,
+      "offset_frames": 0
+    },
+    {
+      "start_frame": 30,
+      "end_frame_exclusive": 60,
+      "nearest_grid_frame": 30,
+      "offset_frames": 0
+    }
+  ],
+  "title_negative_controls": [
+    {
+      "control": "missing-line",
+      "rejected": true,
+      "error": "Title 3 missing at planned frame 30"
+    },
+    {
+      "control": "early-line",
+      "rejected": true,
+      "error": "Title 3 band appears outside planned timing at frame 29"
+    }
+  ],
+  "audio_correspondence": {
+    "sample_rate": 1000,
+    "correlation": 0.99958,
+    "rms_gain_ratio": 0.99986,
+    "mean_absolute_error": 0.001157,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "native_queue_render_seconds": 2,
+  "interventions": [
+    "Brief explicitly requested three progressive original lines on supplied authored beats.",
+    "No changes to model plan before native preparation.",
+    "Panel QA resolution increased64\u2192256 after detailed tile aliasing caused false rejection; thresholds unchanged."
+  ],
+  "limits": [
+    "Hard line entry/exit, not character animation or native camera motion.",
+    "Music grid authored; reference beat identification and listening not claimed.",
+    "Technical correspondence is not exact style match or creative acceptance."
+  ],
+  "layout_negative_control": {
+    "control": "erased-final-panel",
+    "rejected": true,
+    "reason": "Export differs visually from prepared composition at frame 330; inspect offline media, order, layout, transition and colour",
+    "construction": "FFmpeg modification for negative-control use only; not credited as a native render"
+  }
+}

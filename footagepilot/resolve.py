@@ -44,6 +44,7 @@ def prepare(manifest, output, render=False):
     validate_panels([{**r,'start':frames(r['start']),'duration':frames(r['duration'])} for r in data.get('overlays',[])])
     for row in data['shots']:
         if row.get('scale',1)!=1 or row.get('x',.5)!=.5 or row.get('y',.5)!=.5:raise ValueError('Main shots must use full-frame placement; use collage overlays for positioned panels')
+    if len(data.get('titles',[]))>16:raise ValueError('Use at most sixteen native titles')
     for title in data.get('titles',[]):
         if type(title.get('size',28)) not in (int,float) or not math.isfinite(title.get('size',28)) or not 8<=title.get('size',28)<=72:raise ValueError('Title size must be 8–72 logical units')
         if not isinstance(title.get('font','Helvetica Neue'),str) or not 0<len(title.get('font','Helvetica Neue'))<=80 or type(title.get('bold',False)) is not bool:raise ValueError('Title font/bold values are invalid')
@@ -190,16 +191,17 @@ def visual_matches(job, media):
         rows.append({'frame':number,'mean_absolute_error':round(mae,5),'correlation':round(corr,5)})
         if mae>.08 or corr<.90:raise ValueError(f'Export differs visually from prepared composition at frame {number}; inspect offline media, order, layout, transition and colour')
     for index,row in enumerate(job.get('overlays',[])):
-        number=row['start']+row['frames']//2;actual=sample_frame(media,number,job['fps']);left,top,right,bottom=rectangle(row)
-        x,y=round(left*64),round(top*64);pw,ph=round(right*64)-x,round(bottom*64)-y
-        expected=sample_frame(row['path'],number-row['start'],job['fps'],pw,ph);bands=title_band(job,number,64);region=[];reference=[]
+        resolution=256
+        number=row['start']+row['frames']//2;actual=sample_frame(media,number,job['fps'],resolution,resolution);left,top,right,bottom=rectangle(row)
+        x,y=round(left*resolution),round(top*resolution);pw,ph=round(right*resolution)-x,round(bottom*resolution)-y
+        expected=sample_frame(row['path'],number-row['start'],job['fps'],pw,ph);bands=title_band(job,number,resolution);region=[];reference=[]
         # Exclude the resampling edge; verify the actual panel interior.
         for yy in range(1,ph-1):
             if not any(lo<=y+yy<=hi for lo,hi in bands):
-                region+=actual[((y+yy)*64+x+1)*3:((y+yy)*64+x+pw-1)*3];reference+=expected[(yy*pw+1)*3:((yy+1)*pw-1)*3]
+                region+=actual[((y+yy)*resolution+x+1)*3:((y+yy)*resolution+x+pw-1)*3];reference+=expected[(yy*pw+1)*3:((yy+1)*pw-1)*3]
         mae,corr=similarity(reference,region)
         if mae>.08 or corr<.90:raise ValueError(f'Collage panel {index+1} differs from its planned asset')
-        rows.append({'panel':index+1,'frame':number,'mean_absolute_error':round(mae,5),'correlation':round(corr,5)})
+        rows.append({'panel':index+1,'sample_resolution':resolution,'frame':number,'mean_absolute_error':round(mae,5),'correlation':round(corr,5)})
     return rows
 
 
@@ -219,6 +221,25 @@ def title_matches(job, media):
         target=t['size']*2.4*height/job['height']
         if y1-y0+1<target*.55 or len(points)<max(3,len(t['text'].strip())*2):raise ValueError(f'Title {index+1} is too small or unreadable in the export')
         rows.append({'title':index+1,'frame':number,'changed_pixels':len(points),'bbox':[x0,y0,x1,y1],'expected_minimum_height':round(target*.55,2),'scope':'Contrast/size evidence; native text readback is checked during construction, not OCR'})
+    return rows
+
+
+def title_timing_matches(job, media):
+    """Check entry/exit frames in isolated title bands, not speech or OCR."""
+    width=160;height=round(width*job['height']/job['width']);height+=height%2
+    rows=[]
+    for index,t in enumerate(job.get('titles',[])):
+        radius=max(3,4*t['size']*height/job['height']);centre=t['y']*height
+        for number in sorted({max(0,t['start']-1),t['start'],t['start']+t['frames']//2,t['start']+t['frames']-1,min(job['frames']-1,t['start']+t['frames'])}):
+            others=[other for other in job.get('titles',[]) if other is not t and other['start']<=number<other['start']+other['frames'] and abs(other['y']-t['y'])*height<radius+4*other['size']*height/job['height']]
+            if others:
+                rows.append({'title':index+1,'frame':number,'status':'ambiguous-overlapping-title-band'});continue
+            expected=expected_frame(job,number,width,height);actual=sample_frame(media,number,job['fps'],width,height)
+            changed=sum(sum(abs(expected[(y*width+x)*3+k]-actual[(y*width+x)*3+k]) for k in range(3))/3>.2 for y in range(max(0,int(centre-radius)),min(height,int(centre+radius+1))) for x in range(width))
+            active=t['start']<=number<t['start']+t['frames'];minimum=max(3,len(t['text'].strip()))
+            if active and changed<minimum:raise ValueError(f'Title {index+1} missing at planned frame {number}')
+            if not active and changed>=minimum:raise ValueError(f'Title {index+1} band appears outside planned timing at frame {number}')
+            rows.append({'title':index+1,'frame':number,'expected_active':active,'changed_pixels':changed,'status':'passed'})
     return rows
 
 
@@ -243,7 +264,11 @@ def timing_evidence(job):
     for shot in job['shots'][1:]:
         frame=shot['start'];nearest=min(grid,key=lambda x:abs(x-frame)) if grid else None
         cuts.append({'cut_frame':frame,'nearest_grid_frame':nearest,'offset_frames':frame-nearest if nearest is not None else None})
-    return {'provenance':job.get('timing_provenance'),'cuts':cuts,'transitions':[{'filter':r.get('filter','transition_dissolve'),'start_frame':r['start'],'last_effect_frame':r['start']+r['frames']-1,'cut_frame':job['shots'][r['after_shot']+1]['start']} for r in job.get('transitions',[])],'scope':'Authored/reviewed grid correspondence only; no listening, downbeat or musical-fit verdict'}
+    title_events=[]
+    for title in job.get('titles',[]):
+        nearest=min(grid,key=lambda x:abs(x-title['start'])) if grid else None
+        title_events.append({'start_frame':title['start'],'end_frame_exclusive':title['start']+title['frames'],'nearest_grid_frame':nearest,'offset_frames':title['start']-nearest if nearest is not None else None})
+    return {'provenance':job.get('timing_provenance'),'title_events':title_events,'cuts':cuts,'transitions':[{'filter':r.get('filter','transition_dissolve'),'start_frame':r['start'],'last_effect_frame':r['start']+r['frames']-1,'cut_frame':job['shots'][r['after_shot']+1]['start']} for r in job.get('transitions',[])],'scope':'Authored/reviewed grid correspondence only; no listening, downbeat or musical-fit verdict'}
 
 
 def verify(job_path, media, output):
@@ -262,5 +287,5 @@ def verify(job_path, media, output):
     titles=title_matches(job,media)
     audio=audio_match(job['music'],media) if job.get('music') else None
     if hashlib.sha256(media.read_bytes()).hexdigest()!=digest:raise ValueError('Export changed during correspondence checks')
-    result={'timing_evidence':timing_evidence(job),'visual_samples':frames,'title_checks':titles,'audio_correspondence':audio,'technical_pass':True,'sha256':digest,'frames_expected':job['frames'],'duration':duration,'fps':fps,'decode':'passed','native_origin':'Requires retained console evidence and project inspection; cannot be established from an MP4 alone.','creative_verdict':'unreviewed','limits':['Sampled correspondence is not exhaustive perceptual review, listening or storytelling acceptance.']}
+    result={'timing_evidence':timing_evidence(job),'visual_samples':frames,'title_checks':titles,'title_timing_checks':title_timing_matches(job,media),'audio_correspondence':audio,'technical_pass':True,'sha256':digest,'frames_expected':job['frames'],'duration':duration,'fps':fps,'decode':'passed','native_origin':'Requires retained console evidence and project inspection; cannot be established from an MP4 alone.','creative_verdict':'unreviewed','limits':['Sampled correspondence is not exhaustive perceptual review, listening or storytelling acceptance.']}
     output.parent.mkdir(parents=True,exist_ok=True);write(output,result);return result
