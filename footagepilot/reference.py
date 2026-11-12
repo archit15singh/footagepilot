@@ -104,16 +104,18 @@ def analyze_reference(source, output, interval=1., threshold=.28, max_duration=1
             samples=array.array('f');samples.frombytes(raw)
             if sys.byteorder!='little':samples.byteswap()
             values,onsets=audio_events(samples);audio.update(energy=[round(x,5) for x in values],onsets=onsets)
-        frame_times={round(i*interval,4):'regular' for i in range(math.ceil(duration/interval))}
+        # Container/audio duration can outlast the last decodable video frame.
+        safe_end=max(0,min(duration,float(video.get('duration') or duration))-2/fps)
+        frame_times={round(min(safe_end,i*interval),4):'regular' for i in range(math.ceil(duration/interval))}
         for t in cuts:
-            for offset,kind in [(-2/fps,'before cut'),(0,'at cut'),(2/fps,'after cut')]:frame_times[round(min(duration-1/fps,max(0,t+offset)),4)]=kind
+            for offset,kind in [(-2/fps,'before cut'),(0,'at cut'),(2/fps,'after cut')]:frame_times[round(min(safe_end,max(0,t+offset)),4)]=kind
         frames=[]
         for i,(t,kind) in enumerate(sorted(frame_times.items())):
             filename=f'frames/{i:04d}.jpg'
-            execute([ff,'-v','error','-y','-ss',str(t),'-i',media,'-frames:v','1','-vf','scale=320:-2',output/filename])
+            execute([ff,'-v','error','-y','-ss',str(t),'-i',media,'-frames:v','1','-vf','scale=320:-2:out_range=full,format=yuvj420p',output/filename])
             if not (output/filename).is_file():raise ValueError(f'No frame at {t}')
             frames.append({'time':t,'file':filename,'kind':kind})
-        execute([ff,'-v','error','-y','-i',media,'-vf',f'fps=1/{max(duration/24,.25)},scale=160:-2,tile=6x4','-frames:v','1',output/'contact.jpg'])
+        execute([ff,'-v','error','-y','-i',media,'-vf',f'fps=1/{max(duration/24,.25)},scale=160:-2:out_range=full,format=yuvj420p,tile=6x4','-frames:v','1',output/'contact.jpg'])
         if hashlib.sha256(media.read_bytes()).hexdigest()!=snapshot:raise ValueError('Reference changed during analysis')
         data={'schema_version':1,'source_kind':'instagram' if url else 'local','source_url':url,'source_sha256':snapshot,'duration':duration,'width':video['width'],'height':video['height'],'fps':fps,'scene_threshold':threshold,'scene_changes':cuts,'audio':audio,'cut_audio_alignment':cut_alignment(cuts,audio['onsets']),'frames':frames,'decode':'passed','tools':{'ffmpeg':execute([ff,'-version']).stdout.decode().splitlines()[0]},'limitations':['Sampled frames can miss fast actions.','Scene changes are candidates, not transition classifications.','Audio onsets may be speech/SFX; beat and phrase interpretation needs listening.']}
         write(output/'analysis.json',data);make_report(output,data);write(output/'complete.json',{'passed':True,'source_sha256':snapshot,'frames':len(frames),'report':'index.html'})

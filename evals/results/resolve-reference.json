@@ -1,0 +1,19 @@
+{
+  "source_url": "https://www.instagram.com/davinci_resolve_tips/reel/DRBdgfpEZtJ/",
+  "duration": 13.211,
+  "frame_count": 15,
+  "visual_candidates": 3,
+  "onset_candidates": 48,
+  "decode": "passed",
+  "initial_failures": [
+    "Limited-range JPEG encoding rejected",
+    "Timestamp after last decodable video frame"
+  ],
+  "corrected": "Explicit full-range JPEG conversion and video-end clamping",
+  "listening_assessment": false,
+  "limitations": [
+    "Sampled frames can miss fast actions.",
+    "Scene changes are candidates, not transition classifications.",
+    "Audio onsets may be speech/SFX; beat and phrase interpretation needs listening."
+  ]
+}

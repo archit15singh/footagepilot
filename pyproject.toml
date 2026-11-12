@@ -12,7 +12,7 @@ requires-python = ">=3.11"
 footagepilot = "footagepilot.__main__:main"
 
 [tool.setuptools.package-data]
-footagepilot = ["web/*.html", "render/*.jsx"]
+footagepilot = ["web/*.html", "render/*.jsx", "*.lua"]
 
 [tool.setuptools.packages.find]
 include = ["footagepilot", "footagepilot.*"]
