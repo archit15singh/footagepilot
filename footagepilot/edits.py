@@ -45,8 +45,12 @@ def validate_edit(data, base):
     if data.get('aspect','9:16') not in ('9:16','16:9','1:1','4:5'):raise ValueError('Unsupported canvas aspect')
     if data.get('fps',30) not in (24,30,60):raise ValueError('Choose 24, 30 or 60 fps')
     def number(value,low,high):return type(value) in (int,float) and math.isfinite(value) and low<=value<=high
-    total=0
-    for shot in data['shots']+data.get('overlays',[]):
+    plates=data.get('plates',[])
+    if not isinstance(plates,list) or len(plates)>16:raise ValueError('Use at most sixteen Screen plates')
+    for plate in plates:
+        if not isinstance(plate,dict) or plate.get('blend','screen')!='screen' or not number(plate.get('opacity',1),0,1):raise ValueError('Plate needs Screen blend and opacity 0–1')
+        if set(plate)-{'path','start','duration','source_start','blend','opacity'}:raise ValueError('Unsupported plate field; plates are full-canvas motion layers')
+    for shot in data['shots']+data.get('overlays',[])+plates:
         if not number(shot.get('source_start',0),0,86400):raise ValueError('Source start must be finite seconds in 0–86400')
         if not number(shot.get('duration'),.1,30):raise ValueError('Shot duration must be 0.1–30 seconds')
         path=(base/shot['path']).resolve()
@@ -57,7 +61,7 @@ def validate_edit(data, base):
             if not number(shot.get(key,.5),0,1):raise ValueError('Position must be 0–1')
     total=sum(s['duration'] for s in data['shots'])
     if total>180:raise ValueError('Recreation must be at most 180 seconds')
-    for overlay in data.get('overlays',[])+data.get('titles',[]):
+    for overlay in data.get('overlays',[])+data.get('titles',[])+plates:
         if not number(overlay.get('start',0),0,total) or not number(overlay.get('duration'),.1,total) or overlay.get('start',0)+overlay['duration']>total+.001:raise ValueError('Overlay exceeds timeline')
     for title in data.get('titles',[]):
         if not isinstance(title.get('text'),str) or not 1<=len(title['text'])<=120:raise ValueError('Title must contain 1–120 characters')
@@ -79,6 +83,7 @@ def render_edit(manifest, output, token_file=None):
     import hashlib,time,shutil,uuid
     from .__main__ import probe,binary,run,write
     snapshot=manifest.read_bytes();data=json.loads(snapshot);total=validate_edit(data,manifest.parent)
+    if data.get('plates'):raise ValueError('Screen plates require Resolve')
     if 'cues' in data.get('music_timing',{}):raise ValueError('Audio cue execution requires Resolve')
     if any(t.get('filter')=='transition_moving_dissolve' for t in data.get('transitions',[])):raise ValueError('Moving-source dissolves require Resolve')
     if data.get('layout_backgrounds') or any('width' in s or 'height' in s for s in data.get('overlays',[])):raise ValueError('Explicit rectangular layouts require Resolve')

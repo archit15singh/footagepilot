@@ -33,6 +33,41 @@ class ResolveTests(unittest.TestCase):
         for y in range(4):
             self.assertEqual(actual[y*12:(y+1)*12],[.8]*6+[.2]*6)
 
+    def test_screen_compositor_preserves_black_and_uses_fractional_opacity(self):
+        job={'fps':30,'shots':[{'path':'base','start':0,'frames':30}],
+             'plates':[{'path':'plate','start':3,'frames':12,'blend':'screen','opacity':.5}]}
+        def frame(path,*args):return ([0.,1.,.5] if path=='plate' else [.2,.4,.6])*4
+        with patch('footagepilot.resolve.sample_frame',side_effect=frame):
+            self.assertEqual(expected_frame(job,0,2,2),[.2,.4,.6]*4)
+            actual=expected_frame(job,8,2,2)
+        for a,b in zip(actual,[.2,.7,.7]*4):self.assertAlmostEqual(a,b)
+
+    def test_panel_region_gate_includes_screen_plate_above_it(self):
+        from footagepilot.resolve import visual_matches
+        job={'fps':30,'shots':[{'path':'base','start':0,'frames':30}],
+             'overlays':[{'path':'panel','start':0,'frames':30,'x':.5,'y':.5,'width':.5,'height':.5}],
+             'plates':[{'path':'plate','start':0,'frames':30,'blend':'screen','opacity':1}]}
+        def frame(path,number,fps,width=64,height=64):
+            if path!='native':return [{'base':.2,'panel':.4,'plate':.5}[path]]*(width*height*3)
+            return [(.7 if width//4<=x<width*3//4 and height//4<=y<height*3//4 else .6)
+                    for y in range(height) for x in range(width) for _ in range(3)]
+        with patch('footagepilot.resolve.sample_frame',side_effect=frame):
+            self.assertTrue(visual_matches(job,'native'))
+
+    def test_plate_validation_rejects_unknown_mode_transform_and_nan(self):
+        from footagepilot.edits import validate_edit,render_edit
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);(root/'a.jpg').write_bytes(b'input')
+            data={'shots':[{'path':'a.jpg','duration':1}],
+                  'plates':[{'path':'a.jpg','start':0,'duration':.4,'opacity':.75}]}
+            for change in ({'blend':'add'},{'x':.5},{'opacity':float('nan')},{'start':.9}):
+                bad={**data,'plates':[{**data['plates'][0],**change}]}
+                with self.assertRaises(ValueError):validate_edit(bad,root)
+            manifest=root/'edit.json';manifest.write_text(json.dumps(data))
+            with patch('footagepilot.edits.EditsClient') as client:
+                with self.assertRaisesRegex(ValueError,'plates require Resolve'):render_edit(manifest,root/'out.mp4')
+                client.assert_not_called()
+
     def test_timing_reports_off_grid_cut_without_inventing_a_beat(self):
         report=timing_evidence({'shots':[{'start':0},{'start':17}],'beats':[0,15,30],'transitions':[{'start':12,'frames':5,'after_shot':0,'filter':'transition_wipe_left'}],'timing_provenance':'authored'})
         self.assertEqual(report['cuts'][0]['offset_frames'],2)
@@ -60,13 +95,17 @@ class ResolveTests(unittest.TestCase):
     def test_styled_job_keeps_native_features_and_single_line_console(self):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td);(root/'a.jpg').write_bytes(b'input')
-            manifest=root/'edit.json';manifest.write_text(json.dumps({'shots':[{'path':'a.jpg','duration':1}]*2,'titles':[{'text':'A -- title','start':0,'duration':1,'size':28,'color':'#25372F'}],'overlays':[{'path':'a.jpg','start':1,'duration':1,'x':x,'y':y,'scale':.5} for x in (.25,.75) for y in (.25,.75)],'transitions':[{'after_shot':0,'filter':'transition_dissolve','duration':.1}]}))
+            manifest=root/'edit.json';manifest.write_text(json.dumps({'shots':[{'path':'a.jpg','duration':1}]*2,'titles':[{'text':'A -- title','start':0,'duration':1,'size':28,'color':'#25372F'}],'overlays':[{'path':'a.jpg','start':1,'duration':1,'x':x,'y':y,'scale':.5} for x in (.25,.75) for y in (.25,.75)],'plates':[{'path':'a.jpg','start':.1,'duration':.4,'opacity':.75}],'transitions':[{'after_shot':0,'filter':'transition_dissolve','duration':.1}]}))
             def fake_run(cmd):Path(cmd[-1]).write_bytes(b'prepared')
             with patch('footagepilot.resolve.probe',return_value={'streams':[{'codec_type':'video'}]}),patch('footagepilot.resolve.run',side_effect=fake_run),patch('footagepilot.resolve.binary',return_value='ffmpeg'):
                 prepare(manifest,root/'job',render=True)
             job=json.loads((root/'job/job.json').read_text());script=(root/'job/console.lua').read_text()
             self.assertEqual((len(job['titles']),len(job['overlays']),len(job['transitions'])),(1,4,1))
             self.assertEqual(job['transitions'][0]['start'],27)
+            self.assertEqual(job['plates'][0]['start'],3)
+            self.assertEqual(job['plates'][0]['frames'],12)
+            self.assertIn(job['plates'][0]['path'],job['prepared_hashes'])
+            self.assertIn('CompositeMode=5',script)
             self.assertEqual(script.count('\n'),1);self.assertIn('A -- title',script);self.assertIn('TextPlus',script)
 
     def test_cumulative_frame_rounding_and_hashed_preparation(self):
