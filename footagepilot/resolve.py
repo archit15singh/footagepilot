@@ -128,6 +128,7 @@ def prepare(manifest, output, render=False):
         job['beats']=sorted({frames(t) for t in marker_times(timing,float(elapsed))})
         job['timing_mode']=timing.get('mode','authored_grid')
         job['timing_label']='Audio onset candidates; not verified beats or a listening verdict' if timing.get('mode')=='onset_candidates' else 'Supplied timing coordinates; not a listening verdict'
+        if timing.get('mode')=='reference_changes':job['timing_label']='Reference visual change candidates; not verified cuts or musical beats'
         job['timing_provenance']=timing['provenance']
     try:
         for cmd in pending:run(cmd)

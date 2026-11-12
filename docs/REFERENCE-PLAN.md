@@ -40,3 +40,5 @@ Resolve music-cue progress: `music-cues` proposes source-hash-bound RMS onset ca
 
 
 For iterative recreation, `review-reference` now compares actual candidate/reference frames and emits hash-bound model suggestions. A new spec may include `model_reviews` to pass them to Codex planning; human feedback remains separate and takes precedence. See [reference review and limits](resolve/REFERENCE-REVIEW.md). Frame citations and a revised export do not establish creative acceptance.
+
+Reference rhythm progress: `reference_rhythm` can preserve the selected reference’s measured long-to-short change pattern using the same soundtrack, with exact one-shot-per-interval enforcement. See [implementation and limits](resolve/REFERENCE-RHYTHM.md). This transfers candidate timing, not performances, grade or musical-phrase understanding.
