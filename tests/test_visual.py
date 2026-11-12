@@ -21,6 +21,17 @@ class VisualTests(unittest.TestCase):
             notes,paths=review_notes({'feedback':['pending.json','review.json']},root)
             self.assertEqual(len(paths),2);self.assertEqual(len(notes),1);self.assertIn('fewer full-screen',notes[0]['review_notes'])
 
+    def test_wipe_planning_requires_resolve_capability(self):
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td);(p/'a.jpg').touch();(p/'score.wav').touch()
+            spec={'assets':[{'id':'a','path':'a.jpg'}],'music':'score.wav','music_timing':{'bpm':120,'offset':0,'provenance':'authored'},'min_seconds':2,'max_seconds':8}
+            plan={'title':'Travel','shots':[{'asset_id':'a','beats':4,'fit':'fill','zoom':0,'transition_in':t} for t in ('cut','wipe_left')]}
+            with self.assertRaisesRegex(ValueError,'Unknown transition'):compile_plan(plan,spec,p)
+            result=compile_plan(plan,{**spec,'native_backend':'resolve'},p)
+            self.assertEqual(result['transitions'][0]['filter'],'transition_wipe_left')
+            first={**plan,'shots':[dict(row,transition_in='wipe_left') for row in plan['shots']]}
+            with self.assertRaisesRegex(ValueError,'First shot'):compile_plan(first,{**spec,'native_backend':'resolve'},p)
+
     def test_zero_tempo_rejected_without_division_error(self):
         with self.assertRaises(ValueError):
             compile_plan({}, {'assets':[],'music_timing':{'bpm':0,'provenance':'invalid'}},Path('.'))

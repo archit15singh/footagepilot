@@ -42,6 +42,7 @@ def recreate(spec_path,output,token_file=None,backend="edits"):
     for asset in spec['assets']:asset['path']=str((base/asset['path']).resolve())
     spec['music']=str((base/spec['music']).resolve())
     if spec.get('feedback'):spec['feedback']=[str((base/p).resolve()) for p in spec['feedback']]
+    spec['native_backend']=backend
     local=output/'visual-spec.json';write(local,spec)
     planned=stage('visual-codex-plan',lambda:plan_visual(local,output/'plan'))
     if backend=='resolve':

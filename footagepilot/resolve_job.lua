@@ -41,14 +41,25 @@ local ok,err=pcall(function()
     require_ok(item:SetProperties({ZoomX=row.scale,ZoomY=row.scale,Pan=(row.x-0.5)*cfg.width,Tilt=(0.5-row.y)*cfg.height}),'panel geometry')
   end
   for i,row in ipairs(cfg.transitions or {}) do
-    local item=add_layer(row,'Dissolve '..i)
+    local item=add_layer(row,'Transition '..i)
     local c=require_ok(item:AddFusionComp(),'dissolve composition')
     local mi=require_ok(c:FindTool('MediaIn1'),'dissolve media in')
     local mo=require_ok(c:FindTool('MediaOut1'),'dissolve media out')
     local bg=require_ok(c:AddTool('Background'),'transparent background');bg:SetInput('TopLeftAlpha',0)
     local merge=require_ok(c:AddTool('Merge'),'dissolve merge');merge.Background=bg.Output;merge.Foreground=mi.Output
     local start=c:GetAttrs().COMPN_GlobalStart or 0
-    merge.Blend:SetExpression('min(max((time-'..start..')/'..(row.frames-1)..',0),1)')
+    local progress='min(max((time-'..start..')/'..(row.frames-1)..',0),1)'
+    if row.filter=='transition_wipe_left' then
+      local mask=require_ok(c:AddTool('RectangleMask'),'reveal mask')
+      mask:SetInput('Height',1.1);mask:SetInput('SoftEdge',0)
+      mask.Width:SetExpression(progress)
+      mask.Center:SetExpression('Point(('..progress..')/2,0.5)')
+      merge.EffectMask=mask.Mask
+      require_ok(merge.EffectMask:GetConnectedOutput(),'connected reveal mask')
+      merge:SetInput('Blend',1)
+    else
+      merge.Blend:SetExpression(progress)
+    end
     mo.Input=merge.Output
   end
   for i,row in ipairs(cfg.titles or {}) do
