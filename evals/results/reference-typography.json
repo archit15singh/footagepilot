@@ -1,0 +1,43 @@
+{
+  "native_version": "21.2.0.6",
+  "font": "Didot",
+  "intervention": "Retained Codex plan; engineering-selected family change only",
+  "duration": 14.0,
+  "sha256": "8fd69bc93fd1934d4f658cf997a99bfb200d4cc511970a00efcaa3237e491fd2",
+  "visual_sample_count": 55,
+  "title_checks": [
+    {
+      "title": 1,
+      "frame": 90,
+      "changed_pixels": 1040,
+      "bbox": [
+        45,
+        277,
+        274,
+        298
+      ],
+      "expected_minimum_height": 10.97,
+      "scope": "Contrast/size evidence; native text readback is checked during construction, not OCR"
+    }
+  ],
+  "audio_correspondence": {
+    "sample_rate": 1000,
+    "correlation": 0.99958,
+    "rms_gain_ratio": 0.99986,
+    "mean_absolute_error": 0.001157,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "decode": "passed",
+  "creative_verdict": "unreviewed",
+  "limits": [
+    "Font input readback does not prove glyph fallback or exact reference identity.",
+    "Fresh planner font choice is tested separately from this controlled native variant."
+  ],
+  "fresh_planner": {
+    "title_font": "Baskerville",
+    "elapsed_seconds": 57.42142937499739,
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "low",
+    "status": "Compiled and validated; this new cut not yet natively rendered"
+  }
+}

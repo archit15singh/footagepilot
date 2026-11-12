@@ -75,6 +75,7 @@ local ok,err=pcall(function()
     -- Logical title units calibrated against actual exports, not an assumed pixel API.
     text:SetInput('Size',row.size/270);text:SetInput('Center',{row.x,1-row.y})
     text:SetInput('Red1',row.color[1]);text:SetInput('Green1',row.color[2]);text:SetInput('Blue1',row.color[3])
+    assert(text:GetInput('Font')==(row.font or 'Helvetica Neue'),'Native title font readback mismatch')
     assert(text:GetInput('StyledText')==row.text,'Native title text readback mismatch')
     mo.Input=text.Output
   end

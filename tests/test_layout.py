@@ -29,10 +29,22 @@ class LayoutTests(unittest.TestCase):
         from footagepilot.visual import compile_plan
         with tempfile.TemporaryDirectory() as td:
             root=Path(td);(root/'a.jpg').touch();(root/'score.wav').touch()
-            spec={'native_backend':'resolve','assets':[{'id':'a','path':'a.jpg'}],'music':'score.wav','music_timing':{'bpm':120,'offset':0,'provenance':'authored'},'min_seconds':2,'max_seconds':8}
+            spec={'native_backend':'resolve','title_fonts':['Helvetica Neue','Didot'],'assets':[{'id':'a','path':'a.jpg'}],'music':'score.wav','music_timing':{'bpm':120,'offset':0,'provenance':'authored'},'min_seconds':2,'max_seconds':8}
             panel={'asset_id':'a','start_beat':4,'beats':4,'x':.2,'y':.2,'width':.3,'height':.2}
-            plan={'title':'Travel','title_start_beat':2,'title_beats':2,'title_y':.5,'title_color':'#FFE49C','shots':[{'asset_id':'a','beats':4,'fit':'fill','zoom':0}]*2,'panels':[panel],'backgrounds':[{'start_beat':2,'beats':2},{'start_beat':4,'beats':4}]}
+            plan={'title_font':'Didot','title':'Travel','title_start_beat':2,'title_beats':2,'title_y':.5,'title_color':'#FFE49C','shots':[{'asset_id':'a','beats':4,'fit':'fill','zoom':0}]*2,'panels':[panel],'backgrounds':[{'start_beat':2,'beats':2},{'start_beat':4,'beats':4}]}
             result=compile_plan(plan,spec,root)
             self.assertEqual((result['titles'][0]['start'],result['titles'][0]['duration']),(1,1))
+            self.assertEqual(result['titles'][0]['font'],'Didot')
+            with self.assertRaisesRegex(ValueError,'outside supplied'):compile_plan({**plan,'title_font':'Unavailable'},spec,root)
             self.assertEqual(len(result['overlays']),1);self.assertEqual(result['overlays'][0]['width'],.3)
             self.assertEqual(result['layout_backgrounds'][1]['start'],2)
+
+    def test_title_font_contract_is_bounded_and_backend_specific(self):
+        from footagepilot.visual import title_fonts,schema
+        self.assertEqual(title_fonts({}),['Helvetica Neue'])
+        for fonts in ([],['Didot','Didot'],['bad\nfont'],['a']*21,[42]):
+            with self.assertRaises(ValueError):title_fonts({'native_backend':'resolve','title_fonts':fonts})
+        with self.assertRaisesRegex(ValueError,'requires Resolve'):title_fonts({'title_fonts':['Didot']})
+        contract=schema(['a'],video_ranges=True,fonts=['Didot','Baskerville'])
+        self.assertEqual(contract['properties']['title_font']['enum'],['Didot','Baskerville'])
+        self.assertIn('title_font',contract['required'])
