@@ -36,11 +36,11 @@ def validate_observations(payload,frames):
     for row in observations:
         ids=row.get('frame_ids',[])
         if not isinstance(ids,list) or not 1<=len(ids)<=6 or any(i not in known for i in ids):raise ValueError('Reference observation cites unknown frames')
-        if row.get('technique') not in ('title','collage','full_frame','cut','dissolve','mask_reveal','camera_motion','unknown') or row.get('confidence') not in ('visible','inferred'):raise ValueError('Invalid reference observation classification')
-        if row['technique'] in ('cut','dissolve','mask_reveal','camera_motion') and row['confidence']!='inferred':raise ValueError('Temporal techniques require an inferred label from sparse frames')
+        if row.get('technique') not in ('title','collage','full_frame','cut','dissolve','mask_reveal','camera_motion','motion_plate','unknown') or row.get('confidence') not in ('visible','inferred'):raise ValueError('Invalid reference observation classification')
+        if row['technique'] in ('cut','dissolve','mask_reveal','camera_motion','motion_plate') and row['confidence']!='inferred':raise ValueError('Temporal techniques require an inferred label from sparse frames')
         if not isinstance(row.get('adaptation'),str) or not 1<=len(row['adaptation'])<=1000:raise ValueError('Reference adaptation needs concise reasoning')
-    for group in ('shots','panels'):
+    for group in ('shots','panels','plates'):
         for row in payload.get(group,[]):
             ids=row.get('reference_ids')
-            if not isinstance(ids,list) or len(ids)>6 or any(i not in known for i in ids):raise ValueError('Planned shot/panel cites unknown reference evidence')
+            if not isinstance(ids,list) or len(ids)>6 or any(i not in known for i in ids):raise ValueError('Planned shot/panel/plate cites unknown reference evidence')
     return {'status':'frame-citations-validated','frame_count':len(frames),'observation_count':len(observations),'scope':'Checks citations and epistemic labels, not semantic truth or creative fidelity'}

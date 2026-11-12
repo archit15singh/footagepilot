@@ -20,6 +20,18 @@ def make_plate(target,frames=12,fps=30):
     return {'frames':frames,'fps':fps,'sha256':hashlib.sha256(target.read_bytes()).hexdigest(),'kind':'original procedural light-band calibration fixture; not a shard simulation or reference extraction'}
 
 
+def make_glare(target):
+    """An original soft moving light streak; no underlying refraction simulation."""
+    if target.exists():raise ValueError('Use a fresh plate path')
+    target.parent.mkdir(parents=True,exist_ok=True)
+    intensity='16+205*pow(sin(PI*N/29),2)*exp(-pow((X+0.6*Y-12*N-60)/35,2))'
+    run([binary('ffmpeg'),'-v','error','-n','-f','lavfi','-i','color=black:s=480x270:r=30',
+         '-vf',f"geq=lum='{intensity}':cb=128:cr=128,scale=1920:1080",
+         '-frames:v',30,'-an','-c:v','libx264','-crf','18','-pix_fmt','yuv420p',target])
+    return {'frames':30,'fps':30,'sha256':hashlib.sha256(target.read_bytes()).hexdigest(),
+            'kind':'original soft light streak; Screen light overlay, not glass refraction'}
+
+
 def evaluate(job_path,media,drp,output):
     if output.exists():raise ValueError('Use a fresh plate evaluation directory')
     job=json.loads(job_path.read_text())
@@ -50,5 +62,6 @@ def evaluate(job_path,media,drp,output):
 if __name__=='__main__':
     p=argparse.ArgumentParser();sub=p.add_subparsers(dest='command',required=True)
     gen=sub.add_parser('make-plate');gen.add_argument('target',type=Path)
+    glare=sub.add_parser('make-glare');glare.add_argument('target',type=Path)
     check=sub.add_parser('evaluate');check.add_argument('job',type=Path);check.add_argument('media',type=Path);check.add_argument('drp',type=Path);check.add_argument('--output',type=Path,required=True)
-    a=p.parse_args();print(json.dumps(make_plate(a.target) if a.command=='make-plate' else evaluate(a.job,a.media,a.drp,a.output),indent=2))
+    a=p.parse_args();print(json.dumps(make_plate(a.target) if a.command=='make-plate' else make_glare(a.target) if a.command=='make-glare' else evaluate(a.job,a.media,a.drp,a.output),indent=2))

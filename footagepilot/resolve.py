@@ -1,5 +1,6 @@
 """Portable Resolve console jobs. No daemon, credentials or unsafe Lua filesystem access."""
 import hashlib
+import copy
 import json
 import math
 import array
@@ -191,6 +192,30 @@ def expected_frame(job, number, width=64, height=64):
     return result
 
 
+def plate_matches(job, media):
+    """Check changed pixels, so a subtle missing plate cannot hide in the whole frame."""
+    rows=[];resolution=128
+    for index,plate in enumerate(job.get('plates',[])):
+        control=copy.deepcopy(job);control['plates'].pop(index);checked=0
+        numbers={plate['start']+round((plate['frames']-1)*f) for f in (.25,.5,.75)}
+        for number in sorted(numbers):
+            expected=expected_frame(job,number,resolution,resolution)
+            absent=expected_frame(control,number,resolution,resolution)
+            bands=title_band(job,number,resolution)
+            keep=[i for i,(a,b) in enumerate(zip(expected,absent)) if a-b>.02 and not any(lo<=(i//3)//resolution<=hi for lo,hi in bands)]
+            if len(keep)<64:continue
+            strength=sum(expected[i]-absent[i] for i in keep)/len(keep)
+            actual=sample_frame(media,number,job['fps'],resolution,resolution)
+            mae,corr=similarity([expected[i] for i in keep],[actual[i] for i in keep])
+            limit=min(.08,max(.015,strength*.5))
+            if mae>limit or corr<.90:raise ValueError(f'Screen plate {index+1} differs in its active pixels at frame {number}')
+            rows.append({'plate':index+1,'frame':number,'active_channels':len(keep),'expected_contribution':strength,
+                         'mean_absolute_error':mae,'maximum_error':limit,'correlation':corr})
+            checked+=1
+        if not checked:raise ValueError(f'Screen plate {index+1} has insufficient distinguishable pixels for verification')
+    return rows
+
+
 def title_band(job, number, height):
     bands=[]
     for t in job.get('titles',[]):
@@ -326,8 +351,9 @@ def verify(job_path, media, output):
     if job.get('music') and not any(s['codec_type']=='audio' for s in meta['streams']):raise ValueError('Music missing from export')
     if hashlib.sha256(media.read_bytes()).hexdigest()!=digest:raise ValueError('Export changed during verification')
     frames=visual_matches(job,media)
+    plates=plate_matches(job,media)
     titles=title_matches(job,media)
     audio=audio_match(job['music'],media) if job.get('music') else None
     if hashlib.sha256(media.read_bytes()).hexdigest()!=digest:raise ValueError('Export changed during correspondence checks')
-    result={'timing_evidence':timing_evidence(job),'visual_samples':frames,'title_checks':titles,'title_timing_checks':title_timing_matches(job,media),'audio_correspondence':audio,'technical_pass':True,'sha256':digest,'frames_expected':job['frames'],'duration':duration,'fps':fps,'decode':'passed','native_origin':'Requires retained console evidence and project inspection; cannot be established from an MP4 alone.','creative_verdict':'unreviewed','limits':['Sampled correspondence is not exhaustive perceptual review, listening or storytelling acceptance.']}
+    result={'timing_evidence':timing_evidence(job),'visual_samples':frames,'plate_checks':plates,'title_checks':titles,'title_timing_checks':title_timing_matches(job,media),'audio_correspondence':audio,'technical_pass':True,'sha256':digest,'frames_expected':job['frames'],'duration':duration,'fps':fps,'decode':'passed','native_origin':'Requires retained console evidence and project inspection; cannot be established from an MP4 alone.','creative_verdict':'unreviewed','limits':['Sampled correspondence is not exhaustive perceptual review, listening or storytelling acceptance.']}
     output.parent.mkdir(parents=True,exist_ok=True);write(output,result);return result
