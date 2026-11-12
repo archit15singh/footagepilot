@@ -23,10 +23,13 @@ def validate_timing(timing,music=None,zero=False):
     if not isinstance(timing,dict) or not isinstance(timing.get('provenance'),str) or not timing['provenance'].strip():raise ValueError('Music timing needs provenance')
     if 'cues' in timing:
         cues=timing['cues']
-        if timing.get('mode') not in ('onset_candidates','reviewed_cues') or not isinstance(cues,list) or not 3<=len(cues)<=1201 or any(not number(v) or not 0<=v<=600 for v in cues) or cues[0]!=0 or any(b-a<.099999 for a,b in zip(cues,cues[1:])):raise ValueError('Use 3–1201 ordered audio cues starting at zero, at least .1s apart')
+        if timing.get('mode') not in ('onset_candidates','reviewed_cues','reference_changes') or not isinstance(cues,list) or not 3<=len(cues)<=1201 or any(not number(v) or not 0<=v<=600 for v in cues) or cues[0]!=0 or any(b-a<.099999 for a,b in zip(cues,cues[1:])):raise ValueError('Use 3–1201 ordered audio cues starting at zero, at least .1s apart')
         if 'bpm' in timing or timing.get('offset',0)!=0:raise ValueError('Cue timing cannot also specify BPM or an offset')
         digest=timing.get('source_sha256')
         if not isinstance(digest,str) or len(digest)!=64 or any(c not in '0123456789abcdef' for c in digest):raise ValueError('Audio cues need the source music SHA256')
+        if timing.get('mode')=='reference_changes':
+            evidence=timing.get('reference_analysis_sha256')
+            if not isinstance(evidence,str) or len(evidence)!=64 or any(c not in '0123456789abcdef' for c in evidence):raise ValueError('Reference timing needs its analysis fingerprint')
         if music is not None and hashlib.sha256(Path(music).read_bytes()).hexdigest()!=digest:raise ValueError('Audio cues belong to a different or changed music file')
     elif timing.get('mode','authored_grid')!='authored_grid' or not number(timing.get('bpm')) or not 40<=timing['bpm']<=240 or not number(timing.get('offset',0)) or not 0<=timing.get('offset',0)<=2 or (zero and timing.get('offset',0)!=0):raise ValueError('Music timing needs finite BPM40–240 and supported offset')
     return timing

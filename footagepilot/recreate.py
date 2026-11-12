@@ -10,6 +10,7 @@ from .learning import check_sources
 from .music_timing import analysis_options,extract_cues
 from .plate_fetch import PLATES,fetch_plate
 from .framing import refine_framing
+from .reference_rhythm import rhythm_options,extract_rhythm
 
 
 def framing_options(spec,backend):
@@ -71,6 +72,7 @@ def recreate(spec_path,output,token_file=None,backend="edits"):
     if len(catalog)+len(presets)>8 or set(presets)&{a['id'] for a in catalog}:raise ValueError('Combined plate catalog exceeds eight assets or has duplicate IDs')
     use_reference='music_from_reference' in spec
     if use_reference and (spec['music_from_reference'] is not True or 'music' in spec or backend!='resolve'):raise ValueError('Use music_from_reference=true with Resolve and no separate music path')
+    rhythm=rhythm_options(spec,backend)
     music_options=analysis_options(spec,backend)
     output.mkdir(parents=True)
     state={'passed':False,'backend':backend,'stages':[],'preference':'unreviewed','spec_path':str(spec_path),'spec_sha256':hashlib.sha256(snapshot).hexdigest()}
@@ -104,6 +106,15 @@ def recreate(spec_path,output,token_file=None,backend="edits"):
         measured=stage('analyze-selected-music',analyze_music)
         spec['music_timing']=measured['music_timing']
         del spec['music_analysis']
+    if rhythm is not None:
+        def transfer_rhythm():
+            result=extract_rhythm(Path(spec['reference']),Path(spec['music']),output/'reference-rhythm.json',**rhythm)
+            if not spec.get('min_shots',2)<=result['shot_count']<=spec.get('max_shots',30):raise ValueError('Reference rhythm conflicts with requested shot budget')
+            return result
+        measured=stage('extract-reference-rhythm',transfer_rhythm)
+        spec['music_timing']=measured['music_timing']
+        spec['min_shots']=spec['max_shots']=measured['shot_count']
+        del spec['reference_rhythm']
     if spec.get('feedback'):spec['feedback']=[str((base/p).resolve()) for p in spec['feedback']]
     if spec.get('model_reviews'):spec['model_reviews']=[str((base/p).resolve()) for p in spec['model_reviews']]
     for name in presets:
