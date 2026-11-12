@@ -3,6 +3,8 @@ assert(_FP and _FP.stage=='assembled','No successfully assembled FootagePilot pr
 local p=_FP.project
 local cfg=_FP.config
 assert(resolve:GetProjectManager():GetCurrentProject():GetName()==p:GetName(),'Current project changed')
+assert(p:SetCurrentTimeline(_FP.timeline),'Cannot select the assembled timeline')
+assert(p:SetCurrentRenderMode(1),'Single-clip render unavailable')
 assert(p:SetCurrentRenderFormatAndCodec('mp4','H264'),'H264 MP4 unavailable in this edition')
 assert(p:SetRenderSettings({TargetDir=cfg.target,CustomName=cfg.custom_name,SelectAllFrames=true,ExportVideo=true,ExportAudio=cfg.music~=nil,FormatWidth=cfg.width,FormatHeight=cfg.height,FrameRate=cfg.fps}),'Render settings rejected')
 local job=assert(p:AddRenderJob(),'Render job rejected')

@@ -1,0 +1,226 @@
+{
+  "passed": true,
+  "positive": {
+    "visual_samples": [
+      {
+        "shot": 1,
+        "frame": 1,
+        "mean_absolute_error": 0.01035,
+        "correlation": 0.99985
+      },
+      {
+        "shot": 1,
+        "frame": 30,
+        "mean_absolute_error": 0.00994,
+        "correlation": 0.99986
+      },
+      {
+        "shot": 1,
+        "frame": 58,
+        "mean_absolute_error": 0.01128,
+        "correlation": 0.99987
+      },
+      {
+        "shot": 2,
+        "frame": 61,
+        "mean_absolute_error": 0.01076,
+        "correlation": 0.99967
+      },
+      {
+        "shot": 2,
+        "frame": 82,
+        "mean_absolute_error": 0.01078,
+        "correlation": 0.99967
+      },
+      {
+        "shot": 2,
+        "frame": 103,
+        "mean_absolute_error": 0.01076,
+        "correlation": 0.99967
+      },
+      {
+        "shot": 3,
+        "frame": 106,
+        "mean_absolute_error": 0.01029,
+        "correlation": 0.99972
+      },
+      {
+        "shot": 3,
+        "frame": 120,
+        "mean_absolute_error": 0.0101,
+        "correlation": 0.99971
+      },
+      {
+        "shot": 3,
+        "frame": 133,
+        "mean_absolute_error": 0.01028,
+        "correlation": 0.99972
+      },
+      {
+        "shot": 4,
+        "frame": 136,
+        "mean_absolute_error": 0.01046,
+        "correlation": 0.99984
+      },
+      {
+        "shot": 4,
+        "frame": 150,
+        "mean_absolute_error": 0.01095,
+        "correlation": 0.99984
+      },
+      {
+        "shot": 4,
+        "frame": 163,
+        "mean_absolute_error": 0.01094,
+        "correlation": 0.99984
+      },
+      {
+        "shot": 5,
+        "frame": 166,
+        "mean_absolute_error": 0.01032,
+        "correlation": 0.99986
+      },
+      {
+        "shot": 5,
+        "frame": 187,
+        "mean_absolute_error": 0.0103,
+        "correlation": 0.99986
+      },
+      {
+        "shot": 5,
+        "frame": 208,
+        "mean_absolute_error": 0.01027,
+        "correlation": 0.99986
+      },
+      {
+        "shot": 6,
+        "frame": 211,
+        "mean_absolute_error": 0.01068,
+        "correlation": 0.99985
+      },
+      {
+        "shot": 6,
+        "frame": 240,
+        "mean_absolute_error": 0.01069,
+        "correlation": 0.99985
+      },
+      {
+        "shot": 6,
+        "frame": 268,
+        "mean_absolute_error": 0.01072,
+        "correlation": 0.99985
+      },
+      {
+        "shot": 7,
+        "frame": 271,
+        "mean_absolute_error": 0.01081,
+        "correlation": 0.99987
+      },
+      {
+        "shot": 7,
+        "frame": 285,
+        "mean_absolute_error": 0.01094,
+        "correlation": 0.99988
+      },
+      {
+        "shot": 7,
+        "frame": 298,
+        "mean_absolute_error": 0.0109,
+        "correlation": 0.99988
+      },
+      {
+        "shot": 8,
+        "frame": 301,
+        "mean_absolute_error": 0.01017,
+        "correlation": 0.99972
+      },
+      {
+        "shot": 8,
+        "frame": 315,
+        "mean_absolute_error": 0.01035,
+        "correlation": 0.99972
+      },
+      {
+        "shot": 8,
+        "frame": 328,
+        "mean_absolute_error": 0.01037,
+        "correlation": 0.99973
+      },
+      {
+        "shot": 9,
+        "frame": 331,
+        "mean_absolute_error": 0.00979,
+        "correlation": 0.99957
+      },
+      {
+        "shot": 9,
+        "frame": 345,
+        "mean_absolute_error": 0.00962,
+        "correlation": 0.99957
+      },
+      {
+        "shot": 9,
+        "frame": 358,
+        "mean_absolute_error": 0.0098,
+        "correlation": 0.99957
+      },
+      {
+        "shot": 10,
+        "frame": 361,
+        "mean_absolute_error": 0.01168,
+        "correlation": 0.99989
+      },
+      {
+        "shot": 10,
+        "frame": 390,
+        "mean_absolute_error": 0.01177,
+        "correlation": 0.99989
+      },
+      {
+        "shot": 10,
+        "frame": 418,
+        "mean_absolute_error": 0.01179,
+        "correlation": 0.99989
+      }
+    ],
+    "audio_correspondence": {
+      "sample_rate": 1000,
+      "correlation": 0.99958,
+      "mean_absolute_error": 0.001157,
+      "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict",
+      "rms_gain_ratio": 0.99986
+    },
+    "technical_pass": true,
+    "sha256": "f590d43db4e4019d5e0b46fde517acd3a2a6cb29d0fadaf383a76e119fd66781",
+    "frames_expected": 420,
+    "duration": 14.0,
+    "fps": 30.0,
+    "decode": "passed",
+    "native_origin": "Requires retained console evidence and project inspection; cannot be established from an MP4 alone.",
+    "creative_verdict": "unreviewed",
+    "limits": [
+      "Sampled correspondence is not exhaustive perceptual review, listening or storytelling acceptance."
+    ]
+  },
+  "negative_controls": [
+    {
+      "control": "wrong-shots",
+      "rejected": true,
+      "reason": "Export differs visually from prepared shot 2 at frame 61; inspect offline media, order, timing and colour"
+    },
+    {
+      "control": "shifted-audio",
+      "rejected": true,
+      "reason": "Soundtrack waveform does not match prepared music; inspect timing, gain and audio routing"
+    }
+  ],
+  "scope": "Native export technical/correspondence verification, not taste, listening or exhaustive frame inspection",
+  "observed_native_application": {
+    "product": "DaVinci Resolve",
+    "edition": "free Mac App Store",
+    "version": "21.2.0.6",
+    "render_queue": "Completed in 00:00:02",
+    "scope_of_time": "UI-reported native render only; excludes preparation, setup and recovery",
+    "editable_project_export": "DRP saved locally; private media excluded from repository"
+  }
+}
