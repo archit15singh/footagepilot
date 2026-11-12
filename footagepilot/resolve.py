@@ -72,7 +72,7 @@ def prepare(manifest, output, render=False):
         else:filt=f'scale={rw}:{rh}:force_original_aspect_ratio=decrease,pad={rw}:{rh}:(ow-iw)/2:(oh-ih)/2:black'
         if panel:filt+=f',scale={w}:{h},setsar=1'
         if zoom:filt+=f",zoompan=z='1+{zoom}*on/{max(1,count-1)}':x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':d=1:s={w}x{h}:fps={fps}"
-        pending.append([binary('ffmpeg'),'-v','error','-n']+(['-loop','1'] if still else ['-ss',source_start])+['-i',path,'-an','-vf',filt,'-r',fps,'-frames:v',count,'-c:v','libx264','-crf','18','-pix_fmt','yuv420p','-movflags','+faststart',target])
+        pending.append([binary('ffmpeg'),'-v','error','-n']+(['-loop','1'] if still else ['-ss',source_start])+['-i',path,'-an','-vf',filt+',setpts=PTS-STARTPTS','-r',fps,'-frames:v',count,'-c:v','libx264','-crf','18','-pix_fmt','yuv420p','-movflags','+faststart',target])
         return str(target)
     for i,row in enumerate(data['shots']):
         elapsed+=Decimal(str(row['duration']));end=int((elapsed*fps).quantize(Decimal(1),rounding=ROUND_HALF_UP));count=end-cursor

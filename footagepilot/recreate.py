@@ -5,10 +5,39 @@ from urllib.parse import urlsplit
 from .__main__ import write
 from .reference import analyze_reference
 from .visual import plan_visual,plate_catalog
-from .edits import render_edit
+from .edits import render_edit,validate_edit
 from .learning import check_sources
 from .music_timing import analysis_options,extract_cues
 from .plate_fetch import PLATES,fetch_plate
+from .framing import refine_framing
+
+
+def framing_options(spec,backend):
+    if 'framing_review' not in spec:return None
+    value=spec['framing_review']
+    if backend!='resolve' or not isinstance(value,dict) or set(value)-{'shots','axis'}:raise ValueError('framing_review needs Resolve and a shots/axis object')
+    shots=value.get('shots','bookends');axis=value.get('axis','y')
+    if axis not in ('x','y'):raise ValueError('Framing review axis must be x or y')
+    if shots!='bookends' and (not isinstance(shots,list) or not 1<=len(shots)<=3 or any(type(i) is not int or not 1<=i<=60 for i in shots) or len(set(shots))!=len(shots)):raise ValueError('Framing review shots must be bookends or 1–3 unique shot numbers')
+    return {'shots':shots,'axis':axis}
+
+
+def review_plan_framing(manifest,options,output):
+    """Select bounded critical crops; retain the initial plan and every choice."""
+    data=json.loads(manifest.read_text());validate_edit(data,manifest.parent)
+    selection=options['shots'];skipped=[]
+    shots=list(dict.fromkeys([1,len(data['shots'])])) if selection=='bookends' else selection
+    if any(i>len(data['shots']) for i in shots):raise ValueError('Framing review shot is outside the planned timeline')
+    if selection=='bookends':
+        skipped=[i for i in shots if data['shots'][i-1].get('fit','fill')=='contain']
+        shots=[i for i in shots if i not in skipped]
+    if not shots:
+        if output.exists():raise ValueError('Use a fresh framing review directory')
+        output.mkdir(parents=True)
+        result={'manifest':str(manifest),'status':'skipped-contained-bookends','shots':[],'skipped_shots':skipped}
+        write(output/'review.json',result);return result
+    result=refine_framing(manifest,shots,options['axis'],output)
+    return {**result,'status':'bounded-crops-reviewed','selection':selection,'skipped_shots':skipped}
 
 
 def reference_soundtrack(analysis_path):
@@ -32,6 +61,7 @@ def recreate(spec_path,output,token_file=None,backend="edits"):
     if backend not in ("edits","resolve"):raise ValueError("Unknown native editor backend")
     if output.exists():raise ValueError('Use a new recreation directory; previous evidence is preserved')
     snapshot=spec_path.read_bytes();spec=json.loads(snapshot);base=spec_path.parent
+    framing=framing_options(spec,backend)
     catalog=plate_catalog({**spec,'native_backend':backend})
     presets=spec.get('plate_presets',[])
     if not isinstance(presets,list) or any(not isinstance(n,str) or n not in PLATES for n in presets) or len(set(presets))!=len(presets):raise ValueError('Use unique known reviewed plate_presets')
@@ -79,9 +109,14 @@ def recreate(spec_path,output,token_file=None,backend="edits"):
         catalog+=json.loads(Path(fetched['plate_catalog']).read_text())['plate_assets']
     if presets:spec['plate_assets']=catalog
     spec.pop('plate_presets',None)
+    spec.pop('framing_review',None)
     spec['native_backend']=backend
     local=output/'visual-spec.json';write(local,spec)
     planned=stage('visual-codex-plan',lambda:plan_visual(local,output/'plan'))
+    if framing is not None:
+        reviewed=stage('review-planned-framing',lambda:review_plan_framing(Path(planned['manifest']),framing,output/'framing-review'))
+        planned={**planned,'manifest':reviewed['manifest']}
+        state.update(native_manifest=planned['manifest'],native_manifest_sha256=hashlib.sha256(Path(planned['manifest']).read_bytes()).hexdigest())
     if backend=='resolve':
         from .resolve import prepare
         prepared=stage('prepare-native-resolve',lambda:prepare(Path(planned['manifest']),output/'resolve-job',render=True))
@@ -101,6 +136,7 @@ def finish_resolve(run_directory,media,native_project):
     from .resolve import verify
     state_path=run_directory/'run.json';state=json.loads(state_path.read_text())
     if state.get('backend')!='resolve' or state.get('status')!='awaiting-native-render':raise ValueError('Run is not awaiting a Resolve export')
+    if state.get('native_manifest') and hashlib.sha256(Path(state['native_manifest']).read_bytes()).hexdigest()!=state.get('native_manifest_sha256'):raise ValueError('Reviewed native manifest changed; prepare a fresh run')
     if hashlib.sha256(Path(state['spec_path']).read_bytes()).hexdigest()!=state['spec_sha256']:raise ValueError('Recreation spec changed; start a new run for the current edit')
     project_hash=hashlib.sha256(native_project.read_bytes()).hexdigest()
     job_path=Path(state['native_job']);job_snapshot=job_path.read_bytes()
@@ -115,6 +151,7 @@ def finish_resolve(run_directory,media,native_project):
         if escape(job['project_name'],quote=False).encode() not in project_data:raise ValueError('DRP belongs to a different native project')
     report=verify(job_path,media,run_directory/'native-verification.json')
     if job_path.read_bytes()!=job_snapshot or hashlib.sha256(native_project.read_bytes()).hexdigest()!=project_hash or hashlib.sha256(Path(state['spec_path']).read_bytes()).hexdigest()!=state['spec_sha256']:raise ValueError('Native project or source specification changed during verification')
+    if state.get('native_manifest') and hashlib.sha256(Path(state['native_manifest']).read_bytes()).hexdigest()!=state.get('native_manifest_sha256'):raise ValueError('Reviewed native manifest changed during verification')
     state['stages'].append({'name':'verify-native-resolve','status':'passed','result':report})
     state.update(passed=True,status='verified-export',output=str(media),native_project_sha256=hashlib.sha256(native_project.read_bytes()).hexdigest(),preference='unreviewed',limits=['Native DRP identity/archive and rendered correspondence checked; no exhaustive native node-state parser.','Native queue completion must be observed separately; MP4 and DRP files alone cannot authenticate which app rendered them.','No reliable listening or creative acceptance verdict.'])
     write(state_path,state);return state
