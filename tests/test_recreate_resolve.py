@@ -8,6 +8,34 @@ import zipfile
 from footagepilot.recreate import recreate,finish_resolve
 
 class ResolveRecreationTests(unittest.TestCase):
+    def test_music_request_cannot_override_timing_or_open_edits(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);spec=root/'spec.json'
+            for backend,extra,message in [('edits',{},'requires Resolve'),('resolve',{'music_timing':{}},'not both'),('resolve',{'music_analysis':{'max_duration':2},'max_seconds':14},'cover max_seconds')]:
+                spec.write_text(json.dumps({'music_analysis':{},**extra}))
+                with self.assertRaisesRegex(ValueError,message):recreate(spec,root/'run',backend=backend)
+                self.assertFalse((root/'run').exists())
+
+    def test_failed_music_analysis_stops_before_planning_and_is_retained(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);spec=root/'spec.json';spec.write_text(json.dumps({'reference':'ref.json','assets':[],'music':'track.wav','music_analysis':{},'max_seconds':14}))
+            with patch('footagepilot.recreate.check_sources',return_value={'needs_research':False}),patch('footagepilot.recreate.extract_cues',side_effect=ValueError('no usable audio cues')),patch('footagepilot.recreate.plan_visual') as planner:
+                with self.assertRaisesRegex(ValueError,'no usable audio'):recreate(spec,root/'run',backend='resolve')
+                planner.assert_not_called()
+            state=json.loads((root/'run/run.json').read_text());self.assertFalse(state['passed']);self.assertEqual(state['stages'][-1]['status'],'failed')
+
+    def test_measured_coordinates_reach_plan_without_manual_copy(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);spec=root/'spec.json';spec.write_text(json.dumps({'reference':'ref.json','assets':[],'music':'track.wav','music_analysis':{},'max_seconds':14}))
+            timing={'mode':'onset_candidates','cues':[0,.7,14],'source_sha256':'a'*64,'provenance':'measured, not beats'}
+            (root/'job.json').write_text('{}')
+            def planner(path,output):
+                local=json.loads(path.read_text());self.assertEqual(local['music_timing'],timing);self.assertNotIn('music_analysis',local)
+                return {'manifest':str(root/'edit.json')}
+            with patch('footagepilot.recreate.check_sources',return_value={'needs_research':False}),patch('footagepilot.recreate.extract_cues',return_value={'duration':14,'music_timing':timing}) as extractor,patch('footagepilot.recreate.plan_visual',side_effect=planner),patch('footagepilot.resolve.prepare',return_value={'job':str(root/'job.json'),'console':'console.lua'}):
+                result=recreate(spec,root/'run',backend='resolve')
+            self.assertFalse(result['passed']);self.assertEqual(result['stages'][1]['name'],'analyze-selected-music');self.assertEqual(extractor.call_args.kwargs['max_duration'],14)
+
     def test_prepared_native_run_is_not_marked_complete(self):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td);spec=root/'spec.json';spec.write_text(json.dumps({'reference':'reference.json','assets':[],'music':'music.wav'}))
