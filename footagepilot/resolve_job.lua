@@ -25,9 +25,48 @@ local ok,err=pcall(function()
     assert(math.abs(audio[1]:GetDuration()-cfg.frames)<1,'FootagePilot music duration mismatch')
     assert(math.abs(audio[1]:GetStart()-timeline:GetStartFrame())<1,'FootagePilot music start mismatch')
   end
+  local function add_layer(row,name)
+    require_ok(timeline:AddTrack('video'),name..' track')
+    local track=timeline:GetTrackCount('video')
+    timeline:SetTrackName('video',track,name)
+    local clips=require_ok(pool:ImportMedia({row.path}),name..' import')
+    local items=require_ok(pool:AppendToTimeline({{mediaPoolItem=clips[1],startFrame=0,endFrame=row.frames,recordFrame=timeline:GetStartFrame()+row.start,trackIndex=track,mediaType=1}}),name..' append')
+    local item=require_ok(items[1],name..' item')
+    assert(math.abs(item:GetDuration()-row.frames)<1,name..' duration mismatch')
+    assert(math.abs(item:GetStart()-timeline:GetStartFrame()-row.start)<1,name..' start mismatch')
+    return item
+  end
+  for i,row in ipairs(cfg.overlays or {}) do
+    local item=add_layer(row,'Collage '..i)
+    require_ok(item:SetProperties({ZoomX=row.scale,ZoomY=row.scale,Pan=(row.x-0.5)*cfg.width,Tilt=(0.5-row.y)*cfg.height}),'panel geometry')
+  end
+  for i,row in ipairs(cfg.transitions or {}) do
+    local item=add_layer(row,'Dissolve '..i)
+    local c=require_ok(item:AddFusionComp(),'dissolve composition')
+    local mi=require_ok(c:FindTool('MediaIn1'),'dissolve media in')
+    local mo=require_ok(c:FindTool('MediaOut1'),'dissolve media out')
+    local bg=require_ok(c:AddTool('Background'),'transparent background');bg:SetInput('TopLeftAlpha',0)
+    local merge=require_ok(c:AddTool('Merge'),'dissolve merge');merge.Background=bg.Output;merge.Foreground=mi.Output
+    local start=c:GetAttrs().COMPN_GlobalStart or 0
+    merge.Blend:SetExpression('min(max((time-'..start..')/'..(row.frames-1)..',0),1)')
+    mo.Input=merge.Output
+  end
+  for i,row in ipairs(cfg.titles or {}) do
+    local item=add_layer(row,'Title '..i)
+    local c=require_ok(item:AddFusionComp(),'title composition')
+    local mo=require_ok(c:FindTool('MediaOut1'),'title media out')
+    local text=require_ok(c:AddTool('TextPlus'),'TextPlus')
+    text:SetInput('StyledText',row.text);text:SetInput('Font',row.font or 'Helvetica Neue');text:SetInput('Style',row.bold and 'Bold' or 'Regular')
+    -- Logical title units calibrated against actual exports, not an assumed pixel API.
+    text:SetInput('Size',row.size/270);text:SetInput('Center',{row.x,1-row.y})
+    text:SetInput('Red1',row.color[1]);text:SetInput('Green1',row.color[2]);text:SetInput('Blue1',row.color[3])
+    assert(text:GetInput('StyledText')==row.text,'Native title text readback mismatch')
+    mo.Input=text.Output
+  end
   assert(math.abs(timeline:GetEndFrame()-timeline:GetStartFrame()-cfg.frames)<1,'FootagePilot timeline extent mismatch')
   for i,frame in ipairs(cfg.beats) do require_ok(timeline:AddMarker(frame,'Blue','Timing '..i,'Authored timing grid; not a listening verdict',1),'beat marker') end
   require_ok(pm:SaveProject(),'save project')
+  require_ok(pm:ExportProject(project:GetName(),cfg.target..'/resolve-project.drp'),'editable project export')
   _FP.stage='assembled'
   print('FOOTAGEPILOT_ASSEMBLED',resolve:GetProductName(),resolve:GetVersionString(),timeline:GetEndFrame()-timeline:GetStartFrame(),#cfg.shots,#cfg.beats)
   if cfg.render then

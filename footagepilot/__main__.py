@@ -160,7 +160,8 @@ def main():
     compare=commands.add_parser('compare-edits');compare.add_argument('baseline',type=Path);compare.add_argument('candidate',type=Path);compare.add_argument('--output',type=Path,required=True);compare.add_argument('--verdict',choices=('unreviewed','better','worse','tie'),default='unreviewed');compare.add_argument('--notes',default='')
     et=commands.add_parser('edits-tools');et.add_argument('--token-file',type=Path);et.add_argument('--output',type=Path,required=True)
     visual=commands.add_parser('visual-plan');visual.add_argument('spec',type=Path);visual.add_argument('--output',type=Path,required=True)
-    recreate=commands.add_parser('recreate');recreate.add_argument('spec',type=Path);recreate.add_argument('--output',type=Path,required=True);recreate.add_argument('--token-file',type=Path)
+    recreate=commands.add_parser('recreate');recreate.add_argument('spec',type=Path);recreate.add_argument('--output',type=Path,required=True);recreate.add_argument('--token-file',type=Path);recreate.add_argument('--backend',choices=('edits','resolve'),default='edits')
+    finish=commands.add_parser('recreate-finish');finish.add_argument('directory',type=Path);finish.add_argument('--media',type=Path,required=True);finish.add_argument('--native-project',type=Path,required=True)
     saved=commands.add_parser('inspiration-open');saved.add_argument('spec',type=Path)
     rp=commands.add_parser('resolve-prepare');rp.add_argument('manifest',type=Path);rp.add_argument('--output',type=Path,required=True);rp.add_argument('--render',action='store_true',help='Include a native render request after assembly checks')
     rv=commands.add_parser('resolve-verify');rv.add_argument('job',type=Path);rv.add_argument('media',type=Path);rv.add_argument('--output',type=Path,required=True)
@@ -177,9 +178,12 @@ def main():
         elif args.command == 'inspiration-open':
             from .recreate import open_saved
             print(json.dumps(open_saved(args.spec.resolve()),indent=2))
+        elif args.command == 'recreate-finish':
+            from .recreate import finish_resolve
+            print(json.dumps(finish_resolve(args.directory.resolve(),args.media.resolve(),args.native_project.resolve()),indent=2))
         elif args.command == 'recreate':
             from .recreate import recreate
-            print(json.dumps(recreate(args.spec.resolve(),args.output.resolve(),args.token_file),indent=2))
+            print(json.dumps(recreate(args.spec.resolve(),args.output.resolve(),args.token_file,args.backend),indent=2))
         elif args.command == 'visual-plan':
             from .visual import plan_visual
             print(json.dumps(plan_visual(args.spec.resolve(),args.output.resolve()),indent=2))

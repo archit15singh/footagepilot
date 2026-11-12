@@ -1,4 +1,4 @@
-"""Retained stage evidence for reference → visual plan → native Edits export."""
+"""Retained stage evidence for reference → visual plan → selected native editor."""
 import hashlib,json,re,subprocess,sys
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -17,21 +17,22 @@ def open_saved(spec_path):
     return {'opened':'saved collection','next':'Use computer use to review/select reels; save chosen reference_url in the local spec. No collection scraping or account changes.'}
 
 
-def recreate(spec_path,output,token_file=None):
+def recreate(spec_path,output,token_file=None,backend="edits"):
+    if backend not in ("edits","resolve"):raise ValueError("Unknown native editor backend")
     if output.exists():raise ValueError('Use a new recreation directory; previous evidence is preserved')
     snapshot=spec_path.read_bytes();spec=json.loads(snapshot);base=spec_path.parent;output.mkdir(parents=True)
-    state={'passed':False,'stages':[],'preference':'unreviewed'}
+    state={'passed':False,'backend':backend,'stages':[],'preference':'unreviewed','spec_path':str(spec_path),'spec_sha256':hashlib.sha256(snapshot).hexdigest()}
     def stage(name,operation):
         row={'name':name,'status':'running'};state['stages'].append(row);write(output/'run.json',state)
         try:
             result=operation();row.update(status='passed',result=result);write(output/'run.json',state);return result
         except Exception as e:
             row.update(status='failed',error=str(e));write(output/'run.json',state);raise
-    registry=Path(__file__).resolve().parent.parent/'docs/edits/sources.json'
+    registry=Path(__file__).resolve().parent.parent/f'docs/{backend}/sources.json'
     if registry.exists():
         def require_fresh():
             result=check_sources(registry)
-            if result['needs_research']:raise ValueError('Edits research is stale; re-research official guides and current capabilities before recreation')
+            if result['needs_research']:raise ValueError(f'{backend} research is stale; re-research official guides and current capabilities before recreation')
             return result
         stage('research-freshness',require_fresh)
     if spec.get('reference_url'):
@@ -39,9 +40,43 @@ def recreate(spec_path,output,token_file=None):
         spec['reference']=str(output/'reference/analysis.json')
     else:spec['reference']=str((base/spec['reference']).resolve())
     for asset in spec['assets']:asset['path']=str((base/asset['path']).resolve())
-    spec['music']=str((base/spec['music']).resolve());local=output/'visual-spec.json';write(local,spec)
+    spec['music']=str((base/spec['music']).resolve())
+    if spec.get('feedback'):spec['feedback']=[str((base/p).resolve()) for p in spec['feedback']]
+    local=output/'visual-spec.json';write(local,spec)
     planned=stage('visual-codex-plan',lambda:plan_visual(local,output/'plan'))
+    if backend=='resolve':
+        from .resolve import prepare
+        prepared=stage('prepare-native-resolve',lambda:prepare(Path(planned['manifest']),output/'resolve-job',render=True))
+        if spec_path.read_bytes()!=snapshot:raise ValueError('Recreation spec changed during preparation')
+        state.update(status='awaiting-native-render',native_job=prepared['job'],native_job_sha256=hashlib.sha256(Path(prepared['job']).read_bytes()).hexdigest(),console=prepared['console'],next='Execute the generated Lua through Resolve computer use, observe queue completion, then recreate-finish with the exported movie and native DRP. Preparation is not completion.')
+        write(output/'run.json',state);return state
     rendered=stage('native-edits-render',lambda:render_edit(Path(planned['manifest']),output/'recreation.mp4',token_file))
     if spec_path.read_bytes()!=snapshot:raise ValueError('Recreation spec changed during run; rerun current input')
     state.update(passed=True,spec_sha256=hashlib.sha256(snapshot).hexdigest(),output=rendered['output'],limits=['Technical success is not creative acceptance.','No reliable listening assessment is available in this agent session.']);write(output/'run.json',state)
     return state
+
+
+def finish_resolve(run_directory,media,native_project):
+    """Finish a retained Resolve run only with actual output and matching editable project."""
+    import zipfile
+    from html import escape
+    from .resolve import verify
+    state_path=run_directory/'run.json';state=json.loads(state_path.read_text())
+    if state.get('backend')!='resolve' or state.get('status')!='awaiting-native-render':raise ValueError('Run is not awaiting a Resolve export')
+    if hashlib.sha256(Path(state['spec_path']).read_bytes()).hexdigest()!=state['spec_sha256']:raise ValueError('Recreation spec changed; start a new run for the current edit')
+    project_hash=hashlib.sha256(native_project.read_bytes()).hexdigest()
+    job_path=Path(state['native_job']);job_snapshot=job_path.read_bytes()
+    if hashlib.sha256(job_snapshot).hexdigest()!=state.get('native_job_sha256'):raise ValueError('Native job changed or has no retained fingerprint; prepare a fresh run')
+    job=json.loads(job_snapshot)
+    if not zipfile.is_zipfile(native_project):raise ValueError('Expected an actual native DRP project archive')
+    with zipfile.ZipFile(native_project) as archive:
+        names=archive.namelist()
+        if 'project.xml' not in names or not any(n.startswith('SeqContainer/') for n in names):raise ValueError('Native project has no expected project/timeline structure')
+        if archive.getinfo('project.xml').file_size>20_000_000:raise ValueError('Native project metadata exceeds inspection limit')
+        project_data=archive.read('project.xml')
+        if escape(job['project_name'],quote=False).encode() not in project_data:raise ValueError('DRP belongs to a different native project')
+    report=verify(job_path,media,run_directory/'native-verification.json')
+    if job_path.read_bytes()!=job_snapshot or hashlib.sha256(native_project.read_bytes()).hexdigest()!=project_hash or hashlib.sha256(Path(state['spec_path']).read_bytes()).hexdigest()!=state['spec_sha256']:raise ValueError('Native project or source specification changed during verification')
+    state['stages'].append({'name':'verify-native-resolve','status':'passed','result':report})
+    state.update(passed=True,status='verified-export',output=str(media),native_project_sha256=hashlib.sha256(native_project.read_bytes()).hexdigest(),preference='unreviewed',limits=['Native DRP identity/archive and rendered correspondence checked; no exhaustive native node-state parser.','Native queue completion must be observed separately; MP4 and DRP files alone cannot authenticate which app rendered them.','No reliable listening or creative acceptance verdict.'])
+    write(state_path,state);return state
