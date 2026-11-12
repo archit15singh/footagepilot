@@ -1,0 +1,22 @@
+{
+  "sources": [
+    {
+      "url": "https://www.blackmagicdesign.com/products/davinciresolve/training",
+      "verified_at": "2026-11-12T00:20:39.201371+00:00",
+      "max_age_days": 7,
+      "text_sha256": "38b5cf2c1ed6a847c32887c37c002ae7b57c2b2da0f666c53e2328b1e93b43ed"
+    },
+    {
+      "url": "https://www.blackmagicdesign.com/products/davinciresolve",
+      "verified_at": "2026-11-12T00:20:40.709327+00:00",
+      "max_age_days": 7,
+      "text_sha256": "0a47590bdb546834d867823286e9a53286165126a9203f620865ef8a1ca68935"
+    },
+    {
+      "url": "https://www.blackmagicdesign.com/media/partial/release/20260908-03",
+      "verified_at": "2026-11-12T00:20:41.765674+00:00",
+      "max_age_days": 7,
+      "text_sha256": "3a52f7644b2cdf151ed3248e68e3ac48ff019722c88b4ee98792ae7f6c1eb3b5"
+    }
+  ]
+}

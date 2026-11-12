@@ -5,6 +5,7 @@ from html.parser import HTMLParser
 import json
 from pathlib import Path
 import urllib.request
+from urllib.parse import urlsplit
 from .__main__ import binary,probe,run,write
 
 class PageText(HTMLParser):
@@ -27,13 +28,14 @@ def check_sources(registry,fetch=False,now=None):
         status='stale' if age>source.get('max_age_days',7) else 'current'
         row={'url':source['url'],'age_days':round(age,2),'status':status,'fetched':False}
         if fetch:
-            if not source['url'].startswith('https://edits.instagram.com/'):raise ValueError('Research registry only fetches official Edits HTTPS pages')
+            parsed=urlsplit(source['url'])
+            if parsed.scheme!='https' or parsed.hostname not in ('edits.instagram.com','www.blackmagicdesign.com','documents.blackmagicdesign.com') or parsed.username or parsed.password or parsed.port not in (None,443):raise ValueError('Research registry only fetches approved official editor HTTPS sources')
             try:
                 body=urllib.request.urlopen(source['url'],timeout=15).read().decode();digest=text_hash(body);row.update(fetched=True,observed_sha256=digest)
                 if digest!=source.get('text_sha256'):row['status']='changed-needs-review'
             except Exception as e:row.update(status='unavailable',error=type(e).__name__)
         results.append(row)
-    return {'needs_research':any(r['status']!='current' for r in results),'sources':results,'note':'Fetching never renews verification; review changed guides and rerun live capabilities before updating the registry.'}
+    return {'needs_research':not results or any(r['status']!='current' for r in results),'sources':results,'note':'Fetching never renews verification; review changed guides and rerun live capabilities before updating the registry.'}
 
 def compare_edits(baseline,candidate,output,verdict='unreviewed',notes=''):
     if verdict not in ('unreviewed','better','worse','tie'):raise ValueError('Unknown human verdict')

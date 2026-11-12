@@ -1,0 +1,55 @@
+{
+  "stage": "individual-clip preparation only",
+  "native_export": false,
+  "shots": [
+    {
+      "frames": 60,
+      "decoded": true
+    },
+    {
+      "frames": 45,
+      "decoded": true
+    },
+    {
+      "frames": 30,
+      "decoded": true
+    },
+    {
+      "frames": 30,
+      "decoded": true
+    },
+    {
+      "frames": 45,
+      "decoded": true
+    },
+    {
+      "frames": 60,
+      "decoded": true
+    },
+    {
+      "frames": 30,
+      "decoded": true
+    },
+    {
+      "frames": 30,
+      "decoded": true
+    },
+    {
+      "frames": 30,
+      "decoded": true
+    },
+    {
+      "frames": 60,
+      "decoded": true
+    }
+  ],
+  "frames": 420,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "limits": [
+    "Image crop/zoom and audio gain/fades are baked into separate prepared media. Native Resolve retains individual clips, cuts, audio track and markers.",
+    "Cut-only v1: rejects titles, overlays and transitions.",
+    "Preparing a job does not prove Resolve executed or rendered it."
+  ]
+}
