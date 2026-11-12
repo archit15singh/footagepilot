@@ -50,3 +50,12 @@ The range evaluator also supports full-frame fill/no-zoom excerpts. For variable
 
 
 For a source with visible movement, add `--freeze-opening` to `evals.source_ranges` to generate a decodable first-shot freeze control and require visual rejection. A nondiscriminative source fails that evaluation instead of earning a motion claim. In the actual original-video recreation, the independent evaluator checked21source samples and rejected7wrong starts plus the frozen opening; see [results](RESULTS.md).
+
+
+## Canvas crop previews
+
+Set `"canvas_previews": true` in a visual/recreation spec to give the planner two rows per temporal source tile: the whole padded source above, and a centre fill crop at the requested canvas aspect below. Each column has the same source time. Still assets use the same two-row format. The flag is optional (default false), must be boolean, and does not change source media or directly alter render geometry. The planner can move the crop with `focus_x`/`focus_y`, choose another source excerpt, or use `contain` when the brief permits bars.
+
+The lower row is a small diagnostic alternative at centre focus, not a prediction of a later non-centre crop, subject tracking, or a guarantee of safe framing. It must not be mistaken for a collage in the final film. It retains the existing maximum of three strip attachments per video; each tile has more pixels. Whole-row padding is not the native output. Extracted tiles/strip hashes and row labels remain in source-window metadata.
+
+Research checked 12 November 2026: [FFmpeg scale/crop/stack documentation](https://ffmpeg.org/ffmpeg-filters.html) defines aspect-preserving increase/decrease, crop expressions and vertical/horizontal stacking. Blackmagic’s [Resolve 17 Colorist Guide](https://documents.blackmagicdesign.com/UserManuals/DaVinci-Resolve-17-Colorist-Guide.pdf) explains that mismatched aspect ratios can letterbox and distinguishes fitting from full-frame cropping. The older guide explains the framing tradeoff, not a new runtime claim. FootagePilot’s diagnostic previews use FFmpeg; actual native exports must still be checked on the installed Resolve version. Recheck vendor documentation after changes.

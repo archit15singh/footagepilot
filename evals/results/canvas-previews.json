@@ -1,0 +1,65 @@
+{
+  "trial": "canvas-previews-and-reference-review",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "review_seconds": 23.868120833,
+  "planner_seconds": 65.06162441699416,
+  "source_assets": 6,
+  "source_strips": 18,
+  "temporal_samples": 90,
+  "rows_per_tile": 2,
+  "preview_scope": "Whole source above; centre fill crop below, not final non-centre crop",
+  "native_app": "DaVinci Resolve21.2.0.6 free",
+  "observed_queue_seconds": 2,
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "frames": 420,
+  "shots": 12,
+  "visual_samples": 36,
+  "cut_offsets_frames": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "audio_correspondence": {
+    "sample_rate": 1000,
+    "correlation": 0.99982,
+    "rms_gain_ratio": 0.99968,
+    "mean_absolute_error": 0.002702,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "decode": "passed",
+  "native_movie_sha256": "66086b93265e5b54f2a84be0da803cb2e26108efd154d05bef948db7b561a339",
+  "boat_material_seconds": {
+    "prior": 5.933333333333334,
+    "revision": 2.8666666666666667
+  },
+  "interventions": [
+    "Frame-cited model review supplied as unverified suggestions",
+    "Authored brief reserves cave material mainly for last three seconds",
+    "Enabled two-row source previews",
+    "CUA runtime reset; saved/reopened Resolve after Console failed to appear",
+    "Cuts-only native Lua dispatch with exact retained job counts; no manual planner edits"
+  ],
+  "qualitative": [
+    "Fewer repeated cave-entrance compositions in this sampled inspection",
+    "Park visitor still badly cropped; preview availability does not establish framing quality",
+    "Locations still repeat; grade/camera work differ from reference"
+  ],
+  "creative_verdict": "unreviewed",
+  "controlled_comparison": false,
+  "followup_review": {
+    "seconds": 28.453609583,
+    "supported_finding": "Inspected roof samples visibly soft; framing/source suitability still limited",
+    "not_inferred": "Sparse-frame count uncertainty is not a missing-shot failure; actual timeline has12shots"
+  }
+}

@@ -20,14 +20,26 @@ def preview_windows(duration,requested=None):
     return rows
 
 
-def window_sheet(source,window,target):
+def preview_filter(aspect=None):
+    whole='scale=224:320:force_original_aspect_ratio=decrease,pad=224:320:(ow-iw)/2:(oh-ih)/2:black,setsar=1'
+    if aspect is None:return whole
+    heights={'9:16':398,'16:9':126,'1:1':224,'4:5':280}
+    if aspect not in heights:raise ValueError('Unsupported crop preview aspect')
+    h=heights[aspect]
+    crop=f'scale=224:{h}:force_original_aspect_ratio=increase,crop=224:{h}:(iw-ow)/2:(ih-oh)/2,setsar=1'
+    return f'split=2[whole][crop];[whole]{whole}[top];[crop]{crop}[bottom];[top][bottom]vstack=inputs=2'
+
+
+def window_sheet(source,window,target,aspect=None):
     target=Path(target);frames=[]
+    filt=preview_filter(aspect)
     for i,at in enumerate(window['sample_times']):
         frame=target.with_name(target.stem+f'-{i+1}.jpg')
-        run([binary('ffmpeg'),'-v','error','-n','-ss',at,'-i',source,'-frames:v','1','-vf','scale=224:320:force_original_aspect_ratio=decrease,pad=224:320:(ow-iw)/2:(oh-ih)/2:black,setsar=1',frame])
+        run([binary('ffmpeg'),'-v','error','-n','-ss',at,'-i',source,'-frames:v','1','-vf',filt,frame])
         if not frame.is_file():raise ValueError('Missing source-window preview frame')
         frames.append(frame)
     inputs=[v for frame in frames for v in ('-i',frame)]
-    filt=''.join(f'[{i}:v]' for i in range(len(frames)))+f'hstack=inputs={len(frames)}[v]' if len(frames)>1 else '[0:v]null[v]'
-    run([binary('ffmpeg'),'-v','error','-n',*inputs,'-filter_complex',filt,'-map','[v]','-frames:v','1',target])
-    return {**window,'sheet':str(target),'sheet_sha256':hashlib.sha256(target.read_bytes()).hexdigest(),'frame_sha256':[hashlib.sha256(p.read_bytes()).hexdigest() for p in frames]}
+    stack=''.join(f'[{i}:v]' for i in range(len(frames)))+f'hstack=inputs={len(frames)}[v]' if len(frames)>1 else '[0:v]null[v]'
+    run([binary('ffmpeg'),'-v','error','-n',*inputs,'-filter_complex',stack,'-map','[v]','-frames:v','1',target])
+    layout={'canvas_preview_aspect':aspect,'rows':['Full source, padded within224x320','Centre fill crop at canvas aspect; focus0.5/0.5, no zoom'], 'scope':'Crop alternative for selection, not final shot framing or continuous motion'} if aspect else {}
+    return {**window,**layout,'sheet':str(target),'sheet_sha256':hashlib.sha256(target.read_bytes()).hexdigest(),'frame_sha256':[hashlib.sha256(p.read_bytes()).hexdigest() for p in frames]}
