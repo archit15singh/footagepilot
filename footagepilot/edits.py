@@ -80,6 +80,7 @@ def render_edit(manifest, output, token_file=None):
     from .__main__ import probe,binary,run,write
     snapshot=manifest.read_bytes();data=json.loads(snapshot);total=validate_edit(data,manifest.parent)
     if 'cues' in data.get('music_timing',{}):raise ValueError('Audio cue execution requires Resolve')
+    if any(t.get('filter')=='transition_moving_dissolve' for t in data.get('transitions',[])):raise ValueError('Moving-source dissolves require Resolve')
     if data.get('layout_backgrounds') or any('width' in s or 'height' in s for s in data.get('overlays',[])):raise ValueError('Explicit rectangular layouts require Resolve')
     if any(s.get('source_start',0)!=0 for s in data['shots']+data.get('overlays',[])):raise ValueError('Edits source-range execution is not verified; use Resolve for nonzero excerpts')
     if output.exists():raise ValueError('Use a new output file')

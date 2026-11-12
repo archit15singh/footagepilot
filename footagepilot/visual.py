@@ -13,7 +13,9 @@ def object_schema(properties):
     return {'type':'object','additionalProperties':False,'properties':properties,'required':list(properties)}
 
 def transitions_for(spec):
-    return ['cut','dissolve','wipe_left'] if spec.get('native_backend')=='resolve' else ['cut','dissolve']
+    moving=spec.get('moving_transitions',False)
+    if type(moving) is not bool or moving and spec.get('native_backend')!='resolve':raise ValueError('Moving transition planning requires Resolve and a boolean opt-in')
+    return ['cut','dissolve','wipe_left']+(['moving_dissolve'] if moving else []) if spec.get('native_backend')=='resolve' else ['cut','dissolve']
 
 
 def title_fonts(spec):
@@ -205,6 +207,7 @@ def plan_visual(spec_path,output):
             prompt+='Resolve title_font must be one of the supplied installed family names. Choose typography from visible reference evidence, including serif versus sans serif; exact font identity is uncertain from pixels. Never claim an exact match without evidence.\n'
             prompt+='Model revision suggestions are frame-cited hypotheses, not user preferences or verified facts. Consider only supported changes grounded in the supplied reference/source images, preserve uncertainty, and retain independent creative judgment. Human review notes take precedence. Never assert acceptance.\n'
             prompt+='Allowed transitions: '+', '.join(transitions_for(spec))+'. A wipe_left is a left-to-right spatial mask reveal, not camera motion; choose it only for an explicit brief or observed visual grammar.\n'
+            prompt+='If moving_dissolve is allowed, it fades real incoming pre-cut video frames over the outgoing shot. Use only with incoming video, zoom0 and source_start at least0.2s so frame-rounded handles exist. This preserves the main source start/cut; no freezing, invented handles or camera-match claim.\n'
             prompt+='For Resolve choose title_size from the supplied logical sizes and title_bold as true/false. They apply to every title sequence line. Adapt apparent title scale/weight to the cited reference, keep text on canvas and avoid overlapping glyphs. Size is a native logical control, not a claim of pixel-exact reference matching.\n'
             prompt+=json.dumps({'brief':spec.get('brief',''),'installed_title_fonts':fonts,'allowed_title_sizes':sizes,'reference_evidence_frames':evidence_frames,'recorded_human_reviews':feedback,'model_revision_suggestions':suggestions,'assets':asset_descriptions,'music_timing':timing,'duration_budget':[spec.get('min_seconds',10),spec.get('max_seconds',20)],'reference_duration':reference['duration'],'scene_change_candidates':reference['scene_changes'],'audio_analysis_limit':reference['audio']['method']})
             command=[os.environ.get('FOOTAGEPILOT_CODEX','codex'),'exec','--model','gpt-6.1-sol','-c','model_reasoning_effort="low"','--ignore-user-config','--ephemeral','--skip-git-repo-check','--sandbox','read-only','--output-schema',str(contract),'-o',str(response)]

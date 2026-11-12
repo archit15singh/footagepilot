@@ -40,3 +40,18 @@ python3 -m evals.resolve_reveal JOB.json NATIVE_REVEAL.mp4 \
 Sanitized results are in [resolve-reveal.json](../../evals/results/resolve-reveal.json). Private frames, native project and four-video review stay local. The planner capability has contract tests; this controlled variant reused an earlier live plan and does not claim a fresh LLM chose the reveal.
 
 Qualitatively, the mask is spatially correct and a clear scene boundary, but the hard vertical edge is conspicuous on still photos. Prefer it selectively, not at every cut. Creative preference and music fit remain unreviewed. Motion matching, subject tracking and local colour masks remain separate experiments requiring suitable source material and their own evidence.
+
+
+## Moving-source dissolve
+
+A Resolve manifest can opt into a real incoming handle:
+
+```json
+{"transitions":[{"after_shot":5,"filter":"transition_moving_dissolve","duration":0.4}]}
+```
+
+This keeps every main shot/cut and the soundtrack unchanged. The incoming source must be video, have no artificial zoom, and supply at least the **frame-rounded** transition duration before its `source_start`. Preparation decodes those earlier source frames into a moving pre-roll proxy with the same framing as the main excerpt. Resolve fades that proxy over the outgoing native shot with the existing Fusion Merge opacity ramp; the proxy’s nominal endpoint meets the main excerpt’s unchanged source start. No footage is fabricated to fill missing handles. Stills, insufficient handles and artificial-zoom incoming clips reject before encoding. Edits execution rejects this filter before opening its client.
+
+For Codex visual planning, set `moving_transitions: true` with `native_backend: resolve` (or use `recreate --backend resolve`). The opt-in adds `moving_dissolve` to allowed `transition_in` values. The prompt requires incoming video/zoom0/at least0.2seconds of source handle for its short planned transitions. Unsupported choices still fail native preparation; model suggestions are not automatic proof of useful motion. Legacy dissolve/wipe behavior remains explicitly frozen pre-roll.
+
+This is a moving-source opacity-layer recipe, not a call to Resolve’s built-in transition preset API. Blackmagic’s [Fusion18.6 reference](https://documents.blackmagicdesign.com/UserManuals/Fusion18_Manual.pdf) describes Fusion transitions with outgoing/incoming MediaIn nodes and mixing; it supports the compositing principle, not this adapter’s exact recipe. Sources checked12November2026; reproduce on the installed app after updates. Source excerpts here may be variable frame rate, so nominal source-time agreement within the original/output frame quantum does not establish exact source PTS identity or universally smooth camera continuity. Do not describe the effect as a matched-camera transition or a listening verdict.
