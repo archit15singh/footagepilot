@@ -13,6 +13,9 @@ class RecreationFramingTests(unittest.TestCase):
                 self.assertFalse((root/'run').exists())
             with self.assertRaises(ValueError):framing_options({'framing_review':{}},'edits')
             self.assertIsNone(framing_options({},'resolve'))
+            self.assertEqual(framing_options({'framing_review':{},'brief':'Walking ending'},'resolve')['brief'],'Walking ending')
+            for brief in (None,3,'x'*12001):
+                with self.assertRaises(ValueError):framing_options({'framing_review':{},'brief':brief},'resolve')
 
     def test_bookends_skip_contain_and_keep_selected_fill(self):
         with tempfile.TemporaryDirectory() as td:
@@ -20,7 +23,7 @@ class RecreationFramingTests(unittest.TestCase):
             manifest.write_text(json.dumps({'shots':[{'path':'source.mp4','duration':1,'fit':'contain'},{'path':'source.mp4','duration':1}]}))
             with patch('footagepilot.recreate.refine_framing',return_value={'manifest':'reviewed.json'}) as refine:
                 result=review_plan_framing(manifest,{'shots':'bookends','axis':'y'},root/'review')
-                self.assertEqual(refine.call_args.args[1],[2]);self.assertEqual(result['skipped_shots'],[1])
+                self.assertEqual(refine.call_args.args[1],[2]);self.assertEqual(result['skipped_shots'],[1]);self.assertEqual(refine.call_args.kwargs['brief'],'')
             manifest.write_text(json.dumps({'shots':[{'path':'source.mp4','duration':1,'fit':'contain'}]}))
             with patch('footagepilot.recreate.refine_framing') as refine:
                 result=review_plan_framing(manifest,{'shots':'bookends','axis':'y'},root/'contained')

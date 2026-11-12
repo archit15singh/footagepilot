@@ -60,16 +60,17 @@ class FramingTests(unittest.TestCase):
             for changed in (False,True):
                 plate.write_bytes(b'plate');output=root/str(changed)
                 def model(cmd,**kwargs):
+                    self.assertIn('End with the person walking across the bridge.',kwargs['input'])
                     Path(cmd[cmd.index('-o')+1]).write_text(json.dumps({'choices':[{'shot':1,'option':'option-0','reason':'Keep','uncertainty':'Three samples'}]}))
                     if changed:plate.write_bytes(b'replaced')
                     return SimpleNamespace(returncode=0,stderr='')
                 with patch('footagepilot.framing.binary',return_value='ffmpeg'),patch('footagepilot.framing.run',side_effect=render),patch('footagepilot.framing.subprocess.run',side_effect=model):
                     if changed:
-                        with self.assertRaisesRegex(ValueError,'evidence changed'):refine_framing(manifest,[1],'y',output)
+                        with self.assertRaisesRegex(ValueError,'evidence changed'):refine_framing(manifest,[1],'y',output,brief='End with the person walking across the bridge.')
                     else:
-                        refine_framing(manifest,[1],'y',output)
+                        refine_framing(manifest,[1],'y',output,brief='End with the person walking across the bridge.')
                         revised=json.loads((output/'edit.json').read_text());self.assertEqual(revised['plates'][0]['path'],str(plate.resolve()))
-                        record=json.loads((output/'refinement.json').read_text());self.assertEqual(record['input_hashes'][str(plate.resolve())],hashlib.sha256(b'plate').hexdigest())
+                        record=json.loads((output/'refinement.json').read_text());self.assertEqual(record['creative_brief'],'End with the person walking across the bridge.');self.assertEqual(record['input_hashes'][str(plate.resolve())],hashlib.sha256(b'plate').hexdigest())
 
     def test_evaluation_rejects_native_jobs_from_other_manifests(self):
         from evals.framing_refinement import evaluate

@@ -3,13 +3,15 @@
 A valid native export can still crop an important subject badly. `refine-framing` compares actual crop alternatives for selected main shots before preparing a new Resolve job:
 
 ```sh
-python3 -m footagepilot refine-framing EDIT.json --shots 8 --axis y --output projects/framing-001
+python3 -m footagepilot refine-framing EDIT.json --shots 8 --axis y --brief "Keep the walker visible in the bridge ending" --output projects/framing-001
 python3 -m footagepilot resolve-prepare projects/framing-001/edit.json --output projects/job-001 --render
 # Execute the generated job through Resolve, observe queue completion, then verify the actual export.
 python3 -m footagepilot resolve-verify projects/job-001/job.json projects/job-001/resolve-output.mp4 --output projects/job-001/verification.json
 ```
 
 Shot numbers are one-based; choose 1–3 unique main shots. The selected shots must use fill without artificial zoom. Specify `--axis x` or `--axis y`; the other axis stays fixed. Each shot gets its current focus and up to four alternatives at ±0.15/±0.30, clamped to 0–1 and deduplicated. Three source times sample the beginning, middle and last nominal frame of the original excerpt. Each sheet’s top row shows the whole source; following rows show crop options. Columns refer to the same times in every row.
+
+Recreation passes the original creative brief into the crop review. The standalone command accepts `--brief`. It is retained in the evidence and refinement records so subject/action intent can be inspected alongside the option choice. Without intent the reviewer uses balanced composition; it must not claim to know the desired subject. A brief can change which scene detail is sacrificed when the canvas cannot retain everything.
 
 Codex gpt-6.1-sol/low chooses only an existing option ID per shot, with a reason and uncertainty. It can keep the current crop. The compiler changes focus coordinates only: source windows, shot durations/order, effects, titles, music and cue map stay fixed. Media paths are made absolute so the new manifest works from its new directory. The original manifest/media stay unchanged. Input and attached-sheet hashes are checked after the call; stale inputs or unknown/duplicate/missing choices reject. Images, evidence, model log and refinement record stay in the requested output directory, which should be ignored for private media.
 
