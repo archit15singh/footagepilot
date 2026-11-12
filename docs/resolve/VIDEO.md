@@ -4,7 +4,7 @@ Verified 12 November 2026. The earlier visual planner saw one thumbnail per asse
 
 ## Use
 
-Provide your source clips as visual-spec assets and select Resolve with `recreate --backend resolve`, or set `native_backend` to `resolve` for `visual-plan`. The planner receives each video's actual duration and three timestamped images (beginning, middle and near the end), grouped by asset ID. Still assets receive one image. Preview timestamps and metadata are retained in plan.json alongside source hashes.
+Provide your source clips as visual-spec assets and select Resolve with `recreate --backend resolve`, or set `native_backend` to `resolve` for `visual-plan`. The planner receives each video's actual duration and bounded temporal frame strips, grouped by asset ID. Up to three windows cover the beginning, middle and end; each spans at most four seconds and contains five ordered frames. Short clips use one window. Still assets receive one image. Preview timestamps and metadata are retained in plan.json alongside source hashes.
 
 Resolve's structured plan includes `source_start` seconds for shots and panels. The compiler checks that the start is finite/nonnegative and start + planned hold fits the actual video duration. Stills require zero. A prepared visual manifest can also request it directly:
 
@@ -34,4 +34,19 @@ See [sanitized measurements](../../evals/results/source-ranges.json). Personal s
 
 ## Limits and next quality work
 
-Three frames are sparse evidence. They can miss a subject's action, a flash frame, a transition, or a better range between samples. The planner must not claim continuous motion direction or camera matching from them. Range selection currently follows the supplied music grid; it does not listen to reference music. More faithful recreation needs suitable original moving footage, denser analysis of candidate ranges, and visual/human review of continuity. The rejected slideshow feedback is not resolved by this diagnostic. No creative preference is inferred from technical success.
+The earlier three-frame previews were sparse evidence. The current bounded strips improve local temporal context but still leave gaps. They can miss a subject's action, a flash frame, a transition, or a better range between samples. The planner must not claim continuous motion direction or camera matching from them. Range selection currently follows the supplied music grid; it does not listen to reference music. More faithful recreation needs suitable original moving footage, denser analysis of candidate ranges, and visual/human review of continuity. The rejected slideshow feedback is not resolved by this diagnostic. No creative preference is inferred from technical success.
+
+
+## Bounded source windows
+
+A visual-spec asset may supply `preview_windows`, a list of1–3 objects such as `[{"start":8,"end":10}]`. Each interval must fit before the final.1second safety margin and span at most four seconds. Otherwise beginning/middle/end windows are chosen deterministically. These are previews for selection, not mandatory excerpt bounds: the compiler still validates the selected source range against actual video duration. Prefer ranges supported by previews; unseen intervals remain unverified.
+
+For each video window, `visual-plan` retains a horizontal JPEG strip and its constituent frames under `source-previews/`. `plan.json` records each window's requested source sample times, left-to-right layout and image hashes. These are requested seek coordinates, not claimed exact decoded-frame PTS. Original source hashes are checked again after planning. The model sees one strip per window, preserving the previous maximum of three image attachments per video while providing up to fifteen temporal samples. It must not infer continuous motion or exact camera trajectories from gaps. This does not automatically rank every action in a long clip.
+
+The implementation uses sequential FFmpeg accurate seeks and aspect-preserving scale/pad, then stacks retained still frames for analysis. The [official filter documentation](https://ffmpeg.org/ffmpeg-filters.html) describes scale/pad and frame mosaics; frame-window choice is FootagePilot logic, not a claim of vendor semantic analysis. Reviewed12November2026; recheck after decoder/app changes. Padding here is preview-only; the native deliverable follows the shot's independent fill/contain decision.
+
+
+The range evaluator also supports full-frame fill/no-zoom excerpts. For variable-rate material it compares output-side decoded source samples within a nominal source/output frame quantum while retaining the existing MAE/correlation thresholds. It reports requested and matched times, tolerance and partial samples before a failure. This is bounded temporal correspondence, not exact original PTS identity. FFmpeg documents [`r_frame_rate`](https://ffmpeg.org/doxygen/8.1/structAVStream.html) as a guessed base rate; it can differ substantially from average frame rate. The evaluator considers both plus the output rate. Large variable-frame gaps remain outside this nominal tolerance and may require PTS-based analysis. Do not widen tolerance to obtain a pass.
+
+
+For a source with visible movement, add `--freeze-opening` to `evals.source_ranges` to generate a decodable first-shot freeze control and require visual rejection. A nondiscriminative source fails that evaluation instead of earning a motion claim. In the actual original-video recreation, the independent evaluator checked21source samples and rejected7wrong starts plus the frozen opening; see [results](RESULTS.md).
