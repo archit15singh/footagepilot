@@ -8,6 +8,7 @@ from .visual import plan_visual,plate_catalog
 from .edits import render_edit
 from .learning import check_sources
 from .music_timing import analysis_options,extract_cues
+from .plate_fetch import PLATES,fetch_plate
 
 
 def reference_soundtrack(analysis_path):
@@ -32,6 +33,10 @@ def recreate(spec_path,output,token_file=None,backend="edits"):
     if output.exists():raise ValueError('Use a new recreation directory; previous evidence is preserved')
     snapshot=spec_path.read_bytes();spec=json.loads(snapshot);base=spec_path.parent
     catalog=plate_catalog({**spec,'native_backend':backend})
+    presets=spec.get('plate_presets',[])
+    if not isinstance(presets,list) or any(not isinstance(n,str) or n not in PLATES for n in presets) or len(set(presets))!=len(presets):raise ValueError('Use unique known reviewed plate_presets')
+    if presets and backend!='resolve':raise ValueError('Reviewed plate presets require Resolve')
+    if len(catalog)+len(presets)>8 or set(presets)&{a['id'] for a in catalog}:raise ValueError('Combined plate catalog exceeds eight assets or has duplicate IDs')
     use_reference='music_from_reference' in spec
     if use_reference and (spec['music_from_reference'] is not True or 'music' in spec or backend!='resolve'):raise ValueError('Use music_from_reference=true with Resolve and no separate music path')
     music_options=analysis_options(spec,backend)
@@ -69,6 +74,11 @@ def recreate(spec_path,output,token_file=None,backend="edits"):
         del spec['music_analysis']
     if spec.get('feedback'):spec['feedback']=[str((base/p).resolve()) for p in spec['feedback']]
     if spec.get('model_reviews'):spec['model_reviews']=[str((base/p).resolve()) for p in spec['model_reviews']]
+    for name in presets:
+        fetched=stage('fetch-reviewed-plate-'+name,lambda name=name:fetch_plate(name,output/'reviewed-plates'/name))
+        catalog+=json.loads(Path(fetched['plate_catalog']).read_text())['plate_assets']
+    if presets:spec['plate_assets']=catalog
+    spec.pop('plate_presets',None)
     spec['native_backend']=backend
     local=output/'visual-spec.json';write(local,spec)
     planned=stage('visual-codex-plan',lambda:plan_visual(local,output/'plan'))

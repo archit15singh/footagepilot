@@ -54,6 +54,31 @@ class ResolveRecreationTests(unittest.TestCase):
                 result=recreate(spec,root/'run',backend='resolve')
             self.assertFalse(result['passed']);self.assertEqual(result['stages'][1]['name'],'analyze-selected-music');self.assertEqual(extractor.call_args.kwargs['max_duration'],14)
 
+    def test_reviewed_plate_is_fetched_before_planning_without_manual_copy(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);spec=root/'spec.json';spec.write_text(json.dumps({'reference':'ref.json','assets':[],
+                'music':'track.wav','plate_presets':['marburg-glass']}));(root/'job.json').write_text('{}')
+            def fetch(name,output):
+                output.mkdir(parents=True);catalog=output/'catalog.json';catalog.write_text(json.dumps({'plate_assets':[{'id':name,'path':str(output/'glass.mp4')}]}))
+                return {'plate_catalog':str(catalog)}
+            def planner(path,output):
+                local=json.loads(path.read_text());self.assertNotIn('plate_presets',local)
+                self.assertEqual(local['plate_assets'][0]['id'],'marburg-glass')
+                return {'manifest':str(root/'edit.json')}
+            with patch('footagepilot.recreate.check_sources',return_value={'needs_research':False}),patch('footagepilot.recreate.fetch_plate',side_effect=fetch),patch('footagepilot.recreate.plan_visual',side_effect=planner),patch('footagepilot.resolve.prepare',return_value={'job':str(root/'job.json'),'console':'console.lua'}):
+                result=recreate(spec,root/'run',backend='resolve')
+            self.assertIn('fetch-reviewed-plate-marburg-glass',[s['name'] for s in result['stages']])
+
+    def test_unknown_or_duplicate_presets_do_not_start_network_or_run(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);spec=root/'spec.json'
+            for names in (['arbitrary-url'],['marburg-glass']*2,None):
+                spec.write_text(json.dumps({'plate_presets':names}))
+                with patch('footagepilot.recreate.fetch_plate') as fetch:
+                    with self.assertRaises(ValueError):recreate(spec,root/'run',backend='resolve')
+                    fetch.assert_not_called()
+                self.assertFalse((root/'run').exists())
+
     def test_prepared_native_run_is_not_marked_complete(self):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td);spec=root/'spec.json';spec.write_text(json.dumps({'reference':'reference.json','assets':[],'music':'music.wav'}))
