@@ -6,7 +6,7 @@ from footagepilot.resolve import verify,visual_matches
 
 def normalized(path):
     data=json.loads(path.read_text())
-    for row in data['shots']+data.get('overlays',[]):row['path']=str((path.parent/row['path']).resolve())
+    for row in data['shots']+data.get('overlays',[])+data.get('plates',[]):row['path']=str((path.parent/row['path']).resolve())
     if data.get('music'):data['music']=str((path.parent/data['music']).resolve())
     return data
 
