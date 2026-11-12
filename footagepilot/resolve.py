@@ -141,12 +141,14 @@ def similarity(expected, actual):
 
 def raw(command):
     result=subprocess.run([str(x) for x in command],capture_output=True)
-    if result.returncode:raise ValueError(result.stderr.decode(errors='replace')[-2000:])
+    if result.returncode:raise ValueError(result.stderr.decode(errors='replace')[-2000:] or f'Media command exited with status {result.returncode}')
     return result.stdout
 
 
 def sample_frame(path, number, fps, width=64, height=64):
-    data=raw([binary('ffmpeg'),'-v','error','-ss',number/fps,'-i',path,'-frames:v','1','-vf',f'scale={width}:{height},format=rgb24','-f','rawvideo','-'])
+    # Tiny RGB panel scaling exposed nondeterministic pixels/allocator aborts in
+    # the tested ARM64 FFmpeg build. Use its scalar path for bounded QA samples.
+    data=raw([binary('ffmpeg'),'-v','error','-cpuflags','0','-ss',number/fps,'-i',path,'-frames:v','1','-vf',f'scale={width}:{height},format=rgb24','-f','rawvideo','-'])
     if len(data)!=width*height*3:raise ValueError('Missing verification frame')
     return [v/255 for v in data]
 
