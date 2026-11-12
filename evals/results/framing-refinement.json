@@ -1,0 +1,44 @@
+{
+  "focus_only_changes": [
+    {
+      "shot": 8,
+      "field": "focus_y",
+      "before": 0.43,
+      "after": 0.73
+    }
+  ],
+  "native_visual_samples": 36,
+  "control_rejected": true,
+  "control_error": "Export differs visually from prepared composition at frame 262; inspect offline media, order, layout, transition and colour",
+  "audio": {
+    "sample_rate": 1000,
+    "correlation": 0.99982,
+    "rms_gain_ratio": 0.99968,
+    "mean_absolute_error": 0.002702,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "movie_sha256": "e0c5a39460ad04f02a6361da1ecbe0b7b667723e881c680dd2a352038380e96a",
+  "drp_sha256": "deb29cd234d9ca278896b5433c2654ae73682dac2d002fd03f59e29546cfec57",
+  "creative_acceptance": "unreviewed",
+  "scope": "Focus-only structure and sampled rendered correspondence; not subject detection or a creative score",
+  "trial": "bounded-park-framing",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "refinement_elapsed_seconds": 9.455675041,
+  "option_count": 5,
+  "samples_per_option": 3,
+  "native_app": "DaVinci Resolve21.2.0.6 free",
+  "observed_queue_seconds": 2,
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "frames": 420,
+  "seconds": 14,
+  "shots": 12,
+  "interventions": [
+    "Observed park cropping prompted explicit shot8/y refinement",
+    "Model selected one bounded crop; original plan unchanged",
+    "Saved/reopened Resolve to restore Console; same cuts-only native dispatch with exact new job identity/counts"
+  ],
+  "visual_inspection": "Selected source samples and actual native middle frame retain full head; lower body still cropped. Not continuous tracking or whole-film acceptance."
+}
