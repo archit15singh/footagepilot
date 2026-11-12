@@ -75,3 +75,7 @@ The public masking reference downloaded successfully (13.211 seconds, 1272×720)
 ## Follow-up spatial reveal experiment
 
 A native RectangleMask reveal now works as a controlled adaptation; the same retained plan was rendered with only the ending transition recipe changed. The actual 14-second native export passes 43 composition samples and audio checks. Both a wrong dissolve hypothesis and the earlier native dissolve export are rejected against the reveal plan. [Technique, primary-source research and qualitative limits](TRANSITIONS.md); [sanitized measurements](../../evals/results/resolve-reveal.json). Fifty tests pass. This is additional editing capability, not evidence of creative approval.
+
+## Moving source-range follow-up
+
+The visual planner now receives multiple timestamped previews per video and emits bounded source in-points for Resolve. An actual Codex call selected explicitly requested 2–4s and 8–10s excerpts from retained real moving footage. Native Resolve exported both as a four-second diagnostic. Six independent decoded-source samples pass; both zero-start controls are rejected after excluding letterboxing from the independent comparison. The inherited title needed a contrast/position correction before native execution. [Full evidence and limits](VIDEO.md); [sanitized metrics](../../evals/results/source-ranges.json). This is source-range execution evidence, not a finished creative recreation.

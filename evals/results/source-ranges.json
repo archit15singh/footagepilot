@@ -1,0 +1,116 @@
+{
+  "date": "2026-11-12",
+  "source": "Retained real moving Instagram masking reference; local diagnostic only, not a user film or public media redistribution",
+  "planner": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "low",
+    "elapsed_seconds": 13.52,
+    "video_previews_per_asset": 3,
+    "selected_ranges": [
+      [
+        2,
+        4
+      ],
+      [
+        8,
+        10
+      ]
+    ],
+    "direction": "Explicit diagnostic brief requested these ranges; not an unprompted editorial quality benchmark"
+  },
+  "manual_intervention": "Moved title to the black letterbox and changed it to white before native preparation; inherited dark travel title would lack contrast. Source-range decisions unchanged.",
+  "source_samples": [
+    {
+      "shot": 1,
+      "source_seconds": 2.03333,
+      "mae": 0.0006,
+      "correlation": 0.99989
+    },
+    {
+      "shot": 1,
+      "source_seconds": 3.0,
+      "mae": 0.0015,
+      "correlation": 0.99981
+    },
+    {
+      "shot": 1,
+      "source_seconds": 3.93333,
+      "mae": 0.00129,
+      "correlation": 0.99982
+    },
+    {
+      "shot": 2,
+      "source_seconds": 8.03333,
+      "mae": 0.00089,
+      "correlation": 0.99997
+    },
+    {
+      "shot": 2,
+      "source_seconds": 9.0,
+      "mae": 0.00044,
+      "correlation": 0.99998
+    },
+    {
+      "shot": 2,
+      "source_seconds": 9.93333,
+      "mae": 0.0006,
+      "correlation": 0.99997
+    }
+  ],
+  "wrong_start_controls": [
+    {
+      "shot": 1,
+      "wrong_source_start": 0,
+      "rejected": true,
+      "mae": 0.09159,
+      "correlation": 0.89546
+    },
+    {
+      "shot": 2,
+      "wrong_source_start": 0,
+      "rejected": true,
+      "mae": 0.34881,
+      "correlation": -0.12226
+    }
+  ],
+  "native": {
+    "application": "Free Resolve21.2.0.6",
+    "duration": 4.0,
+    "fps": 30.0,
+    "decode": "passed",
+    "sample_count": 6,
+    "minimum_correlation": 0.99997,
+    "title": [
+      {
+        "title": 1,
+        "frame": 30,
+        "changed_pixels": 914,
+        "bbox": [
+          93,
+          49,
+          227,
+          70
+        ],
+        "expected_minimum_height": 10.97,
+        "scope": "Contrast/size evidence; native text readback is checked during construction, not OCR"
+      }
+    ],
+    "audio": {
+      "sample_rate": 1000,
+      "correlation": 0.99964,
+      "rms_gain_ratio": 0.99983,
+      "mean_absolute_error": 0.00092,
+      "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+    },
+    "editable_DRP": true,
+    "queue": "Completed 00:00:01 observed through computer use"
+  },
+  "earlier_eval_failure": "Whole-canvas samples including letterboxing made a wrong-start control nondiscriminative; revised independent check isolates picture rows and reports remaining weak controls honestly.",
+  "limits": [
+    "Sparse frames do not establish motion direction/continuity.",
+    "Source ranges are prepared outside Resolve; project retains editable prepared excerpts.",
+    "Source audio discarded; provided original score used instead.",
+    "Edits rejects nonzero ranges; native execution not verified there.",
+    "Not a completed creative recreation; private diagnostic media not published."
+  ]
+}

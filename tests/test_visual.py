@@ -32,6 +32,18 @@ class VisualTests(unittest.TestCase):
             first={**plan,'shots':[dict(row,transition_in='wipe_left') for row in plan['shots']]}
             with self.assertRaisesRegex(ValueError,'First shot'):compile_plan(first,{**spec,'native_backend':'resolve'},p)
 
+    def test_video_source_ranges_checked_against_actual_duration(self):
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td);(p/'a.mp4').touch();(p/'score.wav').touch()
+            spec={'native_backend':'resolve','assets':[{'id':'a','path':'a.mp4'}],'music':'score.wav','music_timing':{'bpm':120,'offset':0,'provenance':'authored'},'min_seconds':2,'max_seconds':8}
+            shots=[{'asset_id':'a','beats':4,'fit':'fill','zoom':0,'source_start':at} for at in (1,3)]
+            with patch('footagepilot.visual.probe',return_value={'streams':[{'codec_type':'video','duration':'5'}]}):
+                result=compile_plan({'title':'Motion','shots':shots},spec,p)
+                self.assertEqual([r['source_start'] for r in result['shots']],[1,3])
+                with self.assertRaisesRegex(ValueError,'exceeds video'):compile_plan({'title':'Motion','shots':[dict(r,source_start=4) for r in shots]},spec,p)
+                with self.assertRaisesRegex(ValueError,'require Resolve'):compile_plan({'title':'Motion','shots':shots},{**spec,'native_backend':'edits'},p)
+
     def test_zero_tempo_rejected_without_division_error(self):
         with self.assertRaises(ValueError):
             compile_plan({}, {'assets':[],'music_timing':{'bpm':0,'provenance':'invalid'}},Path('.'))

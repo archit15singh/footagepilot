@@ -65,18 +65,20 @@ def prepare(manifest, output, render=False):
         meta=probe(path);video=next((s for s in meta['streams'] if s['codec_type']=='video'),None)
         if not video:raise ValueError('Shot has no video stream')
         still=path.suffix.lower() in ('.jpg','.jpeg','.png','.webp')
-        if not still and float(meta['format']['duration'])+.5/fps<count/fps:raise ValueError('Video source is shorter than planned shot')
+        source_start=row.get('source_start',0)
+        if still and source_start:raise ValueError('Still images cannot have a nonzero source start')
+        if not still and float(video.get('duration') or meta['format']['duration'])+.5/fps<source_start+count/fps:raise ValueError('Video source range exceeds available duration')
         fit=row.get('fit','fill');zoom=row.get('zoom',0)
         if fit=='contain' and zoom:raise ValueError('Contain with zoom is not supported by Resolve preparation')
         if fit=='fill':filt=f"scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h}:'max(0,min(iw-ow,iw*{row.get('focus_x',.5)}-ow/2))':'max(0,min(ih-oh,ih*{row.get('focus_y',.5)}-oh/2))'"
         else:filt=f'scale={w}:{h}:force_original_aspect_ratio=decrease,pad={w}:{h}:(ow-iw)/2:(oh-ih)/2:black'
         if zoom:filt+=f",zoompan=z='1+{zoom}*on/{max(1,count-1)}':x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':d=1:s={w}x{h}:fps={fps}"
-        pending.append([binary('ffmpeg'),'-v','error','-n']+(['-loop','1'] if still else [])+['-i',path,'-an','-vf',filt,'-r',fps,'-frames:v',count,'-c:v','libx264','-crf','18','-pix_fmt','yuv420p','-movflags','+faststart',target])
+        pending.append([binary('ffmpeg'),'-v','error','-n']+(['-loop','1'] if still else ['-ss',source_start])+['-i',path,'-an','-vf',filt,'-r',fps,'-frames:v',count,'-c:v','libx264','-crf','18','-pix_fmt','yuv420p','-movflags','+faststart',target])
         return str(target)
     for i,row in enumerate(data['shots']):
         elapsed+=Decimal(str(row['duration']));end=int((elapsed*fps).quantize(Decimal(1),rounding=ROUND_HALF_UP));count=end-cursor
         if count<1:raise ValueError('Shot rounds below one frame')
-        shots.append({'path':source(row,count,output/f'shot-{i+1:03d}.mp4'),'start':cursor,'frames':count});cursor=end
+        shots.append({'path':source(row,count,output/f'shot-{i+1:03d}.mp4'),'start':cursor,'frames':count,'source_start':row.get('source_start',0),'source_path':str((manifest.parent/row['path']).resolve())});cursor=end
     overlays=[]
     for i,row in enumerate(data.get('overlays',[])):
         count=frames(row['duration'])
