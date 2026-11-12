@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
-from footagepilot.resolve import lua,prepare,verify,similarity,audio_match
+from footagepilot.resolve import lua,prepare,verify,similarity,audio_match,expected_frame,timing_evidence
 
 class ResolveTests(unittest.TestCase):
     def setUp(self):
@@ -24,6 +24,21 @@ class ResolveTests(unittest.TestCase):
         b=array.array('f',[x*.01 for x in a])
         with patch('footagepilot.resolve.raw',side_effect=[a.tobytes(),b.tobytes()]),patch('footagepilot.resolve.binary',return_value='ffmpeg'):
             with self.assertRaisesRegex(ValueError,'waveform does not match'):audio_match(Path('a'),Path('b'))
+
+    def test_wipe_reference_is_spatial_not_global_opacity(self):
+        job={'fps':30,'shots':[{'path':'out','start':0,'frames':10},{'path':'in','start':10,'frames':10}],'transitions':[{'path':'reveal','start':7,'frames':3,'filter':'transition_wipe_left'}]}
+        def frame(path,*args):return ([.8] if path=='reveal' else [.2])*48
+        with patch('footagepilot.resolve.sample_frame',side_effect=frame):
+            actual=expected_frame(job,8,4,4)
+        for y in range(4):
+            self.assertEqual(actual[y*12:(y+1)*12],[.8]*6+[.2]*6)
+
+    def test_timing_reports_off_grid_cut_without_inventing_a_beat(self):
+        report=timing_evidence({'shots':[{'start':0},{'start':17}],'beats':[0,15,30],'transitions':[{'start':12,'frames':5,'after_shot':0,'filter':'transition_wipe_left'}],'timing_provenance':'authored'})
+        self.assertEqual(report['cuts'][0]['offset_frames'],2)
+        self.assertEqual(report['transitions'][0]['last_effect_frame'],16)
+        self.assertEqual(report['transitions'][0]['cut_frame'],17)
+        self.assertIsNone(timing_evidence({'shots':[{'start':0},{'start':17}]})['cuts'][0]['nearest_grid_frame'])
 
     def test_lua_strings_cannot_escape_data(self):
         value='x\"; os.execute(\"bad\"); --\n\\ café'

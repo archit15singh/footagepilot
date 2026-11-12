@@ -58,7 +58,7 @@ def prepare(manifest, output, render=False):
         if not re.fullmatch(r'#[0-9a-fA-F]{6}',title.get('color','#FFFFFF')):raise ValueError('Title colour must be RGB hex')
         if any(type(title.get(k,.5)) not in (int,float) or not math.isfinite(title.get(k,.5)) or not 0<=title.get(k,.5)<=1 for k in ('x','y')):raise ValueError('Title position must be 0–1')
     for transition in data.get('transitions',[]):
-        if transition.get('filter','transition_dissolve')!='transition_dissolve' or frames(transition.get('duration',.2))<2:raise ValueError('Resolve supports dissolves of at least two frames')
+        if transition.get('filter','transition_dissolve') not in ('transition_dissolve','transition_wipe_left') or frames(transition.get('duration',.2))<2:raise ValueError('Resolve supports dissolve/wipe-left transitions of at least two frames')
     shots=[];cursor=0;inputs={};pending=[];elapsed=Decimal(0)
     def source(row,count,target):
         path=(manifest.parent/row['path']).resolve();inputs[str(path)]=hashlib.sha256(path.read_bytes()).hexdigest()
@@ -86,7 +86,7 @@ def prepare(manifest, output, render=False):
     for i,row in enumerate(data.get('transitions',[])):
         incoming=shots[row['after_shot']+1];count=frames(row.get('duration',.2));target=output/f'dissolve-{i+1:03d}.mp4'
         pending.append([binary('ffmpeg'),'-v','error','-n','-i',incoming['path'],'-an','-vf',f'trim=end_frame=1,loop=-1:1:0,setpts=N/({fps}*TB)','-r',fps,'-frames:v',count,'-c:v','libx264','-crf','18','-pix_fmt','yuv420p',target])
-        transitions.append({'path':str(target),'start':incoming['start']-count,'frames':count,'after_shot':row['after_shot']})
+        transitions.append({'path':str(target),'start':incoming['start']-count,'frames':count,'after_shot':row['after_shot'],'filter':row.get('filter','transition_dissolve')})
     titles=[]
     for i,row in enumerate(data.get('titles',[])):
         count=frames(row['duration'])
@@ -100,7 +100,7 @@ def prepare(manifest, output, render=False):
         if float(probe(path)['format']['duration'])+.5/fps<cursor/fps:raise ValueError('Music is shorter than timeline')
         music=output/'music.wav';pending.append([binary('ffmpeg'),'-v','error','-n','-i',path,'-t',cursor/fps,'-af',f'volume={data.get("music_gain",.65)},afade=t=in:d=0.1,afade=t=out:st={max(0,cursor/fps-.3)}:d=0.3','-c:a','pcm_s16le',music])
     output.mkdir(parents=True)
-    job={'project_name':'FootagePilot-'+output.name[:32]+'-'+uuid.uuid4().hex[:8],'schema_version':2,'status':'prepared-not-executed','fps':fps,'width':w,'height':h,'frames':cursor,'shots':shots,'overlays':overlays,'titles':titles,'transitions':transitions,'music':str(music) if music else None,'beats':[],'inputs':inputs,'manifest_sha256':hashlib.sha256(snapshot).hexdigest(),'limits':['Source crop/zoom and audio gain/fades are prepared per clip. Resolve constructs editable layers, Text+ and animated-opacity dissolves.','Dissolve begins before the planned cut and reaches full incoming image on the cut; incoming pre-roll holds its first frame.','Preparing a job does not prove native execution or creative acceptance.']}
+    job={'project_name':'FootagePilot-'+output.name[:32]+'-'+uuid.uuid4().hex[:8],'schema_version':2,'status':'prepared-not-executed','fps':fps,'width':w,'height':h,'frames':cursor,'shots':shots,'overlays':overlays,'titles':titles,'transitions':transitions,'music':str(music) if music else None,'beats':[],'inputs':inputs,'manifest_sha256':hashlib.sha256(snapshot).hexdigest(),'limits':['Source crop/zoom and audio gain/fades are prepared per clip. Resolve constructs editable layers, Text+ and animated-opacity dissolves or rectangle-mask reveals.','Transition begins before the planned cut and reaches full incoming image on the last pre-cut frame; incoming pre-roll holds its first frame.','Preparing a job does not prove native execution or creative acceptance.']}
     timing=data.get('music_timing')
     if timing:
         n=0
@@ -155,7 +155,9 @@ def expected_frame(job, number, width=64, height=64):
     for row in job.get('transitions',[]):
         if row['start']<=number<row['start']+row['frames']:
             alpha=(number-row['start'])/(row['frames']-1);incoming=sample_frame(row['path'],number-row['start'],job['fps'],width,height)
-            result=[a*(1-alpha)+b*alpha for a,b in zip(result,incoming)]
+            if row.get('filter','transition_dissolve')=='transition_wipe_left':
+                result=[incoming[i] if (i//3)%width<alpha*width else v for i,v in enumerate(result)]
+            else:result=[a*(1-alpha)+b*alpha for a,b in zip(result,incoming)]
     return result
 
 
@@ -225,6 +227,16 @@ def audio_match(expected, media):
     return {'sample_rate':1000,'correlation':round(corr,5),'rms_gain_ratio':round(gain_ratio,5),'mean_absolute_error':round(mae,6),'scope':'Numerical soundtrack correspondence; not a listening or musical taste verdict'}
 
 
+def timing_evidence(job):
+    """Frame-domain alignment to an explicit grid; never infer musical beats."""
+    grid=job.get('beats',[])
+    cuts=[]
+    for shot in job['shots'][1:]:
+        frame=shot['start'];nearest=min(grid,key=lambda x:abs(x-frame)) if grid else None
+        cuts.append({'cut_frame':frame,'nearest_grid_frame':nearest,'offset_frames':frame-nearest if nearest is not None else None})
+    return {'provenance':job.get('timing_provenance'),'cuts':cuts,'transitions':[{'filter':r.get('filter','transition_dissolve'),'start_frame':r['start'],'last_effect_frame':r['start']+r['frames']-1,'cut_frame':job['shots'][r['after_shot']+1]['start']} for r in job.get('transitions',[])],'scope':'Authored/reviewed grid correspondence only; no listening, downbeat or musical-fit verdict'}
+
+
 def verify(job_path, media, output):
     job=json.loads(job_path.read_text())
     if output.exists():raise ValueError('Use a fresh verification file')
@@ -241,5 +253,5 @@ def verify(job_path, media, output):
     titles=title_matches(job,media)
     audio=audio_match(job['music'],media) if job.get('music') else None
     if hashlib.sha256(media.read_bytes()).hexdigest()!=digest:raise ValueError('Export changed during correspondence checks')
-    result={'visual_samples':frames,'title_checks':titles,'audio_correspondence':audio,'technical_pass':True,'sha256':digest,'frames_expected':job['frames'],'duration':duration,'fps':fps,'decode':'passed','native_origin':'Requires retained console evidence and project inspection; cannot be established from an MP4 alone.','creative_verdict':'unreviewed','limits':['Sampled correspondence is not exhaustive perceptual review, listening or storytelling acceptance.']}
+    result={'timing_evidence':timing_evidence(job),'visual_samples':frames,'title_checks':titles,'audio_correspondence':audio,'technical_pass':True,'sha256':digest,'frames_expected':job['frames'],'duration':duration,'fps':fps,'decode':'passed','native_origin':'Requires retained console evidence and project inspection; cannot be established from an MP4 alone.','creative_verdict':'unreviewed','limits':['Sampled correspondence is not exhaustive perceptual review, listening or storytelling acceptance.']}
     output.parent.mkdir(parents=True,exist_ok=True);write(output,result);return result

@@ -1,0 +1,102 @@
+{
+  "observed_date": "2026-11-12",
+  "application": "Free Mac App Store Resolve 21.2.0.6",
+  "canvas": [
+    1080,
+    1920
+  ],
+  "duration": 14.0,
+  "fps": 30.0,
+  "native_technique": "RectangleMask width/center expressions into Merge EffectMask over transparent background; native 12-frame incoming still pre-roll",
+  "intervention": "Reused the retained Codex visual plan; replaced only ending transition recipe with 0.4-second mask reveal. No fresh planner call or human preference claimed.",
+  "native_queue": "Completed in 00:00:02, observed through computer use; render-only duration",
+  "editable_DRP": "Native export retained locally",
+  "composition_samples": 43,
+  "minimum_correlation": 0.9875,
+  "maximum_mean_absolute_error": 0.01746,
+  "audio_correspondence": {
+    "sample_rate": 1000,
+    "correlation": 0.99958,
+    "rms_gain_ratio": 0.99986,
+    "mean_absolute_error": 0.001157,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "timing_evidence": {
+    "provenance": "Known authoring grid of original local score: half-second plucks, four-second bars. Not inferred from reference audio.",
+    "cuts": [
+      {
+        "cut_frame": 60,
+        "nearest_grid_frame": 60,
+        "offset_frames": 0
+      },
+      {
+        "cut_frame": 105,
+        "nearest_grid_frame": 105,
+        "offset_frames": 0
+      },
+      {
+        "cut_frame": 135,
+        "nearest_grid_frame": 135,
+        "offset_frames": 0
+      },
+      {
+        "cut_frame": 180,
+        "nearest_grid_frame": 180,
+        "offset_frames": 0
+      },
+      {
+        "cut_frame": 210,
+        "nearest_grid_frame": 210,
+        "offset_frames": 0
+      },
+      {
+        "cut_frame": 240,
+        "nearest_grid_frame": 240,
+        "offset_frames": 0
+      },
+      {
+        "cut_frame": 300,
+        "nearest_grid_frame": 300,
+        "offset_frames": 0
+      },
+      {
+        "cut_frame": 330,
+        "nearest_grid_frame": 330,
+        "offset_frames": 0
+      },
+      {
+        "cut_frame": 360,
+        "nearest_grid_frame": 360,
+        "offset_frames": 0
+      }
+    ],
+    "transitions": [
+      {
+        "filter": "transition_wipe_left",
+        "start_frame": 348,
+        "last_effect_frame": 359,
+        "cut_frame": 360
+      }
+    ],
+    "scope": "Authored/reviewed grid correspondence only; no listening, downbeat or musical-fit verdict"
+  },
+  "negative_controls": [
+    {
+      "control": "dissolve-hypothesis",
+      "rejected": true,
+      "reason": "Export differs visually from prepared composition at frame 351; inspect offline media, order, layout, transition and colour"
+    },
+    {
+      "control": "earlier-dissolve-export",
+      "rejected": true,
+      "reason": "Export differs visually from prepared composition at frame 351; inspect offline media, order, layout, transition and colour"
+    }
+  ],
+  "creative_verdict": "unreviewed",
+  "limits": [
+    "Authored 120 BPM grid, not reference-song beat inference.",
+    "Frozen incoming pre-roll, not moving-camera match.",
+    "Sampled correspondence, not exhaustive frame or listening review.",
+    "Planner capability/schema tested; this variation reused a prior plan rather than claiming a new live LLM choice."
+  ]
+}
