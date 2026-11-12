@@ -11,6 +11,7 @@ from pathlib import Path
 from .__main__ import binary, probe, run, write
 from .edits import validate_edit
 from .layout import rectangle,validate_panels
+from .music_timing import marker_times
 
 
 def lua(value):
@@ -40,8 +41,9 @@ def prepare(manifest, output, render=False):
     if output.exists():raise ValueError('Use a fresh Resolve job directory')
     fps=data.get('fps',30);w,h={'9:16':(1080,1920),'16:9':(1920,1080),'1:1':(1080,1080),'4:5':(1080,1350)}[data.get('aspect','9:16')]
     def frames(seconds):return int((Decimal(str(seconds))*fps).quantize(Decimal(1),rounding=ROUND_HALF_UP))
+    def layer_frames(row):return frames(Decimal(str(row.get('start',0)))+Decimal(str(row['duration'])))-frames(row.get('start',0))
     validate_panels(data.get('overlays',[]))
-    validate_panels([{**r,'start':frames(r['start']),'duration':frames(r['duration'])} for r in data.get('overlays',[])])
+    validate_panels([{**r,'start':frames(r['start']),'duration':layer_frames(r)} for r in data.get('overlays',[])])
     for row in data['shots']:
         if row.get('scale',1)!=1 or row.get('x',.5)!=.5 or row.get('y',.5)!=.5:raise ValueError('Main shots must use full-frame placement; use collage overlays for positioned panels')
     if len(data.get('titles',[]))>16:raise ValueError('Use at most sixteen native titles')
@@ -77,13 +79,13 @@ def prepare(manifest, output, render=False):
         shots.append({'path':source(row,count,output/f'shot-{i+1:03d}.mp4'),'start':cursor,'frames':count,'source_start':row.get('source_start',0),'source_path':str((manifest.parent/row['path']).resolve())});cursor=end
     overlays=[]
     for i,row in enumerate(data.get('overlays',[])):
-        count=frames(row['duration'])
+        count=layer_frames(row)
         if frames(row['start'])+count>cursor:raise ValueError('Rounded collage exceeds timeline')
         overlays.append({'path':source(row,count,output/f'panel-{i+1:03d}.mp4',panel=True),'start':frames(row['start']),'frames':count,'x':row['x'],'y':row['y'],'width':row.get('width',row.get('scale',1)),'height':row.get('height',row.get('scale',1))})
     backgrounds=[]
     if len(data.get('layout_backgrounds',[]))>24:raise ValueError('Use at most 24 layout backgrounds')
     for i,row in enumerate(data.get('layout_backgrounds',[])):
-        start,count=frames(row['start']),frames(row['duration'])
+        start,count=frames(row['start']),layer_frames(row)
         if row.get('color','#000000')!='#000000' or count<1 or start<0 or start+count>cursor:raise ValueError('Layout background must be black and fit the timeline')
         target=output/f'layout-background-{i+1:03d}.mp4'
         pending.append([binary('ffmpeg'),'-v','error','-n','-f','lavfi','-i',f'color=black:s={w}x{h}:r={fps}','-an','-frames:v',count,'-c:v','libx264','-pix_fmt','yuv420p',target])
@@ -95,7 +97,7 @@ def prepare(manifest, output, render=False):
         transitions.append({'path':str(target),'start':incoming['start']-count,'frames':count,'after_shot':row['after_shot'],'filter':row.get('filter','transition_dissolve')})
     titles=[]
     for i,row in enumerate(data.get('titles',[])):
-        count=frames(row['duration'])
+        count=layer_frames(row)
         if frames(row.get('start',0))+count>cursor:raise ValueError('Rounded title exceeds timeline')
         target=output/f'title-carrier-{i+1:03d}.mp4'
         pending.append([binary('ffmpeg'),'-v','error','-n','-f','lavfi','-i',f'color=black:s={w}x{h}:r={fps}','-an','-frames:v',count,'-c:v','libx264','-pix_fmt','yuv420p',target])
@@ -109,9 +111,9 @@ def prepare(manifest, output, render=False):
     job={'project_name':'FootagePilot-'+output.name[:32]+'-'+uuid.uuid4().hex[:8],'schema_version':2,'status':'prepared-not-executed','fps':fps,'width':w,'height':h,'frames':cursor,'shots':shots,'overlays':overlays,'backgrounds':backgrounds,'titles':titles,'transitions':transitions,'music':str(music) if music else None,'beats':[],'inputs':inputs,'manifest_sha256':hashlib.sha256(snapshot).hexdigest(),'limits':['Source crop/zoom and audio gain/fades are prepared per clip. Resolve constructs editable layers, Text+ and animated-opacity dissolves or rectangle-mask reveals.','Panel proxies are reframed to box aspect then normalized to the canvas; native independent-axis scaling restores their intended proportions.','Transition begins before the planned cut and reaches full incoming image on the last pre-cut frame; incoming pre-roll holds its first frame.','Preparing a job does not prove native execution or creative acceptance.']}
     timing=data.get('music_timing')
     if timing:
-        n=0
-        while timing.get('offset',0)+n*60/timing['bpm']<cursor/fps:
-            job['beats'].append(frames(timing.get('offset',0)+n*60/timing['bpm']));n+=1
+        job['beats']=sorted({frames(t) for t in marker_times(timing,float(elapsed))})
+        job['timing_mode']=timing.get('mode','authored_grid')
+        job['timing_label']='Audio onset candidates; not verified beats or a listening verdict' if timing.get('mode')=='onset_candidates' else 'Supplied timing coordinates; not a listening verdict'
         job['timing_provenance']=timing['provenance']
     try:
         for cmd in pending:run(cmd)
@@ -121,7 +123,7 @@ def prepare(manifest, output, render=False):
         paths=[Path(s['path']) for group in (shots,overlays,backgrounds,titles,transitions) for s in group]+([music] if music else [])
         job['prepared_hashes']={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths};write(output/'job.json',job)
         template=(Path(__file__).parent/'resolve_job.lua').read_text();payload={k:job[k] for k in ('fps','width','height','frames','shots','music','beats','overlays','titles','transitions','backgrounds')}
-        payload.update(name=job['project_name'],target=str(output),custom_name='resolve-output',render=render)
+        payload.update(timing_label=job.get('timing_label'),name=job['project_name'],target=str(output),custom_name='resolve-output',render=render)
         (output/'console.lua').write_text('do local cfg='+lua(payload)+'; '+console_program(template)+' end\n');(output/'render.lua').write_text(console_program((Path(__file__).parent/'resolve_render.lua').read_text())+'\n')
         return {'job':str(output/'job.json'),'console':str(output/'console.lua'),'status':job['status'],'next':'Run console.lua inside Resolve; inspect native queue/output and run resolve-verify. Native render requested.' if render else 'Run console.lua inside Resolve, inspect, then run render.lua and resolve-verify.'}
     except Exception as error:
@@ -268,7 +270,7 @@ def timing_evidence(job):
     for title in job.get('titles',[]):
         nearest=min(grid,key=lambda x:abs(x-title['start'])) if grid else None
         title_events.append({'start_frame':title['start'],'end_frame_exclusive':title['start']+title['frames'],'nearest_grid_frame':nearest,'offset_frames':title['start']-nearest if nearest is not None else None})
-    return {'provenance':job.get('timing_provenance'),'title_events':title_events,'cuts':cuts,'transitions':[{'filter':r.get('filter','transition_dissolve'),'start_frame':r['start'],'last_effect_frame':r['start']+r['frames']-1,'cut_frame':job['shots'][r['after_shot']+1]['start']} for r in job.get('transitions',[])],'scope':'Authored/reviewed grid correspondence only; no listening, downbeat or musical-fit verdict'}
+    return {'provenance':job.get('timing_provenance'),'mode':job.get('timing_mode','authored_grid'),'title_events':title_events,'cuts':cuts,'transitions':[{'filter':r.get('filter','transition_dissolve'),'start_frame':r['start'],'last_effect_frame':r['start']+r['frames']-1,'cut_frame':job['shots'][r['after_shot']+1]['start']} for r in job.get('transitions',[])],'scope':'Supplied timing-coordinate correspondence only; onset candidates are not verified beats. No listening, downbeat or musical-fit verdict'}
 
 
 def verify(job_path, media, output):

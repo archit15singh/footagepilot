@@ -80,7 +80,7 @@ local ok,err=pcall(function()
     mo.Input=text.Output
   end
   assert(math.abs(timeline:GetEndFrame()-timeline:GetStartFrame()-cfg.frames)<1,'FootagePilot timeline extent mismatch')
-  for i,frame in ipairs(cfg.beats) do require_ok(timeline:AddMarker(frame,'Blue','Timing '..i,'Authored timing grid; not a listening verdict',1),'beat marker') end
+  for i,frame in ipairs(cfg.beats) do require_ok(timeline:AddMarker(frame,'Blue','Timing '..i,cfg.timing_label or 'Authored timing grid; not a listening verdict',1),'beat marker') end
   require_ok(pm:SaveProject(),'save project')
   require_ok(pm:ExportProject(project:GetName(),cfg.target..'/resolve-project.drp'),'editable project export')
   _FP.stage='assembled'

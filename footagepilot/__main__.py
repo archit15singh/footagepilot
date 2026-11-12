@@ -155,6 +155,7 @@ def main():
     production = commands.add_parser('produce'); production.add_argument('project',type=Path); production.add_argument('--brief',required=True); production.add_argument('--skip-cleanup',action='store_true'); production.add_argument('--engine',action='append',choices=('remotion','hyperframes'),help='Render only this engine; repeat for both (default: both)')
     planner = commands.add_parser('plan'); planner.add_argument('project',type=Path); planner.add_argument('--brief',required=True)
     reference=commands.add_parser('reference');reference.add_argument('source');reference.add_argument('--output',type=Path,required=True);reference.add_argument('--interval',type=float,default=1.);reference.add_argument('--scene-threshold',type=float,default=.28);reference.add_argument('--max-duration',type=float,default=180.);reference.add_argument('--browser',choices=('brave','chrome','firefox','edge'))
+    cues=commands.add_parser('music-cues');cues.add_argument('source',type=Path);cues.add_argument('--output',type=Path,required=True);cues.add_argument('--max-duration',type=float,default=30.);cues.add_argument('--min-gap',type=float,default=.3)
     edits=commands.add_parser('edits-render');edits.add_argument('manifest',type=Path);edits.add_argument('--output',type=Path,required=True);edits.add_argument('--token-file',type=Path)
     knowledge=commands.add_parser('learn-check');knowledge.add_argument('--sources',type=Path,default=Path('docs/edits/sources.json'));knowledge.add_argument('--fetch',action='store_true')
     compare=commands.add_parser('compare-edits');compare.add_argument('baseline',type=Path);compare.add_argument('candidate',type=Path);compare.add_argument('--output',type=Path,required=True);compare.add_argument('--verdict',choices=('unreviewed','better','worse','tie'),default='unreviewed');compare.add_argument('--notes',default='')
@@ -169,7 +170,10 @@ def main():
     web = commands.add_parser('serve'); web.add_argument('directory', type=Path); web.add_argument('--port', type=int, default=8765)
     args = parser.parse_args()
     try:
-        if args.command == 'resolve-prepare':
+        if args.command == 'music-cues':
+            from .music_timing import extract_cues
+            print(json.dumps(extract_cues(args.source.resolve(),args.output.resolve(),args.max_duration,args.min_gap),indent=2))
+        elif args.command == 'resolve-prepare':
             from .resolve import prepare
             print(json.dumps(prepare(args.manifest.resolve(),args.output.resolve(),args.render),indent=2))
         elif args.command == 'resolve-verify':
