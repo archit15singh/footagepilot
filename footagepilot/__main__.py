@@ -161,6 +161,7 @@ def main():
     compare=commands.add_parser('compare-edits');compare.add_argument('baseline',type=Path);compare.add_argument('candidate',type=Path);compare.add_argument('--output',type=Path,required=True);compare.add_argument('--verdict',choices=('unreviewed','better','worse','tie'),default='unreviewed');compare.add_argument('--notes',default='')
     et=commands.add_parser('edits-tools');et.add_argument('--token-file',type=Path);et.add_argument('--output',type=Path,required=True)
     review=commands.add_parser('review-reference');review.add_argument('spec',type=Path);review.add_argument('candidate',type=Path);review.add_argument('--output',type=Path,required=True)
+    source_import=commands.add_parser('import-sources');source_import.add_argument('archive',type=Path);source_import.add_argument('--output',type=Path,required=True)
     framing=commands.add_parser('refine-framing');framing.add_argument('manifest',type=Path);framing.add_argument('--shots',type=int,nargs='+',required=True);framing.add_argument('--axis',choices=('x','y'),required=True);framing.add_argument('--output',type=Path,required=True)
     visual=commands.add_parser('visual-plan');visual.add_argument('spec',type=Path);visual.add_argument('--output',type=Path,required=True)
     recreate=commands.add_parser('recreate');recreate.add_argument('spec',type=Path);recreate.add_argument('--output',type=Path,required=True);recreate.add_argument('--token-file',type=Path);recreate.add_argument('--backend',choices=('edits','resolve'),default='edits')
@@ -193,6 +194,9 @@ def main():
         elif args.command == 'review-reference':
             from .reference_review import review_reference
             print(json.dumps(review_reference(args.spec.resolve(),args.candidate.resolve(),args.output.resolve()),indent=2))
+        elif args.command == 'import-sources':
+            from .source_import import import_archive
+            print(json.dumps(import_archive(args.archive.resolve(),args.output.resolve()),indent=2))
         elif args.command == 'refine-framing':
             from .framing import refine_framing
             print(json.dumps(refine_framing(args.manifest.resolve(),args.shots,args.axis,args.output.resolve()),indent=2))
