@@ -1,0 +1,124 @@
+{
+  "passed": true,
+  "planner": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "low",
+    "elapsed_seconds": 50.99615054100286
+  },
+  "timing_mode": "onset_candidates",
+  "interior_candidate_count": 27,
+  "duration": 14.0,
+  "output_sha256": "635b374f7eb9c57df34fcd22df32c35684d75c3bec51cf6eb27d737e294c3de5",
+  "native_queue_render_seconds": 2,
+  "visual_samples": 46,
+  "minimum_correlation": 0.97616,
+  "title_timing_samples": 14,
+  "timing_evidence": {
+    "provenance": "Measured 10ms RMS energy novelty candidates; zero/end are boundaries, interior points are transients, not verified beats or phrases.",
+    "mode": "onset_candidates",
+    "title_events": [
+      {
+        "start_frame": 0,
+        "end_frame_exclusive": 62,
+        "nearest_grid_frame": 0,
+        "offset_frames": 0
+      },
+      {
+        "start_frame": 20,
+        "end_frame_exclusive": 62,
+        "nearest_grid_frame": 20,
+        "offset_frames": 0
+      },
+      {
+        "start_frame": 32,
+        "end_frame_exclusive": 62,
+        "nearest_grid_frame": 32,
+        "offset_frames": 0
+      }
+    ],
+    "cuts": [
+      {
+        "cut_frame": 62,
+        "nearest_grid_frame": 62,
+        "offset_frames": 0
+      },
+      {
+        "cut_frame": 122,
+        "nearest_grid_frame": 122,
+        "offset_frames": 0
+      },
+      {
+        "cut_frame": 166,
+        "nearest_grid_frame": 166,
+        "offset_frames": 0
+      },
+      {
+        "cut_frame": 227,
+        "nearest_grid_frame": 227,
+        "offset_frames": 0
+      },
+      {
+        "cut_frame": 272,
+        "nearest_grid_frame": 272,
+        "offset_frames": 0
+      },
+      {
+        "cut_frame": 362,
+        "nearest_grid_frame": 362,
+        "offset_frames": 0
+      }
+    ],
+    "transitions": [],
+    "scope": "Supplied timing-coordinate correspondence only; onset candidates are not verified beats. No listening, downbeat or musical-fit verdict"
+  },
+  "audio_correspondence": {
+    "sample_rate": 1000,
+    "correlation": 0.99958,
+    "rms_gain_ratio": 0.99986,
+    "mean_absolute_error": 0.001157,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "negative_controls": [
+    {
+      "control": "wrong-shots",
+      "rejected": true,
+      "reason": "Export differs visually from prepared composition at frame 0; inspect offline media, order, layout, transition and colour"
+    },
+    {
+      "control": "shifted-audio",
+      "rejected": true,
+      "reason": "Soundtrack waveform does not match prepared music; inspect timing, gain and audio routing"
+    }
+  ],
+  "known_pulse_diagnostic": {
+    "passed": true,
+    "known_pulses": [
+      0.35,
+      0.9,
+      1.6,
+      2.9,
+      4.2
+    ],
+    "candidate_onsets": [
+      0.35,
+      0.9,
+      1.6,
+      2.9,
+      4.2
+    ],
+    "maximum_error_seconds": 0.0,
+    "silence_rejected_without_output": true,
+    "different_track_rejected": true,
+    "scope": "Known transient recovery and source binding; not real-song beat/phrase accuracy"
+  },
+  "interventions": [
+    "Brief requested full14second excerpt and progressive reference-style titles/collage using the supplied cue map.",
+    "No model-plan changes before native preparation.",
+    "First diagnostic fixture placed a pulse inside the requested .3second boundary exclusion; retained locally and replaced by a fixture respecting minimum gap."
+  ],
+  "limits": [
+    "Onset candidates may lag attacks and are not verified musical beats/phrases.",
+    "No listening or subjective music-fit assessment.",
+    "Native camera matching and creative acceptance remain unverified."
+  ]
+}

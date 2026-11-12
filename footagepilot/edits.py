@@ -68,7 +68,10 @@ def validate_edit(data, base):
         if type(i) is not int or not 0<=i<len(data['shots'])-1:raise ValueError('Transition needs an existing adjacent shot boundary')
         if not number(transition.get('duration',.2),.05,min(data['shots'][i]['duration'],data['shots'][i+1]['duration'])/2):raise ValueError('Transition too long for adjacent shots')
     timing=data.get('music_timing')
-    if timing and (not data.get('music') or not number(timing.get('bpm'),40,240) or not number(timing.get('offset',0),0,2) or not timing.get('provenance')):raise ValueError('Music timing needs a track, finite BPM/offset and provenance')
+    if timing:
+        if not data.get('music'):raise ValueError('Music timing requires a track')
+        from .music_timing import validate_timing,marker_times
+        validate_timing(timing,base/data['music']);marker_times(timing,total)
     return total
 
 
@@ -76,6 +79,7 @@ def render_edit(manifest, output, token_file=None):
     import hashlib,time,shutil,uuid
     from .__main__ import probe,binary,run,write
     snapshot=manifest.read_bytes();data=json.loads(snapshot);total=validate_edit(data,manifest.parent)
+    if 'cues' in data.get('music_timing',{}):raise ValueError('Audio cue execution requires Resolve')
     if data.get('layout_backgrounds') or any('width' in s or 'height' in s for s in data.get('overlays',[])):raise ValueError('Explicit rectangular layouts require Resolve')
     if any(s.get('source_start',0)!=0 for s in data['shots']+data.get('overlays',[])):raise ValueError('Edits source-range execution is not verified; use Resolve for nonzero excerpts')
     if output.exists():raise ValueError('Use a new output file')

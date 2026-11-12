@@ -34,3 +34,6 @@ Phase A is the reference pipeline in this change. Phase B is the Edits capabilit
 ## Frame-cited planning follow-up
 
 The planner now consumes timestamped frames around selected change candidates and retains per-technique/per-shot frame citations. [Contract and limitations](REFERENCE-EVIDENCE.md). This reveals a remaining fidelity constraint: the current layout compiler forces complete quadrants even when the reference shows growing asymmetric rows. Traceable adaptation is not equivalence; native layout generalization is now tested in resolve/LAYOUTS.md, while creative acceptance remains separate.
+
+
+Resolve music-cue progress: `music-cues` proposes source-hash-bound RMS onset candidates; visual plans can use their uneven cue intervals for cuts, titles and panels. See [music timing](resolve/MUSIC-CUES.md). This advances variable holds without a known BPM; phrase identification and listening-based acceptance in priority3 remain unproven.
