@@ -1,0 +1,94 @@
+{
+  "passed": true,
+  "source_kind": "six original personal travel videos selected/downloaded through Photos UI; private media excluded",
+  "planner": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "low",
+    "elapsed_seconds": 70.2353643749957
+  },
+  "preview_windows": 18,
+  "preview_samples": 90,
+  "retained_sheet_hashes_match": true,
+  "duration": 14.0,
+  "output_sha256": "e4adbee2e6f552cd05c9b700b788d53b8af7027f641d347e70556ca606f784fa",
+  "native_queue_render_seconds": 2,
+  "source_sample_count": 21,
+  "minimum_source_correlation": 0.99976,
+  "maximum_nominal_time_tolerance_seconds": 0.04167,
+  "wrong_start_controls": [
+    {
+      "shot": 1,
+      "wrong_source_start": 0,
+      "rejected": true,
+      "mae": 0.10089,
+      "correlation": 0.73713
+    },
+    {
+      "shot": 2,
+      "wrong_source_start": 0,
+      "rejected": true,
+      "mae": 0.30878,
+      "correlation": 0.19717
+    },
+    {
+      "shot": 3,
+      "wrong_source_start": 0,
+      "rejected": true,
+      "mae": 0.34468,
+      "correlation": -0.13182
+    },
+    {
+      "shot": 4,
+      "wrong_source_start": 0,
+      "rejected": true,
+      "mae": 0.19969,
+      "correlation": 0.21972
+    },
+    {
+      "shot": 5,
+      "wrong_source_start": 0,
+      "rejected": true,
+      "mae": 0.15774,
+      "correlation": 0.04981
+    },
+    {
+      "shot": 6,
+      "wrong_source_start": 0,
+      "rejected": true,
+      "mae": 0.13703,
+      "correlation": 0.44461
+    },
+    {
+      "shot": 7,
+      "wrong_source_start": 0,
+      "rejected": true,
+      "mae": 0.36805,
+      "correlation": 0.09256
+    }
+  ],
+  "frozen_opening_control": {
+    "control": "frozen-opening",
+    "rejected": true,
+    "reason": "Export differs visually from prepared composition at frame 31; inspect offline media, order, layout, transition and colour",
+    "scope": "First native shot frozen for negative-control use only; not credited as a native render"
+  },
+  "native_sample_count": 38,
+  "title_timing_samples": 15,
+  "audio_correspondence": {
+    "sample_rate": 1000,
+    "correlation": 0.99958,
+    "rms_gain_ratio": 0.99986,
+    "mean_absolute_error": 0.001157,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "interventions": [
+    "New source pool replaces still photos; not a controlled creative comparison.",
+    "No model-plan changes before native preparation.",
+    "Independent range evaluator extended for fill and nominal source/output frame quantization after retained exact-time and base-rate-only failures. Pixel thresholds unchanged."
+  ],
+  "limits": [
+    "Bounded temporal samples leave unseen gaps; exact camera paths/continuous action not established.",
+    "Source-time comparison allows reported nominal frame quantization, not exact source PTS identity.",
+    "No listening, music-fit judgment or human creative acceptance."
+  ]
+}
