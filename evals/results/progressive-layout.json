@@ -1,0 +1,64 @@
+{
+  "passed": true,
+  "native_sample_count": 55,
+  "minimum_correlation": 0.94401,
+  "panels": 7,
+  "distinct_arrivals": 7,
+  "background_spans": 2,
+  "negative_control": {
+    "control": "erased-final-panel",
+    "rejected": true,
+    "reason": "Collage panel 7 differs from its planned asset",
+    "construction": "FFmpeg modification for negative-control use only; not credited as a native render"
+  },
+  "scope": "Native layout correspondence and missing-layer rejection; no creative acceptance",
+  "date": "2026-11-12",
+  "application": "Free Mac App Store Resolve21.2.0.6",
+  "duration": 14.0,
+  "fps": 30.0,
+  "planner": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "low",
+    "elapsed_seconds": 56.424
+  },
+  "title": {
+    "start_seconds": 2,
+    "duration_seconds": 2,
+    "color": "#FFE49C",
+    "position_y": 0.5
+  },
+  "arrivals_seconds": [
+    9,
+    9.5,
+    10,
+    10.5,
+    11,
+    11.5,
+    12
+  ],
+  "panel_box": {
+    "width": 0.31,
+    "height": 0.3
+  },
+  "audio": {
+    "sample_rate": 1000,
+    "correlation": 0.99958,
+    "rms_gain_ratio": 0.99986,
+    "mean_absolute_error": 0.001157,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "native_queue": "Completed in 00:00:02 observed through computer use; render-only time",
+  "editable_DRP": true,
+  "legacy_quadrant_export_verified": true,
+  "failures_and_corrections": [
+    "First plan exposed fixed title-at-zero compiler; added title timing and reran actual planner.",
+    "First native attempt stopped on scale readback: ZoomGang=true changed requested 0.31x0.30 to 0.31x0.31. Both getters confirmed it.",
+    "ZoomGang=false followed by independent transform and readback produced correct geometry; corrected native export passed original thresholds."
+  ],
+  "limits": [
+    "Typography still differs from the reference serif.",
+    "Still photos do not reproduce camera movement.",
+    "Authored score/grid is not reference-song beat recognition.",
+    "Structural similarity inspected; human creative preference remains unreviewed."
+  ]
+}

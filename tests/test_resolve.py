@@ -53,8 +53,8 @@ class ResolveTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td);(root/'a.jpg').write_bytes(b'input')
             manifest=root/'edit.json'
-            manifest.write_text(json.dumps({'shots':[{'path':'a.jpg','duration':1}], 'overlays':[{'path':'a.jpg','start':0,'duration':1,'x':.5,'y':.5,'scale':1}]}))
-            with self.assertRaisesRegex(ValueError,'quadrant panels'):prepare(manifest,root/'job')
+            manifest.write_text(json.dumps({'shots':[{'path':'a.jpg','duration':1}], 'overlays':[{'path':'a.jpg','start':0,'duration':1,'x':.5,'y':.5,'scale':1}]*2}))
+            with self.assertRaisesRegex(ValueError,'overlap'):prepare(manifest,root/'job')
             self.assertFalse((root/'job').exists())
 
     def test_styled_job_keeps_native_features_and_single_line_console(self):

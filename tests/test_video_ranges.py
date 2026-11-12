@@ -20,3 +20,12 @@ class VideoRangeTests(unittest.TestCase):
             with patch('footagepilot.edits.EditsClient') as native:
                 with self.assertRaisesRegex(ValueError,'use Resolve'):render_edit(manifest,p/'output.mp4')
                 native.assert_not_called()
+
+    def test_frame_rounding_cannot_create_overlapping_panels(self):
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td);(p/'a.jpg').write_bytes(b'image');manifest=p/'edit.json'
+            manifest.write_text(json.dumps({'shots':[{'path':'a.jpg','duration':1}],'overlays':[{'path':'a.jpg','start':at,'duration':.12,'x':.25,'y':.25,'width':.5,'height':.5} for at in (.02,.14)]}))
+            with patch('footagepilot.learning.check_sources',return_value={'needs_research':False}),patch('footagepilot.resolve.run') as render:
+                with self.assertRaisesRegex(ValueError,'overlap'):prepare(manifest,p/'output')
+                render.assert_not_called()
+            self.assertFalse((p/'output').exists())

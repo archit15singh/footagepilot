@@ -36,9 +36,13 @@ local ok,err=pcall(function()
     assert(math.abs(item:GetStart()-timeline:GetStartFrame()-row.start)<1,name..' start mismatch')
     return item
   end
+  for i,row in ipairs(cfg.backgrounds or {}) do add_layer(row,'Layout background '..i) end
   for i,row in ipairs(cfg.overlays or {}) do
     local item=add_layer(row,'Collage '..i)
-    require_ok(item:SetProperties({ZoomX=row.scale,ZoomY=row.scale,Pan=(row.x-0.5)*cfg.width,Tilt=(0.5-row.y)*cfg.height}),'panel geometry')
+    require_ok(item:SetProperties({ZoomGang=false}),'independent panel axes')
+    require_ok(item:SetProperties({ZoomX=row.width or row.scale,ZoomY=row.height or row.scale,Pan=(row.x-0.5)*cfg.width,Tilt=(0.5-row.y)*cfg.height}),'panel geometry')
+    local props=item:GetProperties()
+    assert(math.abs(props.ZoomX-(row.width or row.scale))<0.001 and math.abs(props.ZoomY-(row.height or row.scale))<0.001,'Panel native scale readback mismatch')
   end
   for i,row in ipairs(cfg.transitions or {}) do
     local item=add_layer(row,'Transition '..i)
