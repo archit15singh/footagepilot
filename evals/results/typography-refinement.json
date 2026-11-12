@@ -1,0 +1,48 @@
+{
+  "title_only": true,
+  "native_visual_samples": 75,
+  "titles": 4,
+  "title_timing_checks": 19,
+  "old_title_control_rejected": "Title 2 is missing or has insufficient contrast",
+  "old_movie_sha256": "a200599de74ad0b2c47bbb1a0a56643517de0843dffad105bcbf6481fe86e061",
+  "audio": {
+    "sample_rate": 1000,
+    "correlation": 0.99974,
+    "rms_gain_ratio": 0.99985,
+    "mean_absolute_error": 0.002096,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "movie_sha256": "fccb2668aad96bbc8990be84294ff642691cdb9a6ce1e7e01facdbd866745193",
+  "drp_sha256": "62cdee1745d40ef768adbc51467a953bea9e6191018c81fc84b793bb48c60b68",
+  "creative_acceptance": "unreviewed",
+  "scope": "Native title contrast/size/timing and editable construction; not OCR, exact reference typography or human preference.",
+  "date": "2026-11-12",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "final_refinement_seconds": 17.822718,
+  "native_queue_seconds": 2,
+  "word_sequence": [
+    "Small",
+    "days",
+    "big",
+    "memories"
+  ],
+  "final_logical_size": 28,
+  "prototype_logical_size": 12,
+  "prototype_refinement_seconds": 13.812259,
+  "intermediate_refinement_seconds": 16.170077,
+  "actual_native_renders": 2,
+  "qualitative_findings": [
+    "Changing-word treatment and glyph scale are closer in category than the original static phrase.",
+    "First size12 native draft passed technical QA but was visibly undersized.",
+    "Per-background word placement differs from the reference alignment.",
+    "Source repetition, softness, absent athletic action and unmatched grade remain."
+  ],
+  "interventions": [
+    "Three headless refinement calls; intermediate size24 plan prepared but not executed.",
+    "Revised bounds and prompt use actual baseline title measurements, avoiding a stale hard-coded pixel conversion.",
+    "Two generated native jobs executed unmodified after saved-workspace restart.",
+    "Old-job-versus-new-movie title control was nondiscriminative; explicit original movie is now tested against new four-event title requirements. No renderer QA thresholds changed.",
+    "No manual model-choice edits; original text was agent-authored, not a recorded user preference."
+  ]
+}

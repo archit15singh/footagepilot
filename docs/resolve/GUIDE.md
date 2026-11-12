@@ -63,3 +63,5 @@ The first command downloads/analyses the chosen reference, plans with Codex gpt-
 For a new iteration, optional visual-spec.feedback lists local compare-edits JSON files. Only recorded human verdicts (better/worse/tie) with concise notes enter the planner; unreviewed comparisons are ignored. Review files are bound into the planner input hashes. Preserve prior outputs and ask the human to compare variations; model critique cannot become a human preference. Native scripts are generated as one console line because a leading Lua comment pasted into Fusion's single-line input can swallow a multiline program.
 
 Optional recreation can transfer measured visual-change timing from its reference soundtrack using `reference_rhythm`; see [reference rhythm](REFERENCE-RHYTHM.md) for constraints, evidence and the distinction from verified music beats.
+
+[Title-only refinement](TYPOGRAPHY-REVIEW.md) can revise a verified run’s opening words without replanning its footage or timing.
