@@ -1,0 +1,96 @@
+{
+  "passed": true,
+  "comparison": "same recorded manifest; only one transition added",
+  "headless_replan": false,
+  "manifest_only_transition_changed": true,
+  "native_queue_render_seconds": 2,
+  "duration": 13.5,
+  "output_sha256": "1b46897950bd7ed6ee518632f969c6a3a73c2204747a3a0e8e747c15baf6b856",
+  "transition": {
+    "start": 324,
+    "frames": 12,
+    "after_shot": 5,
+    "filter": "transition_moving_dissolve",
+    "source_start": 32.873167
+  },
+  "main_source_start": 33.273167,
+  "nominal_source_handle_meets_main": true,
+  "source_samples": [
+    {
+      "part": "handle",
+      "frame": 0,
+      "requested_source_seconds": 32.873167,
+      "matched_source_seconds": 32.873167,
+      "tolerance_seconds": 0.03339871909442955,
+      "mae": 0.0007129544526143792,
+      "correlation": 0.9999257602129137
+    },
+    {
+      "part": "handle",
+      "frame": 6,
+      "requested_source_seconds": 33.073167000000005,
+      "matched_source_seconds": 33.073167000000005,
+      "tolerance_seconds": 0.03339871909442955,
+      "mae": 0.0009749668096405229,
+      "correlation": 0.9998907232112825
+    },
+    {
+      "part": "handle",
+      "frame": 11,
+      "requested_source_seconds": 33.23983366666667,
+      "matched_source_seconds": 33.23983366666667,
+      "tolerance_seconds": 0.03339871909442955,
+      "mae": 0.0010059232026143792,
+      "correlation": 0.9998672817635242
+    },
+    {
+      "part": "main",
+      "frame": 0,
+      "requested_source_seconds": 33.273167,
+      "matched_source_seconds": 33.273167,
+      "tolerance_seconds": 0.03339871909442955,
+      "mae": 0.0007624208537581698,
+      "correlation": 0.9998985191284006
+    },
+    {
+      "part": "main",
+      "frame": 1,
+      "requested_source_seconds": 33.30650033333333,
+      "matched_source_seconds": 33.30650033333333,
+      "tolerance_seconds": 0.03339871909442955,
+      "mae": 0.0011546415441176469,
+      "correlation": 0.9998392277087962
+    }
+  ],
+  "frozen_handle_control": {
+    "decoded": true,
+    "source_control_rejected": true,
+    "last_frame_mae": 0.05255629595588235,
+    "correlation": 0.8124287900966817,
+    "frozen_reference_rejected": true,
+    "reason": "Export differs visually from prepared composition at frame 332; inspect offline media, order, layout, transition and colour",
+    "scope": "Frozen proxy replaces only the expected handle; actual native film stays unchanged, no alternate movie credited as native"
+  },
+  "native_visual_samples": 50,
+  "title_timing_samples": 9,
+  "audio": {
+    "sample_rate": 1000,
+    "correlation": 0.99992,
+    "rms_gain_ratio": 0.99992,
+    "mean_absolute_error": 0.001429,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "unit_tests": 84,
+  "visual_inspection": "Six frames324/327/330/333/335/336 show cave-entry/outgoing boat blending into the moving cave-interior shot, then continuing at the cut.",
+  "interventions": [
+    "Initial new unit fixture omitted the binary-path mock and stopped before the expected handle validation; corrected test setup, implementation unchanged.",
+    "Independent original-source decoding was slow; the existing process was polled to completion rather than restarted.",
+    "The source/native evaluation completed first; the added decodable frozen-proxy helper was then executed separately and rejected the frozen reference at frame332."
+  ],
+  "limits": [
+    "Nominal source/output frame quantization, not exact original PTS identity.",
+    "Effect is native opacity compositing of prepared moving handles, not a built-in transition preset call.",
+    "Engineering-selected controlled transition; planner opt-in/schema/prompt wired, no new headless planner choice claimed.",
+    "Not a matched-camera, listening or human creative-acceptance verdict."
+  ]
+}
