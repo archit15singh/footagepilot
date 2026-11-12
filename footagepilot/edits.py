@@ -47,6 +47,7 @@ def validate_edit(data, base):
     def number(value,low,high):return type(value) in (int,float) and math.isfinite(value) and low<=value<=high
     total=0
     for shot in data['shots']+data.get('overlays',[]):
+        if not number(shot.get('source_start',0),0,86400):raise ValueError('Source start must be finite seconds in 0–86400')
         if not number(shot.get('duration'),.1,30):raise ValueError('Shot duration must be 0.1–30 seconds')
         path=(base/shot['path']).resolve()
         if not path.is_file():raise ValueError('Shot file missing')
@@ -75,6 +76,7 @@ def render_edit(manifest, output, token_file=None):
     import hashlib,time,shutil,uuid
     from .__main__ import probe,binary,run,write
     snapshot=manifest.read_bytes();data=json.loads(snapshot);total=validate_edit(data,manifest.parent)
+    if any(s.get('source_start',0)!=0 for s in data['shots']+data.get('overlays',[])):raise ValueError('Edits source-range execution is not verified; use Resolve for nonzero excerpts')
     if output.exists():raise ValueError('Use a new output file')
     output.parent.mkdir(parents=True,exist_ok=True)
     evidence=output.with_suffix('.edits.json');calls=[]
