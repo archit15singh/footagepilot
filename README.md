@@ -4,7 +4,7 @@ Agent-driven video editing for real footage: clean up speech, plan cuts, add cap
 
 Working agent-operated video editing: MakeMyClip cleanup → local word alignment → headless Codex story planning → validated word cuts → HyperFrames/Remotion → music/SFX mixing.
 
-[Naming and migration](docs/NAMING.md) · [Video variations](gallery/index.html) · [Real end-to-end findings](docs/REAL-E2E-RESULTS.md) · [Setup](docs/SETUP.md)
+[Session handoff and restart](docs/RESUME.md) · [Naming and migration](docs/NAMING.md) · [Video variations](gallery/index.html) · [Real end-to-end findings](docs/REAL-E2E-RESULTS.md) · [Setup](docs/SETUP.md)
 
 The committed gallery contains four automatically generated edits of real archival footage. Codex is the only planner and was live-tested. Word timestamps are model estimates and listening remains unverified. No UI polish or synthetic demo is needed to reproduce this run.
 
