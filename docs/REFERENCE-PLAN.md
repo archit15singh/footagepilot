@@ -33,4 +33,4 @@ Phase A is the reference pipeline in this change. Phase B is the Edits capabilit
 
 ## Frame-cited planning follow-up
 
-The planner now consumes timestamped frames around selected change candidates and retains per-technique/per-shot frame citations. [Contract and limitations](REFERENCE-EVIDENCE.md). This reveals a remaining fidelity constraint: the current layout compiler forces complete quadrants even when the reference shows growing asymmetric rows. Traceable adaptation is not equivalence; native layout generalization is the next targeted renderer experiment.
+The planner now consumes timestamped frames around selected change candidates and retains per-technique/per-shot frame citations. [Contract and limitations](REFERENCE-EVIDENCE.md). This reveals a remaining fidelity constraint: the current layout compiler forces complete quadrants even when the reference shows growing asymmetric rows. Traceable adaptation is not equivalence; native layout generalization is now tested in resolve/LAYOUTS.md, while creative acceptance remains separate.

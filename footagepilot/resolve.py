@@ -6,11 +6,11 @@ import array
 import subprocess
 import sys
 import uuid
-from collections import Counter
 from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 from .__main__ import binary, probe, run, write
 from .edits import validate_edit
+from .layout import rectangle,validate_panels
 
 
 def lua(value):
@@ -40,16 +40,8 @@ def prepare(manifest, output, render=False):
     if output.exists():raise ValueError('Use a fresh Resolve job directory')
     fps=data.get('fps',30);w,h={'9:16':(1080,1920),'16:9':(1920,1080),'1:1':(1080,1080),'4:5':(1080,1350)}[data.get('aspect','9:16')]
     def frames(seconds):return int((Decimal(str(seconds))*fps).quantize(Decimal(1),rounding=ROUND_HALF_UP))
-    # Four complete quadrants are the planner's collage contract. Reject unknown layouts.
-    cells=set()
-    for row in data.get('overlays',[]):
-        if row.get('scale',1)!=.5 or row.get('x') not in (.25,.75) or row.get('y') not in (.25,.75):raise ValueError('Resolve collage requires half-size quadrant panels')
-        begin,count=frames(row['start']),frames(row['duration'])
-        for n in range(begin,begin+count):
-            cell=(n,row['x'],row['y'])
-            if cell in cells:raise ValueError('Overlapping collage panels')
-            cells.add(cell)
-    if any(count!=4 for count in Counter(c[0] for c in cells).values()):raise ValueError('Resolve collage needs four panels throughout its duration')
+    validate_panels(data.get('overlays',[]))
+    validate_panels([{**r,'start':frames(r['start']),'duration':frames(r['duration'])} for r in data.get('overlays',[])])
     for row in data['shots']:
         if row.get('scale',1)!=1 or row.get('x',.5)!=.5 or row.get('y',.5)!=.5:raise ValueError('Main shots must use full-frame placement; use collage overlays for positioned panels')
     for title in data.get('titles',[]):
@@ -60,7 +52,7 @@ def prepare(manifest, output, render=False):
     for transition in data.get('transitions',[]):
         if transition.get('filter','transition_dissolve') not in ('transition_dissolve','transition_wipe_left') or frames(transition.get('duration',.2))<2:raise ValueError('Resolve supports dissolve/wipe-left transitions of at least two frames')
     shots=[];cursor=0;inputs={};pending=[];elapsed=Decimal(0)
-    def source(row,count,target):
+    def source(row,count,target,panel=False):
         path=(manifest.parent/row['path']).resolve();inputs[str(path)]=hashlib.sha256(path.read_bytes()).hexdigest()
         meta=probe(path);video=next((s for s in meta['streams'] if s['codec_type']=='video'),None)
         if not video:raise ValueError('Shot has no video stream')
@@ -69,9 +61,12 @@ def prepare(manifest, output, render=False):
         if still and source_start:raise ValueError('Still images cannot have a nonzero source start')
         if not still and float(video.get('duration') or meta['format']['duration'])+.5/fps<source_start+count/fps:raise ValueError('Video source range exceeds available duration')
         fit=row.get('fit','fill');zoom=row.get('zoom',0)
+        rw=max(2,round(w*row.get('width',row.get('scale',1))/2)*2) if panel else w
+        rh=max(2,round(h*row.get('height',row.get('scale',1))/2)*2) if panel else h
         if fit=='contain' and zoom:raise ValueError('Contain with zoom is not supported by Resolve preparation')
-        if fit=='fill':filt=f"scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h}:'max(0,min(iw-ow,iw*{row.get('focus_x',.5)}-ow/2))':'max(0,min(ih-oh,ih*{row.get('focus_y',.5)}-oh/2))'"
-        else:filt=f'scale={w}:{h}:force_original_aspect_ratio=decrease,pad={w}:{h}:(ow-iw)/2:(oh-ih)/2:black'
+        if fit=='fill':filt=f"scale={rw}:{rh}:force_original_aspect_ratio=increase,crop={rw}:{rh}:'max(0,min(iw-ow,iw*{row.get('focus_x',.5)}-ow/2))':'max(0,min(ih-oh,ih*{row.get('focus_y',.5)}-oh/2))'"
+        else:filt=f'scale={rw}:{rh}:force_original_aspect_ratio=decrease,pad={rw}:{rh}:(ow-iw)/2:(oh-ih)/2:black'
+        if panel:filt+=f',scale={w}:{h},setsar=1'
         if zoom:filt+=f",zoompan=z='1+{zoom}*on/{max(1,count-1)}':x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':d=1:s={w}x{h}:fps={fps}"
         pending.append([binary('ffmpeg'),'-v','error','-n']+(['-loop','1'] if still else ['-ss',source_start])+['-i',path,'-an','-vf',filt,'-r',fps,'-frames:v',count,'-c:v','libx264','-crf','18','-pix_fmt','yuv420p','-movflags','+faststart',target])
         return str(target)
@@ -83,7 +78,15 @@ def prepare(manifest, output, render=False):
     for i,row in enumerate(data.get('overlays',[])):
         count=frames(row['duration'])
         if frames(row['start'])+count>cursor:raise ValueError('Rounded collage exceeds timeline')
-        overlays.append({'path':source(row,count,output/f'panel-{i+1:03d}.mp4'),'start':frames(row['start']),'frames':count,'x':row['x'],'y':row['y'],'scale':.5})
+        overlays.append({'path':source(row,count,output/f'panel-{i+1:03d}.mp4',panel=True),'start':frames(row['start']),'frames':count,'x':row['x'],'y':row['y'],'width':row.get('width',row.get('scale',1)),'height':row.get('height',row.get('scale',1))})
+    backgrounds=[]
+    if len(data.get('layout_backgrounds',[]))>24:raise ValueError('Use at most 24 layout backgrounds')
+    for i,row in enumerate(data.get('layout_backgrounds',[])):
+        start,count=frames(row['start']),frames(row['duration'])
+        if row.get('color','#000000')!='#000000' or count<1 or start<0 or start+count>cursor:raise ValueError('Layout background must be black and fit the timeline')
+        target=output/f'layout-background-{i+1:03d}.mp4'
+        pending.append([binary('ffmpeg'),'-v','error','-n','-f','lavfi','-i',f'color=black:s={w}x{h}:r={fps}','-an','-frames:v',count,'-c:v','libx264','-pix_fmt','yuv420p',target])
+        backgrounds.append({'path':str(target),'start':start,'frames':count})
     transitions=[]
     for i,row in enumerate(data.get('transitions',[])):
         incoming=shots[row['after_shot']+1];count=frames(row.get('duration',.2));target=output/f'dissolve-{i+1:03d}.mp4'
@@ -102,7 +105,7 @@ def prepare(manifest, output, render=False):
         if float(probe(path)['format']['duration'])+.5/fps<cursor/fps:raise ValueError('Music is shorter than timeline')
         music=output/'music.wav';pending.append([binary('ffmpeg'),'-v','error','-n','-i',path,'-t',cursor/fps,'-af',f'volume={data.get("music_gain",.65)},afade=t=in:d=0.1,afade=t=out:st={max(0,cursor/fps-.3)}:d=0.3','-c:a','pcm_s16le',music])
     output.mkdir(parents=True)
-    job={'project_name':'FootagePilot-'+output.name[:32]+'-'+uuid.uuid4().hex[:8],'schema_version':2,'status':'prepared-not-executed','fps':fps,'width':w,'height':h,'frames':cursor,'shots':shots,'overlays':overlays,'titles':titles,'transitions':transitions,'music':str(music) if music else None,'beats':[],'inputs':inputs,'manifest_sha256':hashlib.sha256(snapshot).hexdigest(),'limits':['Source crop/zoom and audio gain/fades are prepared per clip. Resolve constructs editable layers, Text+ and animated-opacity dissolves or rectangle-mask reveals.','Transition begins before the planned cut and reaches full incoming image on the last pre-cut frame; incoming pre-roll holds its first frame.','Preparing a job does not prove native execution or creative acceptance.']}
+    job={'project_name':'FootagePilot-'+output.name[:32]+'-'+uuid.uuid4().hex[:8],'schema_version':2,'status':'prepared-not-executed','fps':fps,'width':w,'height':h,'frames':cursor,'shots':shots,'overlays':overlays,'backgrounds':backgrounds,'titles':titles,'transitions':transitions,'music':str(music) if music else None,'beats':[],'inputs':inputs,'manifest_sha256':hashlib.sha256(snapshot).hexdigest(),'limits':['Source crop/zoom and audio gain/fades are prepared per clip. Resolve constructs editable layers, Text+ and animated-opacity dissolves or rectangle-mask reveals.','Panel proxies are reframed to box aspect then normalized to the canvas; native independent-axis scaling restores their intended proportions.','Transition begins before the planned cut and reaches full incoming image on the last pre-cut frame; incoming pre-roll holds its first frame.','Preparing a job does not prove native execution or creative acceptance.']}
     timing=data.get('music_timing')
     if timing:
         n=0
@@ -114,9 +117,9 @@ def prepare(manifest, output, render=False):
         for path,digest in inputs.items():
             if hashlib.sha256(Path(path).read_bytes()).hexdigest()!=digest:raise ValueError('Source changed during preparation')
         if manifest.read_bytes()!=snapshot:raise ValueError('Manifest changed during preparation')
-        paths=[Path(s['path']) for group in (shots,overlays,titles,transitions) for s in group]+([music] if music else [])
+        paths=[Path(s['path']) for group in (shots,overlays,backgrounds,titles,transitions) for s in group]+([music] if music else [])
         job['prepared_hashes']={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths};write(output/'job.json',job)
-        template=(Path(__file__).parent/'resolve_job.lua').read_text();payload={k:job[k] for k in ('fps','width','height','frames','shots','music','beats','overlays','titles','transitions')}
+        template=(Path(__file__).parent/'resolve_job.lua').read_text();payload={k:job[k] for k in ('fps','width','height','frames','shots','music','beats','overlays','titles','transitions','backgrounds')}
         payload.update(name=job['project_name'],target=str(output),custom_name='resolve-output',render=render)
         (output/'console.lua').write_text('do local cfg='+lua(payload)+'; '+console_program(template)+' end\n');(output/'render.lua').write_text(console_program((Path(__file__).parent/'resolve_render.lua').read_text())+'\n')
         return {'job':str(output/'job.json'),'console':str(output/'console.lua'),'status':job['status'],'next':'Run console.lua inside Resolve; inspect native queue/output and run resolve-verify. Native render requested.' if render else 'Run console.lua inside Resolve, inspect, then run render.lua and resolve-verify.'}
@@ -149,9 +152,11 @@ def expected_frame(job, number, width=64, height=64):
     """Independent RGB compositor for QA only; never used as a delivered movie."""
     shot=next(s for s in job['shots'] if s['start']<=number<s['start']+s['frames'])
     result=sample_frame(shot['path'],number-shot['start'],job['fps'],width,height)
+    for row in job.get('backgrounds',[]):
+        if row['start']<=number<row['start']+row['frames']:result=[0.]*(width*height*3)
     for row in job.get('overlays',[]):
         if row['start']<=number<row['start']+row['frames']:
-            pw,ph=width//2,height//2;x=int((row['x']-.25)*width);y=int((row['y']-.25)*height)
+            left,top,right,bottom=rectangle(row);x,y=round(left*width),round(top*height);pw,ph=round(right*width)-x,round(bottom*height)-y
             panel=sample_frame(row['path'],number-row['start'],job['fps'],pw,ph)
             for yy in range(ph):result[((y+yy)*width+x)*3:((y+yy)*width+x+pw)*3]=panel[yy*pw*3:(yy+1)*pw*3]
     for row in job.get('transitions',[]):
@@ -176,7 +181,7 @@ def visual_matches(job, media):
     rows=[];samples=set()
     for shot in job['shots']:
         samples.update(shot['start']+n for n in {min(1,shot['frames']-1),shot['frames']//2,max(0,shot['frames']-2)})
-    for row in job.get('overlays',[])+job.get('transitions',[]):
+    for row in job.get('overlays',[])+job.get('transitions',[])+job.get('backgrounds',[]):
         samples.update(row['start']+round((row['frames']-1)*fraction) for fraction in (0,.25,.5,.75,1))
     for number in sorted(samples):
         expected=expected_frame(job,number);actual=sample_frame(media,number,job['fps']);bands=title_band(job,number,64)
@@ -185,13 +190,15 @@ def visual_matches(job, media):
         rows.append({'frame':number,'mean_absolute_error':round(mae,5),'correlation':round(corr,5)})
         if mae>.08 or corr<.90:raise ValueError(f'Export differs visually from prepared composition at frame {number}; inspect offline media, order, layout, transition and colour')
     for index,row in enumerate(job.get('overlays',[])):
-        number=row['start']+row['frames']//2;actual=sample_frame(media,number,job['fps']);expected=sample_frame(row['path'],number-row['start'],job['fps'],32,32)
-        x=int((row['x']-.25)*64);y=int((row['y']-.25)*64);bands=title_band(job,number,64);region=[];reference=[]
-        for yy in range(32):
+        number=row['start']+row['frames']//2;actual=sample_frame(media,number,job['fps']);left,top,right,bottom=rectangle(row)
+        x,y=round(left*64),round(top*64);pw,ph=round(right*64)-x,round(bottom*64)-y
+        expected=sample_frame(row['path'],number-row['start'],job['fps'],pw,ph);bands=title_band(job,number,64);region=[];reference=[]
+        # Exclude the resampling edge; verify the actual panel interior.
+        for yy in range(1,ph-1):
             if not any(lo<=y+yy<=hi for lo,hi in bands):
-                region+=actual[((y+yy)*64+x)*3:((y+yy)*64+x+32)*3];reference+=expected[yy*32*3:(yy+1)*32*3]
+                region+=actual[((y+yy)*64+x+1)*3:((y+yy)*64+x+pw-1)*3];reference+=expected[(yy*pw+1)*3:((yy+1)*pw-1)*3]
         mae,corr=similarity(reference,region)
-        if mae>.08 or corr<.90:raise ValueError(f'Collage quadrant {index+1} differs from its planned asset')
+        if mae>.08 or corr<.90:raise ValueError(f'Collage panel {index+1} differs from its planned asset')
         rows.append({'panel':index+1,'frame':number,'mean_absolute_error':round(mae,5),'correlation':round(corr,5)})
     return rows
 

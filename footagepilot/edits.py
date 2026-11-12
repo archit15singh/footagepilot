@@ -76,6 +76,7 @@ def render_edit(manifest, output, token_file=None):
     import hashlib,time,shutil,uuid
     from .__main__ import probe,binary,run,write
     snapshot=manifest.read_bytes();data=json.loads(snapshot);total=validate_edit(data,manifest.parent)
+    if data.get('layout_backgrounds') or any('width' in s or 'height' in s for s in data.get('overlays',[])):raise ValueError('Explicit rectangular layouts require Resolve')
     if any(s.get('source_start',0)!=0 for s in data['shots']+data.get('overlays',[])):raise ValueError('Edits source-range execution is not verified; use Resolve for nonzero excerpts')
     if output.exists():raise ValueError('Use a new output file')
     output.parent.mkdir(parents=True,exist_ok=True)
