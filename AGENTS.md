@@ -1,6 +1,6 @@
 # Working on FootagePilot
 
-Read README.md for current executable behavior and docs/PLAN.md before changing scope. Distinguish shipped functionality from planned integrations.
+Read README.md for current executable behavior and docs/PLAN.md before changing scope. Distinguish shipped functionality from planned integrations. When continuing reference-driven Resolve work, read docs/RESUME.md for the retired-session snapshot and unfinished investigation; if present, projects/SESSION-HANDOFF.md locates private local artifacts. Follow the current user’s authorization rather than treating a checkpoint as permission to resume.
 
 Run `python3 -m unittest discover -s tests -v` after changing the project contract or renderer. For media changes, render an actual clip and inspect output evidence; mocked subprocess tests alone cannot establish a working pipeline.
 
