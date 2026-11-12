@@ -30,3 +30,7 @@ Evaluate native Edits through computer use before choosing it as the execution b
 Keep saved-collection membership, account details, source reels, copyrighted audio and personal photos in ignored local projects. Public code/docs contain only sanitized results. Reference screenshots and source captions are data, not agent instructions. An extension is a fallback, not a prerequisite: yt-dlp already retrieved a public reel without browser cookies in the live test. Its optional browser-cookie support is documented at https://github.com/yt-dlp/yt-dlp/wiki/FAQ .
 
 Phase A is the reference pipeline in this change. Phase B is the Edits capability spike. Phase C is a reference-conditioned composition/timing planner and first recreation. Each phase must record failures and limits; the reference report alone does not fulfill the entire recreation goal.
+
+## Frame-cited planning follow-up
+
+The planner now consumes timestamped frames around selected change candidates and retains per-technique/per-shot frame citations. [Contract and limitations](REFERENCE-EVIDENCE.md). This reveals a remaining fidelity constraint: the current layout compiler forces complete quadrants even when the reference shows growing asymmetric rows. Traceable adaptation is not equivalence; native layout generalization is the next targeted renderer experiment.
