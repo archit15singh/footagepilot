@@ -1,0 +1,169 @@
+{
+  "passed": true,
+  "same_native_movie_sha256": "4e40ea6189dbe1cd26288352409cb2944f24a0c1623504e522ab6c98ca36e0f6",
+  "movie_unchanged": true,
+  "previous_status_counts": {
+    "passed": 4,
+    "ambiguous-overlapping-title-band": 5
+  },
+  "current_timing_samples": [
+    {
+      "title": 1,
+      "frame": 0,
+      "expected_active": true,
+      "changed_pixels": 291,
+      "region_y": [
+        98,
+        144
+      ],
+      "status": "passed"
+    },
+    {
+      "title": 1,
+      "frame": 26,
+      "expected_active": true,
+      "changed_pixels": 295,
+      "region_y": [
+        98,
+        144
+      ],
+      "status": "passed"
+    },
+    {
+      "title": 1,
+      "frame": 52,
+      "expected_active": true,
+      "changed_pixels": 296,
+      "region_y": [
+        98,
+        144
+      ],
+      "status": "passed"
+    },
+    {
+      "title": 1,
+      "frame": 53,
+      "expected_active": false,
+      "changed_pixels": 0,
+      "region_y": [
+        98,
+        144
+      ],
+      "status": "passed"
+    },
+    {
+      "title": 2,
+      "frame": 26,
+      "expected_active": false,
+      "changed_pixels": 0,
+      "region_y": [
+        144,
+        190
+      ],
+      "status": "passed"
+    },
+    {
+      "title": 2,
+      "frame": 27,
+      "expected_active": true,
+      "changed_pixels": 423,
+      "region_y": [
+        144,
+        190
+      ],
+      "status": "passed"
+    },
+    {
+      "title": 2,
+      "frame": 40,
+      "expected_active": true,
+      "changed_pixels": 424,
+      "region_y": [
+        144,
+        190
+      ],
+      "status": "passed"
+    },
+    {
+      "title": 2,
+      "frame": 52,
+      "expected_active": true,
+      "changed_pixels": 424,
+      "region_y": [
+        144,
+        190
+      ],
+      "status": "passed"
+    },
+    {
+      "title": 2,
+      "frame": 53,
+      "expected_active": false,
+      "changed_pixels": 0,
+      "region_y": [
+        144,
+        190
+      ],
+      "status": "passed"
+    }
+  ],
+  "negative_controls": [
+    {
+      "control": "missing-line",
+      "rejected": true,
+      "error": "Title 2 missing at planned frame 27"
+    },
+    {
+      "control": "early-line",
+      "rejected": true,
+      "error": "Title 2 band appears outside planned timing at frame 26"
+    }
+  ],
+  "final_recheck": [
+    {
+      "case": "native",
+      "passed": true,
+      "samples": 9
+    },
+    {
+      "case": "missing",
+      "rejected": true,
+      "reason": "Title 2 missing at planned frame 27"
+    },
+    {
+      "case": "early",
+      "rejected": true,
+      "reason": "Title 2 band appears outside planned timing at frame 26"
+    }
+  ],
+  "legacy_regression": [
+    {
+      "case": "sequence-023",
+      "passed": true,
+      "samples": 14
+    },
+    {
+      "case": "reference-audio-038",
+      "passed": true,
+      "samples": 10
+    }
+  ],
+  "visual_samples": 45,
+  "title_size_checks": 2,
+  "audio_correspondence": {
+    "sample_rate": 1000,
+    "correlation": 0.99992,
+    "rms_gain_ratio": 0.99992,
+    "mean_absolute_error": 0.001429,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "unit_tests": 81,
+  "control_inspection": "Missing-line frame retains Follow only; early-line frame displays both lines before the second is planned.",
+  "threshold_changes": false,
+  "new_render": false,
+  "limits": [
+    "Changed-pixel presence in sampled regions, not OCR or exhaustive glyph/timing proof.",
+    "Same-centre or too-small regions remain ambiguous; text spilling across regions needs inspection.",
+    "No human preference, listening or creative acceptance claim."
+  ]
+}

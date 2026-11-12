@@ -2,7 +2,7 @@
 import argparse,json
 from pathlib import Path
 from footagepilot.__main__ import binary,run,write
-from footagepilot.resolve import title_timing_matches
+from footagepilot.resolve import title_timing_matches,title_timing_band
 
 
 def evaluate(job_path,media,output):
@@ -14,12 +14,14 @@ def evaluate(job_path,media,output):
     output.mkdir(parents=True)
     title=next(t for t in reversed(titles) if t['start']>0)
     if not any(b['start']==0 and b['start']+b['frames']>=title['start']+title['frames'] for b in job.get('backgrounds',[])):raise ValueError('Controls need an opening black card covering the selected title')
-    centre=round(title['y']*job['height']);radius=round(4*title['size']);top=max(0,centre-radius);height=min(job['height']-top,2*radius)
+    band=title_timing_band(job,titles.index(title),job['height'])
+    if band is None:raise ValueError('Control title cannot be isolated')
+    top,bottom=band;height=bottom-top
     start=title['start']/job['fps'];end=(title['start']+title['frames'])/job['fps']
     missing=output/'missing-line.mp4'
     run([binary('ffmpeg'),'-v','error','-n','-i',media,'-vf',f"drawbox=x=0:y={top}:w=iw:h={height}:color=black:t=fill:enable='gte(t,{start})*lt(t,{end})'",'-c:v','libx264','-crf','18','-c:a','copy',missing])
     crop=output/'line.png'
-    run([binary('ffmpeg'),'-v','error','-n','-ss',(start+end)/2,'-i',media,'-vf',f'crop=iw:{height}:0:{top}','-frames:v','1',crop])
+    run([binary('ffmpeg'),'-v','error','-n','-cpuflags','0','-ss',(start+end)/2,'-i',media,'-vf',f'crop=iw:{height}:0:{top}','-frames:v','1',crop])
     early=output/'early-line.mp4'
     run([binary('ffmpeg'),'-v','error','-n','-i',media,'-loop','1','-i',crop,'-filter_complex',f"[0:v][1:v]overlay=0:{top}:enable='lt(t,{start})':shortest=1[v]",'-map','[v]','-map','0:a?','-c:v','libx264','-crf','18','-c:a','copy',early])
     controls=[]
