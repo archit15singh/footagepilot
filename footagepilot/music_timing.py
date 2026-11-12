@@ -4,6 +4,19 @@ from pathlib import Path
 from .__main__ import binary,probe,write
 
 
+def analysis_options(spec,backend):
+    """Explicit opt-in; an analysis request never silently replaces authored timing."""
+    if 'music_analysis' not in spec:return None
+    request=spec['music_analysis']
+    if backend!='resolve':raise ValueError('Automatic music analysis requires Resolve')
+    if 'music_timing' in spec:raise ValueError('Choose music_analysis or music_timing, not both')
+    if not isinstance(request,dict) or set(request)-{'max_duration','min_gap'}:raise ValueError('Unknown music_analysis options')
+    duration=request.get('max_duration',spec.get('max_seconds',20));gap=request.get('min_gap',.3)
+    if type(duration) not in (int,float) or not math.isfinite(duration) or not 1<=duration<=600 or type(gap) not in (int,float) or not math.isfinite(gap) or not .15<=gap<=2:raise ValueError('Music analysis duration1–600s and minimum gap.15–2s required')
+    if duration<spec.get('max_seconds',20):raise ValueError('Music analysis must cover max_seconds')
+    return {'max_duration':duration,'min_gap':gap}
+
+
 def validate_timing(timing,music=None,zero=False):
     def number(v):return type(v) in (int,float) and math.isfinite(v)
     if not isinstance(timing,dict) or not isinstance(timing.get('provenance'),str) or not timing['provenance'].strip():raise ValueError('Music timing needs provenance')

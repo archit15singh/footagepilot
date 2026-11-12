@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "workflow": "recreate: selected music analysis \u2192 Codex visual plan \u2192 native Resolve \u2192 recreate-finish",
+  "source_kind": "six original moving trip clips; retained Instagram reference; authored score",
+  "planner_model": "gpt-6.1-sol",
+  "planner_seconds": 64.61650304200884,
+  "cue_coordinates": 29,
+  "copied_manually": false,
+  "cue_mode": "onset_candidates",
+  "cue_evidence_matches_generated_spec": true,
+  "generated_spec_hash_bound_to_plan": true,
+  "duration": 14.0,
+  "output_sha256": "5dd878e123e47b38fe0a71c8469da8bf2353b9c4f77a244e916cb37f63e2f8ee",
+  "native_render_queue_observed": "Completed 00:00:02 (render only)",
+  "visual_samples": 42,
+  "title_timing_samples": 10,
+  "audio": {
+    "sample_rate": 1000,
+    "correlation": 0.99958,
+    "rms_gain_ratio": 0.99986,
+    "mean_absolute_error": 0.001157,
+    "scope": "Numerical soundtrack correspondence; not a listening or musical taste verdict"
+  },
+  "cut_offsets_frames": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "silence_failed_before_planning": true,
+  "sampling_regression": {
+    "passed": true,
+    "sample_calls": 72,
+    "frame_size_groups": 24,
+    "scope": "Repeated exact pixels for supplied prepared clips; not a universal decoder guarantee or aesthetic score"
+  },
+  "retained_missing_panel_control": {
+    "rejected": true,
+    "reason": "Export differs visually from prepared composition at frame 287; inspect offline media, order, layout, transition and colour",
+    "method": "scalar QA on unchanged retained missing-panel control"
+  },
+  "interventions": [
+    "Initial run stopped because reference_url triggered missing yt-dlp. New spec explicitly selected retained reference analysis; original failed run kept.",
+    "First two verification attempts failed in FFmpeg tiny-panel extraction. Seek changes and single-thread decoding did not fix it. Scalar CPU path produced48stable diagnostic samples, then72real panel regression samples. No movie regeneration or QA threshold changes.",
+    "Resolve console focus recovered by restarting the agent-owned project. AX input setValue worked; coordinate click did not.",
+    "No manual model-plan edits before native preparation."
+  ],
+  "tool_versions": {
+    "ffmpeg": "9.0 ARM64",
+    "resolve": "21.2.0.6"
+  },
+  "limits": [
+    "Transient alignment does not establish beats, phrases or musical fit.",
+    "This removes manual coordinate copying; native console execution/queue observation still uses computer use.",
+    "Scalar sampling addresses the observed build-specific failures; not a universal decoder guarantee.",
+    "Different fresh plan, not a controlled creative-quality comparison; no human acceptance or listening claim."
+  ]
+}

@@ -7,6 +7,7 @@ from .reference import analyze_reference
 from .visual import plan_visual
 from .edits import render_edit
 from .learning import check_sources
+from .music_timing import analysis_options,extract_cues
 
 
 def open_saved(spec_path):
@@ -20,7 +21,9 @@ def open_saved(spec_path):
 def recreate(spec_path,output,token_file=None,backend="edits"):
     if backend not in ("edits","resolve"):raise ValueError("Unknown native editor backend")
     if output.exists():raise ValueError('Use a new recreation directory; previous evidence is preserved')
-    snapshot=spec_path.read_bytes();spec=json.loads(snapshot);base=spec_path.parent;output.mkdir(parents=True)
+    snapshot=spec_path.read_bytes();spec=json.loads(snapshot);base=spec_path.parent
+    music_options=analysis_options(spec,backend)
+    output.mkdir(parents=True)
     state={'passed':False,'backend':backend,'stages':[],'preference':'unreviewed','spec_path':str(spec_path),'spec_sha256':hashlib.sha256(snapshot).hexdigest()}
     def stage(name,operation):
         row={'name':name,'status':'running'};state['stages'].append(row);write(output/'run.json',state)
@@ -41,6 +44,14 @@ def recreate(spec_path,output,token_file=None,backend="edits"):
     else:spec['reference']=str((base/spec['reference']).resolve())
     for asset in spec['assets']:asset['path']=str((base/asset['path']).resolve())
     spec['music']=str((base/spec['music']).resolve())
+    if music_options is not None:
+        def analyze_music():
+            result=extract_cues(Path(spec['music']),output/'music-cues.json',**music_options)
+            if result['duration']+1e-6<spec.get('max_seconds',20):raise ValueError('Source music is shorter than max_seconds; choose a shorter duration budget or longer track')
+            return result
+        measured=stage('analyze-selected-music',analyze_music)
+        spec['music_timing']=measured['music_timing']
+        del spec['music_analysis']
     if spec.get('feedback'):spec['feedback']=[str((base/p).resolve()) for p in spec['feedback']]
     if spec.get('model_reviews'):spec['model_reviews']=[str((base/p).resolve()) for p in spec['model_reviews']]
     spec['native_backend']=backend
