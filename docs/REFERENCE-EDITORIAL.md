@@ -14,6 +14,24 @@ Write one sentence that describes what the viewer sees change. “A boat slips u
 - **Let light and framing connect the shots.** Repeated low angles and green practical lights made separate night locations feel like one scene. The warm storefronts and framed street views of a grading tutorial already shared visual qualities before the grade. Review light, color and subject placement across adjacent shots before choosing an overall treatment.
 - **Let a single setup carry the piece when it can.** A group portrait that comes to life, an overhead reaction with a caption, and a behind-the-scenes setup followed by its result all work with few cuts. Hold long enough for the viewer to notice the change.
 
+## Plan a few shots before you film
+
+Decide what the viewer should experience, then capture the few photos or clips that make it possible. A one-sentence idea and a short shot list are enough. Keep room for spontaneous footage.
+
+**Singapore example · One turn takes me through the city**
+
+1. Film the same turn at three landmarks. Use the same camera height and similar framing. Keep yourself in roughly the same place in the frame and turn in the same direction at each stop.
+2. Record at least a second before and after each turn so you have room to choose the cut. Compare the takes on location and repeat one if the pose or direction differs.
+3. In Edits, join the clips at the same point mid-turn. The body movement continues while the location changes.
+
+**Vietnam example · A boat passes from daylight into a cave**
+
+1. Show the cave ahead so the viewer knows where the boat is going.
+2. Hold as the rock ceiling passes overhead. Leave enough of the approach in the shot for the drop in light to register.
+3. Show the first glimpse from inside. Record a few seconds of natural sound on either side of the entrance so the mix can convey the change in space.
+
+With footage you already have, look for an action that contains its own setup and payoff. The Vietnam boat footage already has that shape. The Singapore turn depends on capturing a matching set.
+
 ## From reference to timeline
 
 1. **Watch for the idea.** Write down the opening, the moment the premise becomes clear, and what the ending does. Identify the anchor that stays recognizable when the location, scale or treatment changes.
