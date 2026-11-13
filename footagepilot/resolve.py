@@ -4,6 +4,7 @@ import copy
 import json
 import math
 import array
+import re
 import subprocess
 import sys
 import uuid
@@ -388,17 +389,55 @@ def timing_evidence(job):
     return {'provenance':job.get('timing_provenance'),'mode':job.get('timing_mode','authored_grid'),'title_events':title_events,'cuts':cuts,'transitions':[{'filter':r.get('filter','transition_dissolve'),'start_frame':r['start'],'last_effect_frame':r['start']+r['frames']-1,'cut_frame':job['shots'][r['after_shot']+1]['start']} for r in job.get('transitions',[])],'scope':'Supplied timing-coordinate correspondence only; onset candidates are not verified beats. No listening, downbeat or musical-fit verdict'}
 
 
+def verify_decode_and_black_frames(job, media):
+    """Decode the full export and allow only near-black spans authored in the job."""
+    minimum_seconds = 0.10
+    pixel_threshold = 0.05
+    command = [
+        binary('ffmpeg'), '-hide_banner', '-nostats', '-v', 'info', '-xerror',
+        '-i', media, '-map', '0:v:0', '-map', '0:a?',
+        '-vf', f'blackdetect=d={minimum_seconds}:pix_th={pixel_threshold}',
+        '-f', 'null', '-',
+    ]
+    result = subprocess.run([str(arg) for arg in command], capture_output=True, text=True)
+    if result.returncode:
+        raise ValueError(result.stderr[-3000:] or 'Export failed full decode')
+
+    fps = job['fps']
+    authored = sorted((row['start'], row['start']+row['frames']) for row in job.get('backgrounds', []))
+    spans = []
+    for start, end in authored:
+        if spans and start <= spans[-1][1]:
+            spans[-1] = (spans[-1][0], max(end, spans[-1][1]))
+        else:
+            spans.append((start, end))
+
+    intervals = []
+    for match in re.finditer(r'black_start:(\S+)\s+black_end:(\S+)\s+black_duration:(\S+)', result.stderr):
+        start, end, duration = map(float, match.groups())
+        if not any(first-.01 <= start*fps and end*fps <= last+.01 for first,last in spans):
+            raise ValueError(f'Unexpected near-black export interval at {start:.3f}–{end:.3f} s')
+        intervals.append({'start_seconds':start,'end_seconds':end,'duration_seconds':duration})
+    return {
+        'minimum_seconds':minimum_seconds,'pixel_threshold':pixel_threshold,
+        'allowed_authored_intervals':intervals,
+    }
+
+
 def verify(job_path, media, output):
     job=json.loads(job_path.read_text())
     if output.exists():raise ValueError('Use a fresh verification file')
     for path,digest in {**job['inputs'],**job['prepared_hashes']}.items():
         if hashlib.sha256(Path(path).read_bytes()).hexdigest()!=digest:raise ValueError('Job inputs changed')
     digest=hashlib.sha256(media.read_bytes()).hexdigest()
-    run([binary('ffmpeg'),'-v','error','-i',media,'-f','null','-']);meta=probe(media)
-    stream=next(s for s in meta['streams'] if s['codec_type']=='video');duration=float(meta['format']['duration'])
+    meta=probe(media)
+    stream=next((s for s in meta['streams'] if s['codec_type']=='video'),None)
+    if stream is None:raise ValueError('Video stream missing from export')
+    duration=float(meta['format']['duration'])
     rate=stream.get('avg_frame_rate','0/1').split('/');fps=float(rate[0])/float(rate[1])
     if (stream['width'],stream['height'])!=(job['width'],job['height']) or abs(fps-job['fps'])>.01 or abs(duration-job['frames']/job['fps'])>1.5/job['fps']:raise ValueError('Export dimensions, FPS or duration differ from job')
     if job.get('music') and not any(s['codec_type']=='audio' for s in meta['streams']):raise ValueError('Music missing from export')
+    black_frames=verify_decode_and_black_frames(job,media)
     if hashlib.sha256(media.read_bytes()).hexdigest()!=digest:raise ValueError('Export changed during verification')
     color_checks=[] if job.get('color_preset') else None
     frames=visual_matches(job,media,color_checks)
@@ -406,8 +445,9 @@ def verify(job_path, media, output):
     plates=plate_matches(job,media)
     titles=title_matches(job,media)
     audio=audio_match(job['music'],media) if job.get('music') else None
+    title_timing=title_timing_matches(job,media)
     if hashlib.sha256(media.read_bytes()).hexdigest()!=digest:raise ValueError('Export changed during correspondence checks')
-    result={'timing_evidence':timing_evidence(job),'visual_samples':frames,'plate_checks':plates,'title_checks':titles,'title_timing_checks':title_timing_matches(job,media),'audio_correspondence':audio,'technical_pass':True,'sha256':digest,'frames_expected':job['frames'],'duration':duration,'fps':fps,'decode':'passed','native_origin':'Requires retained console evidence and project inspection; cannot be established from an MP4 alone.','creative_verdict':'unreviewed','limits':['Sampled correspondence is not exhaustive perceptual review, listening or storytelling acceptance.']}
+    result={'timing_evidence':timing_evidence(job),'visual_samples':frames,'plate_checks':plates,'title_checks':titles,'title_timing_checks':title_timing,'audio_correspondence':audio,'black_frames':black_frames,'technical_pass':True,'sha256':digest,'frames_expected':job['frames'],'duration':duration,'fps':fps,'decode':'passed','native_origin':'Requires retained console evidence and project inspection; cannot be established from an MP4 alone.','creative_verdict':'unreviewed','limits':['Sampled correspondence is not exhaustive perceptual review, listening or storytelling acceptance.']}
     if color_checks is not None:
         result['color_preset']=job['color_preset']
         result['color_checks']=color_checks
