@@ -1,8 +1,54 @@
 import tempfile,unittest,json
 from pathlib import Path
-from footagepilot.visual import compile_plan,review_notes
+from subprocess import CompletedProcess
+from unittest.mock import patch
+from footagepilot.visual import compile_plan,plan_visual,review_notes
 
 class VisualTests(unittest.TestCase):
+    def test_planner_retries_unknown_frame_once_and_keeps_rejected_candidate(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            (root/'frames').mkdir()
+            for name in ('a.jpg','b.jpg','contact.jpg','score.wav','frames/0000.jpg'):
+                (root/name).touch()
+            (root/'analysis.json').write_text(json.dumps({
+                'decode':'passed','duration':4,'scene_changes':[],
+                'frames':[{'time':0,'file':'frames/0000.jpg'}],'audio':{'method':'fixture'},
+            }))
+            spec=root/'spec.json'
+            spec.write_text(json.dumps({
+                'reference':'analysis.json','assets':[{'id':'a','path':'a.jpg'},{'id':'b','path':'b.jpg'}],
+                'music':'score.wav','music_timing':{'bpm':120,'offset':0,'provenance':'authored'},
+                'min_seconds':2,'max_seconds':8,
+            }))
+            for always_invalid in (False, True):
+                prompts=[]
+                def codex(command, *, input, **kwargs):
+                    prompts.append(input)
+                    frame='ref-9999' if always_invalid or len(prompts)==1 else 'ref-0000'
+                    payload={'title':'Travel','shots':[{'asset_id':asset,'beats':4,'fit':'fill','zoom':0,
+                                                       'reference_ids':[]} for asset in ('a','b')],
+                             'reference_techniques':[{'technique':'full_frame','frame_ids':[frame],
+                                                      'confidence':'visible','adaptation':'Full frame'}]}
+                    Path(command[command.index('-o')+1]).write_text(json.dumps(payload))
+                    return CompletedProcess(command,0,'','planner output')
+                output=root/f'run-{always_invalid}'
+                with (
+                    patch('footagepilot.visual.asset_media',return_value={'kind':'still'}),
+                    patch('footagepilot.visual.binary',return_value='ffmpeg'),
+                    patch('footagepilot.visual.run',side_effect=lambda args: args[-1].touch()),
+                    patch('footagepilot.visual.subprocess.run',side_effect=codex),
+                ):
+                    if always_invalid:
+                        with self.assertRaisesRegex(ValueError,'unknown frames'):
+                            plan_visual(spec,output)
+                    else:
+                        plan_visual(spec,output)
+                self.assertEqual(len(prompts),2)
+                self.assertIn('copied verbatim from this list: ref-0000',prompts[1])
+                self.assertTrue((output/'planner-attempt-1.json').is_file())
+                self.assertEqual((output/'edit.json').exists(),not always_invalid)
+
     def test_plan_uses_only_known_assets_and_complete_collages(self):
         with tempfile.TemporaryDirectory() as d:
             p=Path(d);(p/'a.jpg').touch();(p/'score.wav').touch();spec={'assets':[{'id':'a','path':'a.jpg'}],'music':'score.wav','music_timing':{'bpm':120,'offset':0,'provenance':'authored'},'min_seconds':2,'max_seconds':8}

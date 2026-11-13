@@ -3,6 +3,10 @@ import math,re
 from pathlib import Path
 
 
+class UnknownReferenceFrame(ValueError):
+    """A candidate cited an ID outside the supplied evidence."""
+
+
 def select_frames(reference,root,windows=6,times=None):
     duration=reference['duration'];frames=reference.get('frames',[])
     if type(duration) not in (int,float) or not math.isfinite(duration) or duration<=0:raise ValueError('Invalid reference duration')
@@ -35,12 +39,14 @@ def validate_observations(payload,frames):
     if not isinstance(observations,list) or not 1<=len(observations)<=12:raise ValueError('Use 1–12 frame-cited reference observations')
     for row in observations:
         ids=row.get('frame_ids',[])
-        if not isinstance(ids,list) or not 1<=len(ids)<=6 or any(i not in known for i in ids):raise ValueError('Reference observation cites unknown frames')
+        if not isinstance(ids,list) or not 1<=len(ids)<=6:raise ValueError('Reference observation needs 1–6 frame citations')
+        if any(not isinstance(i,str) or i not in known for i in ids):raise UnknownReferenceFrame('Reference observation cites unknown frames')
         if row.get('technique') not in ('title','collage','full_frame','cut','dissolve','mask_reveal','camera_motion','motion_plate','unknown') or row.get('confidence') not in ('visible','inferred'):raise ValueError('Invalid reference observation classification')
         if row['technique'] in ('cut','dissolve','mask_reveal','camera_motion','motion_plate') and row['confidence']!='inferred':raise ValueError('Temporal techniques require an inferred label from sparse frames')
         if not isinstance(row.get('adaptation'),str) or not 1<=len(row['adaptation'])<=1000:raise ValueError('Reference adaptation needs concise reasoning')
     for group in ('shots','panels','plates'):
         for row in payload.get(group,[]):
             ids=row.get('reference_ids')
-            if not isinstance(ids,list) or len(ids)>6 or any(i not in known for i in ids):raise ValueError('Planned shot/panel/plate cites unknown reference evidence')
+            if not isinstance(ids,list) or len(ids)>6:raise ValueError('Planned shot/panel/plate needs at most six frame citations')
+            if any(not isinstance(i,str) or i not in known for i in ids):raise UnknownReferenceFrame('Planned shot/panel/plate cites unknown reference evidence')
     return {'status':'frame-citations-validated','frame_count':len(frames),'observation_count':len(observations),'scope':'Checks citations and epistemic labels, not semantic truth or creative fidelity'}

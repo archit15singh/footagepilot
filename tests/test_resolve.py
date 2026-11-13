@@ -42,6 +42,34 @@ class ResolveTests(unittest.TestCase):
             actual=expected_frame(job,8,2,2)
         for a,b in zip(actual,[.2,.7,.7]*4):self.assertAlmostEqual(a,b)
 
+    def test_color_gate_rejects_neutral_export_that_passes_general_correspondence(self):
+        from footagepilot.color import apply_saturation, color_preset
+        from footagepilot.resolve import visual_matches
+
+        job={'fps':30,'shots':[{'path':'source','start':0,'frames':30}],
+             'color_preset':color_preset({'color_preset':'soft-color-v1'})}
+        neutral=[.28,.42,.57]*(64*64)
+        graded=apply_saturation(neutral,.65)
+        brighter_graded=[channel+.025 for channel in graded]
+        with patch('footagepilot.resolve.sample_frame',side_effect=lambda path,*args: brighter_graded if path=='graded' else neutral):
+            self.assertTrue(visual_matches(job,'neutral'))
+            checks=[]
+            visual_matches(job,'graded',checks)
+            self.assertEqual(len(checks),3)
+            with self.assertRaisesRegex(ValueError,'Color preset missing'):
+                visual_matches(job,'neutral',[])
+
+    def test_color_preset_rejects_hdr_before_running_ffmpeg(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            (root/'source.mp4').touch()
+            manifest=root/'edit.json'
+            manifest.write_text(json.dumps({'color_preset':'monochrome-v1','shots':[{'path':'source.mp4','duration':1}]}))
+            with patch('footagepilot.resolve.probe',return_value={'streams':[{'codec_type':'video','color_transfer':'smpte2084'}]}):
+                with self.assertRaisesRegex(ValueError,'requires SDR'):
+                    prepare(manifest,root/'job')
+            self.assertFalse((root/'job').exists())
+
     def test_panel_region_gate_includes_screen_plate_above_it(self):
         from footagepilot.resolve import visual_matches
         job={'fps':30,'shots':[{'path':'base','start':0,'frames':30}],

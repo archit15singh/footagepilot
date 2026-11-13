@@ -7,9 +7,25 @@ local ok,err=pcall(function()
     assert(version[1]==21 and version[2]==2,'Screen enum requires recalibration on this Resolve version')
   end
   local pm=resolve:GetProjectManager()
+  if cfg.color_preset then
+    local version=resolve:GetVersion()
+    assert(version[1]==21 and version[2]==2,'Color preset requires calibration on this Resolve version')
+  end
   local project=require_ok(pm:CreateProject(cfg.name), 'create fresh project (choose a new job name)')
   _FP={project=project,config=cfg,stage='project'}
   require_ok(project:SetSettings({timelineResolutionWidth=tostring(cfg.width),timelineResolutionHeight=tostring(cfg.height),timelineFrameRate=tostring(cfg.fps)}),'project settings')
+  if cfg.color_preset then
+    assert(project:GetSetting('colorScienceMode')=='davinciYRGB','Color preset requires DaVinci YRGB')
+  end
+  local function apply_color(item)
+    local look=cfg.color_preset
+    if not look then return end
+    require_ok(item:SetCDL({NodeIndex='1',Slope='1 1 1',Offset='0 0 0',Power='1 1 1',Saturation=tostring(look.saturation)}),'apply color preset')
+    local grade=require_ok(item:GetCDL(1),'read color preset')
+    assert(math.abs(tonumber(grade.Saturation)-look.saturation)<0.00001,'Color saturation readback mismatch')
+    require_ok(item:GetNodeGraph():SetNodeLabel(1,look.label),'name color node')
+    assert(item:GetNodeLabel(1)==look.label,'Color node label readback mismatch')
+  end
   local pool=project:GetMediaPool()
   local timeline=require_ok(pool:CreateEmptyTimeline('Reference recreation'), 'timeline')
   require_ok(timeline:SetStartTimecode('00:00:00:00'),'start timecode')
@@ -21,6 +37,7 @@ local ok,err=pcall(function()
     require_ok(items[1],'appended clip '..i)
     assert(math.abs(items[1]:GetDuration()-shot.frames)<1,'FootagePilot duration mismatch at shot '..i)
     assert(math.abs(items[1]:GetStart()-timeline:GetStartFrame()-shot.start)<1,'FootagePilot cut mismatch at shot '..i)
+    apply_color(items[1])
   end
   if cfg.music then
     local clips=require_ok(pool:ImportMedia({cfg.music}),'import music')
@@ -47,6 +64,7 @@ local ok,err=pcall(function()
     require_ok(item:SetProperties({ZoomX=row.width or row.scale,ZoomY=row.height or row.scale,Pan=(row.x-0.5)*cfg.width,Tilt=(0.5-row.y)*cfg.height}),'panel geometry')
     local props=item:GetProperties()
     assert(math.abs(props.ZoomX-(row.width or row.scale))<0.001 and math.abs(props.ZoomY-(row.height or row.scale))<0.001,'Panel native scale readback mismatch')
+    apply_color(item)
   end
   for i,row in ipairs(cfg.transitions or {}) do
     local item=add_layer(row,'Transition '..i)
@@ -69,6 +87,7 @@ local ok,err=pcall(function()
       merge.Blend:SetExpression(progress)
     end
     mo.Input=merge.Output
+    apply_color(item)
   end
   for i,row in ipairs(cfg.plates or {}) do
     assert(row.blend=='screen','Unsupported motion plate blend')

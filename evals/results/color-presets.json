@@ -1,0 +1,92 @@
+{
+  "date": "2026-11-13",
+  "resolve": "Free Mac App Store 21.2.0.6",
+  "ffmpeg": "9.0",
+  "ffprobe": "4.4.1",
+  "blackdetect": {
+    "minimum_seconds": 0.1,
+    "pixel_threshold": 0.05
+  },
+  "native_attempts": 4,
+  "native_verified_exports": 3,
+  "unattended_trials": 0,
+  "runs": {
+    "soft_color": {
+      "preset": "soft-color-v1",
+      "duration_seconds": 14.0,
+      "resolution": [
+        1080,
+        1920
+      ],
+      "fps": 30.0,
+      "frames": 420,
+      "main_shots": 25,
+      "native_queue_seconds": 2,
+      "composition_checks": 75,
+      "chroma_checks": 69,
+      "title_checks": 4,
+      "title_timing_checks": 19,
+      "audio_correlation": 0.99974,
+      "max_graded_chroma_error": 0.00697,
+      "video_sha256": "bc1c26b7bf6ca8a47bc50eb0bea50a482a27cb8ab762a02892669988418b59d5",
+      "drp_sha256": "90e2e0dd1b361f0731ff86a7415731bd809ce6c315773f96d426f938d36edc69",
+      "blackdetect_intervals": 0
+    },
+    "ai_monochrome": {
+      "preset": "monochrome-v1",
+      "duration_seconds": 14.0,
+      "resolution": [
+        1080,
+        1920
+      ],
+      "fps": 30.0,
+      "frames": 420,
+      "main_shots": 25,
+      "native_queue_seconds": 2,
+      "composition_checks": 75,
+      "chroma_checks": 75,
+      "title_checks": 1,
+      "title_timing_checks": 4,
+      "audio_correlation": 0.99974,
+      "max_graded_chroma_error": 0.0,
+      "video_sha256": "9a97c432345cdf703d51bbe1f672f6a131e1bf26045f6701daf1f8a7364fe6cf",
+      "drp_sha256": "d85b6d9d40dafa1aa24ca7f6da8a80d89ccd23142a50a3e6dea8b22185ce2e72",
+      "blackdetect_intervals": 0,
+      "planning_seconds": 99.414,
+      "framing_review_seconds": 15.834,
+      "finish_status": "verified-export",
+      "model_plan_manually_edited": false,
+      "planner_retries_in_successful_run": 0
+    },
+    "five_clip_compatibility": {
+      "preset": "soft-color-v1",
+      "duration_seconds": 15.0,
+      "resolution": [
+        1080,
+        1920
+      ],
+      "fps": 30.0,
+      "frames": 450,
+      "main_shots": 5,
+      "native_queue_seconds": 2,
+      "composition_checks": 26,
+      "chroma_checks": 25,
+      "title_checks": 1,
+      "title_timing_checks": 5,
+      "audio_correlation": 0.99975,
+      "max_graded_chroma_error": 0.01004,
+      "video_sha256": "7d2f65c9f6467fc7506b7ec6910fbbefc620ad2c8c4faaa161e709c3705f3f56",
+      "drp_sha256": "d2743de438dde107eae7ca951b27b609ff980a56f9d2b17ed026166433c67bb8",
+      "blackdetect_intervals": 0,
+      "moving_dissolves": 1,
+      "collage_panels": 1
+    }
+  },
+  "controls": {
+    "original_ungraded_export": "rejected at frame 1",
+    "unknown_frame_citation": "rejected in an earlier live run. Retry success and retry exhaustion exercised in unit tests.",
+    "initial_panel_rgb_color_gate": "false rejection at frame 271. Chroma gate passes same media."
+  },
+  "creative_acceptance": "unreviewed",
+  "listening": "unreviewed"
+}
