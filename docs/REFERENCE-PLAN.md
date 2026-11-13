@@ -44,3 +44,5 @@ For iterative recreation, `review-reference` now compares actual candidate/refer
 Reference rhythm progress: `reference_rhythm` can preserve the selected reference’s measured long-to-short change pattern using the same soundtrack, with exact one-shot-per-interval enforcement. See [implementation and limits](resolve/REFERENCE-RHYTHM.md). This transfers candidate timing, not performances, grade or musical-phrase understanding.
 
 The [frame-by-frame timing report](REFERENCE-TIMING.md) aligns decoded presentation timestamps with audio onsets and, when supported, an estimated constant pulse. It supplies signed offsets and exact neighboring JPEGs to visual planning.
+
+The [editorial review of 30 reels](REFERENCE-EDITORIAL.md) documents how to choose a directing idea, test shot coverage, and tie transitions and sound to the payoff. [Example notes](REFERENCE-EDITORIAL-NOTES.md) record what each reel contributed.
