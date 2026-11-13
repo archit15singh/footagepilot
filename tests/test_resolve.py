@@ -25,6 +25,39 @@ class ResolveTests(unittest.TestCase):
         with patch('footagepilot.resolve.raw',side_effect=[a.tobytes(),b.tobytes()]),patch('footagepilot.resolve.binary',return_value='ffmpeg'):
             with self.assertRaisesRegex(ValueError,'waveform does not match'):audio_match(Path('a'),Path('b'))
 
+    def test_source_audio_uses_only_exact_main_excerpts(self):
+        from footagepilot.resolve import source_audio_command
+        shots = [
+            {'source_path':'one.mov','source_start':.4,'frames':17},
+            {'source_path':'two.mov','source_start':1.2,'frames':23},
+        ]
+        with patch('footagepilot.resolve.binary',return_value='ffmpeg'):
+            command = source_audio_command(shots,30,Path('audio.wav'))
+        self.assertEqual(command[4:16],[
+            '-ss',.4,'-t',17/30,'-i','one.mov','-ss',1.2,'-t',23/30,'-i','two.mov',
+        ])
+        graph = command[command.index('-filter_complex')+1]
+        self.assertIn('atrim=end_sample=27200',graph)
+        self.assertIn('atrim=end_sample=36800',graph)
+        self.assertIn('[a0][a1]concat=n=2:v=0:a=1,volume=0.75[audio]',graph)
+
+    def test_source_audio_rejects_missing_stream_and_competing_music(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root/'shot.mp4').touch()
+            (root/'score.wav').touch()
+            manifest = root/'edit.json'
+            edit = {'source_audio':True,'shots':[{'path':'shot.mp4','duration':1}]}
+            manifest.write_text(json.dumps({**edit,'music':'score.wav'}))
+            with self.assertRaisesRegex(ValueError,'either source_audio'):
+                prepare(manifest,root/'job')
+            manifest.write_text(json.dumps(edit))
+            media = {'streams':[{'codec_type':'video','duration':2}]}
+            with patch('footagepilot.resolve.probe',return_value=media),patch('footagepilot.resolve.binary',return_value='ffmpeg'):
+                with self.assertRaisesRegex(ValueError,'audio stream on every main shot'):
+                    prepare(manifest,root/'job')
+            self.assertFalse((root/'job').exists())
+
     def test_wipe_reference_is_spatial_not_global_opacity(self):
         job={'fps':30,'shots':[{'path':'out','start':0,'frames':10},{'path':'in','start':10,'frames':10}],'transitions':[{'path':'reveal','start':7,'frames':3,'filter':'transition_wipe_left'}]}
         def frame(path,*args):return ([.8] if path=='reveal' else [.2])*48

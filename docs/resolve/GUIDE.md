@@ -23,6 +23,8 @@ Preparation creates separate shot/panel proxies and blank title carriers. Legacy
 
 Set an optional `color_preset` in the edit manifest or visual spec to apply a versioned SDR look in editable Resolve color nodes. The grade check compares the render with both the planned and neutral treatments. [Editable color presets](COLOR.md)
 
+For an authored Resolve edit manifest, set `"source_audio": true` to keep the sound from the main-shot excerpts. Every main shot must have audio, and the manifest must omit `music`. Preparation trims to the same source starts and frame lengths as the picture, adds brief fades at each cut, and gives the combined stereo track headroom. Resolve imports that track as an editable audio item. Use a separately prepared music track when the scene needs continuous sound across picture cuts.
+
 Open Resolve and import the selected prepared media through its normal file picker if needed. In Workspace → Console, select Lua and paste the contents of `console.lua`. Review the source first: this job creates a fresh project, sets the canvas/FPS, imports clips, constructs the video/audio timeline and graphics, adds timing markers, saves and exports an editable DRP. It does not read arbitrary files, change preferences, delete projects, access a network or publish. `--render` explicitly includes a native render request after assembly postconditions; omit it to inspect before starting a render. A duplicate job name fails rather than overwriting an existing project. Failed jobs retain the partial project for diagnosis.
 
 A successful console run must print `FOOTAGEPILOT_ASSEMBLED`. Check native clip positions/durations and the viewer for offline media. **Prepared is not assembled; assembled is not rendered; rendered is not visually accepted.**
