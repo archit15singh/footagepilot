@@ -23,15 +23,32 @@ def select_frames(reference,root,windows=6,times=None):
     cuts=reference.get('scene_changes',[])
     if any(type(t) not in (int,float) or not math.isfinite(t) or not 0<=t<=duration for t in cuts):raise ValueError('Invalid reference cut candidate')
     selected={}
+    by_index={raw["frame_index"]: row for raw,row in zip(frames,rows) if "frame_index" in raw}
+    change_indices={r["time"]: r["frame_index"] for r in reference.get("transitions", [])}
     for n in range(windows):
         target=duration*n/max(1,windows-1)
         centre=min(cuts,key=lambda t:abs(t-target)) if cuts else target
+        if centre in change_indices and by_index:
+            index=change_indices[centre]
+            for adjacent in range(index-1,index+2):
+                if adjacent in by_index:
+                    row=by_index[adjacent];selected[row['id']]=row
+            continue
         for offset in (-.08,0,.08):
             row=min(rows,key=lambda r:abs(r['time']-(centre+offset)))
             selected[row['id']]=row
     for target in times:
         row=min(rows,key=lambda r:abs(r['time']-target));selected[row['id']]=row
     return sorted(selected.values(),key=lambda r:r['time'])
+
+
+def timing_for_frames(reference, frames):
+    """Attach bounded audio offsets to change frames included in the prompt."""
+    by_time = {row['time']: row['id'] for row in frames}
+    changes = [{**row, 'reference_id': by_time[row['time']]}
+               for row in reference.get('transitions', []) if row['time'] in by_time]
+    pulse = reference.get('audio', {}).get('pulse', {})
+    return {'changes': changes, 'pulse': {k: pulse[k] for k in ('status', 'bpm') if k in pulse}}
 
 
 def validate_observations(payload,frames):
