@@ -1,5 +1,7 @@
 # Resolve hybrid workflow
 
+Use Resolve for the editable master. For the handoff to Instagram Edits and the evidence to retain for each export, see the [editor workflow](../EDITOR-WORKFLOW.md).
+
 Verified/researched 12 November 2026. Recheck after seven days, an app update, a new edition or an import/export failure. This is a staged integration, not a completed replacement for the working Edits renderer.
 
 ## What was established
