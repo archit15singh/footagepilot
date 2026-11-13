@@ -1,11 +1,39 @@
 import hashlib,json,tempfile,unittest,zipfile
 from pathlib import Path
 from unittest.mock import patch
-from footagepilot.source_import import import_archive,media_info,video_members,MAX_BYTES
+from footagepilot.source_import import import_archive,import_sources,media_info,video_members,MAX_BYTES
 
 
 class SourceImportTests(unittest.TestCase):
     def probe(self):return {'streams':[{'codec_type':'video','width':1440,'height':1080,'duration':'4','side_data_list':[{'rotation':-90}]},{'codec_type':'audio'}]}
+
+    def test_individual_files_preserve_order_contents_and_provenance(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            inputs = [root / 'second.MOV', root / 'first.mp4']
+            for path in inputs:
+                path.write_bytes(path.name.encode())
+            output = root / 'pool'
+            with patch('footagepilot.source_import.probe', return_value=self.probe()):
+                result = import_sources(inputs, output)
+            self.assertEqual(result['videos'], 2)
+            report = json.loads((output / 'sources.json').read_text())
+            self.assertEqual([row['original_file'] for row in report['sources']],
+                             [str(path.resolve()) for path in inputs])
+            self.assertEqual((output / 'clip-01.mov').read_bytes(), inputs[0].read_bytes())
+            self.assertEqual((output / 'clip-02.mp4').read_bytes(), inputs[1].read_bytes())
+
+    def test_individual_import_failure_leaves_no_edit_assets(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            source = root / 'source.mp4'
+            source.write_bytes(b'invalid video')
+            output = root / 'pool'
+            with patch('footagepilot.source_import.probe', return_value={'streams': []}):
+                with self.assertRaisesRegex(ValueError, 'no usable video'):
+                    import_sources([source], output)
+            self.assertTrue((output / 'failure.json').is_file())
+            self.assertFalse((output / 'assets.json').exists())
 
     def test_archive_paths_cannot_escape_and_duplicate_names_remain_distinct(self):
         with tempfile.TemporaryDirectory() as td:

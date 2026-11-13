@@ -163,7 +163,9 @@ def main():
     review=commands.add_parser('review-reference');review.add_argument('spec',type=Path);review.add_argument('candidate',type=Path);review.add_argument('--output',type=Path,required=True)
     from .plate_fetch import PLATES
     plate_fetch=commands.add_parser('fetch-plate');plate_fetch.add_argument('name',choices=sorted(PLATES));plate_fetch.add_argument('--output',type=Path,required=True)
-    source_import=commands.add_parser('import-sources');source_import.add_argument('archive',type=Path);source_import.add_argument('--output',type=Path,required=True)
+    source_import = commands.add_parser('import-sources')
+    source_import.add_argument('inputs', nargs='+', type=Path, help='One ZIP or 1–20 original video files')
+    source_import.add_argument('--output', type=Path, required=True)
     typography=commands.add_parser('refine-typography');typography.add_argument('directory',type=Path);typography.add_argument('--words',nargs='+',required=True);typography.add_argument('--output',type=Path,required=True)
     framing=commands.add_parser('refine-framing');framing.add_argument('manifest',type=Path);framing.add_argument('--shots',type=int,nargs='+',required=True);framing.add_argument('--axis',choices=('x','y'),required=True);framing.add_argument('--output',type=Path,required=True);framing.add_argument('--brief',default='',help='Creative intent for choosing the subject/action to preserve')
     visual=commands.add_parser('visual-plan');visual.add_argument('spec',type=Path);visual.add_argument('--output',type=Path,required=True)
@@ -201,8 +203,8 @@ def main():
             from .plate_fetch import fetch_plate
             print(json.dumps(fetch_plate(args.name,args.output.resolve()),indent=2))
         elif args.command == 'import-sources':
-            from .source_import import import_archive
-            print(json.dumps(import_archive(args.archive.resolve(),args.output.resolve()),indent=2))
+            from .source_import import import_sources
+            print(json.dumps(import_sources(args.inputs, args.output.resolve()), indent=2))
         elif args.command == 'refine-typography':
             from .typography import refine_typography
             print(json.dumps(refine_typography(args.directory.resolve(),args.words,args.output.resolve()),indent=2))
