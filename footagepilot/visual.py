@@ -4,11 +4,12 @@ from decimal import Decimal,ROUND_HALF_UP
 from pathlib import Path
 from .__main__ import binary,run,write,probe
 from .edits import validate_edit
-from .reference_evidence import select_frames,validate_observations
+from .reference_evidence import UnknownReferenceFrame,select_frames,validate_observations
 from .layout import validate_panels
 from .music_timing import validate_timing,position,span
 from .source_previews import preview_windows,window_sheet,preview_filter
 from .reference_review import iteration_notes
+from .color import color_preset
 
 def object_schema(properties):
     return {'type':'object','additionalProperties':False,'properties':properties,'required':list(properties)}
@@ -103,6 +104,7 @@ def asset_media(path,requested_windows=None):
 
 
 def compile_plan(payload,spec,base):
+    preset=color_preset(spec, spec.get('native_backend'))
     aspect,show_titles=canvas_options(spec)
     minimum,maximum=shot_budget(spec)
     catalog=plate_catalog(spec)
@@ -210,6 +212,7 @@ def compile_plan(payload,spec,base):
         result['titles']=titles
     if backgrounds:result['layout_backgrounds']=backgrounds
     if plates:result['plates']=plates
+    if preset:result['color_preset']=preset['id']
     validate_edit(result,base);return result
 
 def review_notes(spec,base):
@@ -228,6 +231,7 @@ def review_notes(spec,base):
 def plan_visual(spec_path,output):
     if output.exists():raise ValueError('Use a new visual-plan output directory')
     snapshot=spec_path.read_bytes();spec=json.loads(snapshot);base=spec_path.parent
+    color_preset(spec, spec.get('native_backend'))
     if spec.get('plate_presets'):raise ValueError('Use recreate to fetch reviewed plate presets before visual planning')
     aspect,show_titles=canvas_options(spec)
     counts=shot_budget(spec)
@@ -281,6 +285,8 @@ def plan_visual(spec_path,output):
             if canvas_previews:prompt+='Source preview tiles have two rows: TOP is the whole padded source, BOTTOM is a centre fill crop at output_aspect. Each column is the same source time. Crop rows are diagnostic alternatives, not the final selected shot: choosing focus_x/focus_y moves that crop; contain preserves the whole image with bars. Avoid truncating key heads/actions; choose a different range or focus if the crop row is unsuitable. Still previews use the same two-row layout. Do not mistake the two rows for an authored collage.\n'
             prompt+='Respect output_aspect and show_titles. If show_titles is false, title is project metadata only: return an empty title_sequence and do not invent title-card backgrounds. Panels may be empty when the reference uses full-frame cuts.\n'
             prompt+='Return 1–12 reference_techniques observations citing supplied frame IDs with concise adaptation reasoning. Cite reference_ids per shot/panel; use an empty list for an original choice. Temporal techniques (cut/dissolve/mask_reveal/camera_motion/motion_plate) are inferred from sparse frames, never label them visible. Frame citation validation does not prove semantic correctness.\n'
+            if 'color_preset' in spec:
+                prompt+=f"Footage color preset is fixed to {spec['color_preset']}. Consider that look when choosing shots and title contrast.\n"
             prompt+='For Resolve video shots choose source_start seconds within the supplied duration; source_start plus the computed shot duration from the supplied timing coordinates must fit. Still assets require source_start=0. Prefer excerpts supported by the supplied source windows, considering the beginning, subject action and ending across each strip. Avoid truncated actions where visible. Preserve real source motion; do not assert continuous direction or exact camera matching from sampled frames alone.\n'
             prompt+='When music_timing contains cues, every field named beats/start_beat refers to CUE INTERVAL COUNTS / CUE INDICES, not seconds or musical beats. For example, a shot starting at index2 and lasting3intervals runs from cues[2] to cues[5]. All indices must fit the supplied cue array. Intervals are uneven and may be skipped by choosing longer holds. Do not invent BPM or call onset candidates verified beats. Otherwise use the supplied BPM grid.\n'
             prompt+='Resolve title_sequence may contain up to eight original short lines with integer start_beat/beats and normalized y. An empty array keeps the single title. Use staggered entries held together on separated rows to adapt a progressive reference title card; keep simultaneous rows at least .13 apart. Native title appearances are hard cuts at those beats, not a character write-on or an inferred music beat. Use only the authored/reviewed supplied timing grid.\n'
@@ -293,12 +299,24 @@ def plan_visual(spec_path,output):
             prompt+=json.dumps({'brief':spec.get('brief',''),'output_aspect':aspect,'show_titles':show_titles,'shot_count_budget':counts,'canvas_previews':canvas_previews,'installed_title_fonts':fonts,'allowed_title_sizes':sizes,'reference_evidence_frames':evidence_frames,'recorded_human_reviews':feedback,'model_revision_suggestions':suggestions,'assets':asset_descriptions,'plate_assets':plate_descriptions,'music_timing':timing,'duration_budget':[spec.get('min_seconds',10),spec.get('max_seconds',20)],'reference_duration':reference['duration'],'scene_change_candidates':reference['scene_changes'],'audio_analysis_limit':reference['audio']['method']})
             command=[os.environ.get('FOOTAGEPILOT_CODEX','codex'),'exec','--model','gpt-6.1-sol','-c','model_reasoning_effort="low"','--ignore-user-config','--ephemeral','--skip-git-repo-check','--sandbox','read-only','--output-schema',str(contract),'-o',str(response)]
             for image in images:command+=['--image',str(image)]
-            result=subprocess.run(command+['-'],input=prompt,cwd=temp,text=True,capture_output=True,timeout=600);(output/'planner.log').write_text(result.stderr)
-            if result.returncode:raise ValueError('Visual Codex planner failed; see local planner.log')
-            payload=json.loads(response.read_text())
+            for attempt in (1, 2):
+                response.unlink(missing_ok=True)
+                result=subprocess.run(command+['-'],input=prompt,cwd=temp,text=True,capture_output=True,timeout=600)
+                (output/'planner.log').write_text(result.stderr)
+                if result.returncode:raise ValueError('Visual Codex planner failed; see local planner.log')
+                payload=json.loads(response.read_text())
+                try:
+                    evidence=validate_observations(payload,evidence_frames)
+                except UnknownReferenceFrame as error:
+                    if attempt==2:raise
+                    (output/'planner-attempt-1.log').write_text(result.stderr)
+                    write(output/'planner-attempt-1.json',{'error':str(error),'candidate':payload})
+                    allowed=', '.join(row['id'] for row in evidence_frames)
+                    prompt+='\nThe first candidate cited unavailable frames. Return a fresh complete plan. Every frame citation must be copied verbatim from this list: '+allowed+'. Do not infer IDs from timestamps or adjacent frames.'
+                else:
+                    break
         if any(hashlib.sha256(Path(p).read_bytes()).hexdigest()!=h for p,h in hashes.items()):raise ValueError('Visual planning inputs changed')
         if any(hashlib.sha256(Path(w['sheet']).read_bytes()).hexdigest()!=w['sheet_sha256'] for a in asset_descriptions+plate_descriptions for w in a.get('sample_windows',[])):raise ValueError('Source preview sheet changed during planning')
-        evidence=validate_observations(payload,evidence_frames)
         manifest=compile_plan(payload,spec,base);write(output/'edit.json',manifest);write(output/'plan.json',{'backend':'codex','model':'gpt-6.1-sol','reasoning_effort':'low','elapsed_seconds':time.monotonic()-started,'input_hashes':hashes,'asset_media':asset_descriptions,'plate_media':plate_descriptions,'reference_evidence_frames':evidence_frames,'evidence_validation':evidence,**payload})
         return {'manifest':str(output/'edit.json'),'plan':str(output/'plan.json'),'duration':sum(s['duration'] for s in manifest['shots'])}
     except Exception as error:

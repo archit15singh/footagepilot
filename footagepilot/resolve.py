@@ -13,6 +13,7 @@ from .__main__ import binary, probe, run, write
 from .edits import validate_edit
 from .layout import rectangle,validate_panels
 from .music_timing import marker_times
+from .color import apply_saturation, chroma, color_preset, sdr_source
 
 
 def lua(value):
@@ -40,6 +41,7 @@ def prepare(manifest, output, render=False):
     registry=Path(__file__).resolve().parent.parent/'docs/resolve/sources.json'
     if not registry.exists() or check_sources(registry)['needs_research']:raise ValueError('Resolve research is missing or stale; review official guides and installed API before preparing a job')
     snapshot=manifest.read_bytes();data=json.loads(snapshot);validate_edit(data,manifest.parent)
+    preset = color_preset(data)
     if output.exists():raise ValueError('Use a fresh Resolve job directory')
     fps=data.get('fps',30);w,h={'9:16':(1080,1920),'16:9':(1920,1080),'1:1':(1080,1080),'4:5':(1080,1350)}[data.get('aspect','9:16')]
     def frames(seconds):return int((Decimal(str(seconds))*fps).quantize(Decimal(1),rounding=ROUND_HALF_UP))
@@ -61,6 +63,7 @@ def prepare(manifest, output, render=False):
         path=(manifest.parent/row['path']).resolve();inputs[str(path)]=hashlib.sha256(path.read_bytes()).hexdigest()
         meta=probe(path);video=next((s for s in meta['streams'] if s['codec_type']=='video'),None)
         if not video:raise ValueError('Shot has no video stream')
+        if preset:sdr_source(video)
         still=path.suffix.lower() in ('.jpg','.jpeg','.png','.webp')
         source_start=row.get('source_start',0)
         if still and source_start:raise ValueError('Still images cannot have a nonzero source start')
@@ -124,6 +127,7 @@ def prepare(manifest, output, render=False):
     output.mkdir(parents=True)
     job={'project_name':'FootagePilot-'+output.name[:32]+'-'+uuid.uuid4().hex[:8],'schema_version':2,'status':'prepared-not-executed','fps':fps,'width':w,'height':h,'frames':cursor,'shots':shots,'overlays':overlays,'plates':plates,'backgrounds':backgrounds,'titles':titles,'transitions':transitions,'music':str(music) if music else None,'beats':[],'inputs':inputs,'manifest_sha256':hashlib.sha256(snapshot).hexdigest(),'limits':['Source crop/zoom and audio gain/fades are prepared per clip. Resolve constructs editable layers, Text+ and animated-opacity dissolves or rectangle-mask reveals.','Panel proxies are reframed to box aspect then normalized to the canvas; native independent-axis scaling restores their intended proportions.','Transition begins before the cut and reaches full incoming image on the last pre-cut frame. Moving dissolve uses source handles; legacy dissolve/wipe pre-roll freezes its first frame.','Screen plates are full-canvas black-backed layers above transitions and below titles; list order defines stacked blending. Native enum 5 was calibrated on Resolve 21.2 only.','Preparing a job does not prove native execution or creative acceptance.']}
     timing=data.get('music_timing')
+    if preset:job['color_preset']=preset
     if timing:
         job['beats']=sorted({frames(t) for t in marker_times(timing,float(elapsed))})
         job['timing_mode']=timing.get('mode','authored_grid')
@@ -139,6 +143,7 @@ def prepare(manifest, output, render=False):
         job['prepared_hashes']={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths};write(output/'job.json',job)
         template=(Path(__file__).parent/'resolve_job.lua').read_text();payload={k:job[k] for k in ('fps','width','height','frames','shots','music','beats','overlays','titles','transitions','backgrounds','plates')}
         payload.update(timing_label=job.get('timing_label'),name=job['project_name'],target=str(output),custom_name='resolve-output',render=render)
+        if preset:payload['color_preset']=preset
         (output/'console.lua').write_text('do local cfg='+lua(payload)+'; '+console_program(template)+' end\n');(output/'render.lua').write_text(console_program((Path(__file__).parent/'resolve_render.lua').read_text())+'\n')
         return {'job':str(output/'job.json'),'console':str(output/'console.lua'),'status':job['status'],'next':'Run console.lua inside Resolve; inspect native queue/output and run resolve-verify. Native render requested.' if render else 'Run console.lua inside Resolve, inspect, then run render.lua and resolve-verify.'}
     except Exception as error:
@@ -168,20 +173,24 @@ def sample_frame(path, number, fps, width=64, height=64):
     return [v/255 for v in data]
 
 
-def expected_frame(job, number, width=64, height=64):
+def expected_frame(job, number, width=64, height=64, *, graded=True):
     """Independent RGB compositor for QA only; never used as a delivered movie."""
     shot=next(s for s in job['shots'] if s['start']<=number<s['start']+s['frames'])
-    result=sample_frame(shot['path'],number-shot['start'],job['fps'],width,height)
+    preset=job.get('color_preset') if graded else None
+    def footage(row, w, h):
+        pixels=sample_frame(row['path'],number-row['start'],job['fps'],w,h)
+        return apply_saturation(pixels,preset['saturation']) if preset else pixels
+    result=footage(shot,width,height)
     for row in job.get('backgrounds',[]):
         if row['start']<=number<row['start']+row['frames']:result=[0.]*(width*height*3)
     for row in job.get('overlays',[]):
         if row['start']<=number<row['start']+row['frames']:
             left,top,right,bottom=rectangle(row);x,y=round(left*width),round(top*height);pw,ph=round(right*width)-x,round(bottom*height)-y
-            panel=sample_frame(row['path'],number-row['start'],job['fps'],pw,ph)
+            panel=footage(row,pw,ph)
             for yy in range(ph):result[((y+yy)*width+x)*3:((y+yy)*width+x+pw)*3]=panel[yy*pw*3:(yy+1)*pw*3]
     for row in job.get('transitions',[]):
         if row['start']<=number<row['start']+row['frames']:
-            alpha=(number-row['start'])/(row['frames']-1);incoming=sample_frame(row['path'],number-row['start'],job['fps'],width,height)
+            alpha=(number-row['start'])/(row['frames']-1);incoming=footage(row,width,height)
             if row.get('filter','transition_dissolve')=='transition_wipe_left':
                 result=[incoming[i] if (i//3)%width<alpha*width else v for i,v in enumerate(result)]
             else:result=[a*(1-alpha)+b*alpha for a,b in zip(result,incoming)]
@@ -227,7 +236,7 @@ def title_band(job, number, height):
     return bands
 
 
-def visual_matches(job, media):
+def visual_matches(job, media, color_checks=None):
     rows=[];samples=set()
     for shot in job['shots']:
         samples.update(shot['start']+n for n in {min(1,shot['frames']-1),shot['frames']//2,max(0,shot['frames']-2)})
@@ -239,12 +248,25 @@ def visual_matches(job, media):
         mae,corr=similarity([expected[i] for i in keep],[actual[i] for i in keep])
         rows.append({'frame':number,'mean_absolute_error':round(mae,5),'correlation':round(corr,5)})
         if mae>.08 or corr<.90:raise ValueError(f'Export differs visually from prepared composition at frame {number}; inspect offline media, order, layout, transition and colour')
+        if color_checks is not None:
+            neutral=expected_frame(job,number,graded=False)
+            pixels=keep[::3]
+            graded_color=chroma(expected,pixels)
+            neutral_color=chroma(neutral,pixels)
+            signal,_=similarity(graded_color,neutral_color)
+            if signal>=.01:
+                actual_color=chroma(actual,pixels)
+                grade_error,_=similarity(actual_color,graded_color)
+                neutral_error,_=similarity(actual_color,neutral_color)
+                color_checks.append({'frame':number,'chroma_signal':round(signal,5),'graded_chroma_error':round(grade_error,5),'neutral_chroma_error':round(neutral_error,5)})
+                if neutral_error-grade_error<signal*.15 or grade_error>max(.012,signal*.6):
+                    raise ValueError(f'Color preset missing or different at frame {number}')
     for index,row in enumerate(job.get('overlays',[])):
         resolution=256
         number=row['start']+row['frames']//2;actual=sample_frame(media,number,job['fps'],resolution,resolution);left,top,right,bottom=rectangle(row)
         x,y=round(left*resolution),round(top*resolution);pw,ph=round(right*resolution)-x,round(bottom*resolution)-y
         expected=sample_frame(row['path'],number-row['start'],job['fps'],pw,ph)
-        if any(p['start']<=number<p['start']+p['frames'] for p in job.get('plates',[])):
+        if job.get('color_preset') or any(p['start']<=number<p['start']+p['frames'] for p in job.get('plates',[])):
             composited=expected_frame(job,number,resolution,resolution)
             expected=[v for yy in range(ph) for v in composited[((y+yy)*resolution+x)*3:((y+yy)*resolution+x+pw)*3]]
         bands=title_band(job,number,resolution);region=[];reference=[]
@@ -352,10 +374,15 @@ def verify(job_path, media, output):
     if (stream['width'],stream['height'])!=(job['width'],job['height']) or abs(fps-job['fps'])>.01 or abs(duration-job['frames']/job['fps'])>1.5/job['fps']:raise ValueError('Export dimensions, FPS or duration differ from job')
     if job.get('music') and not any(s['codec_type']=='audio' for s in meta['streams']):raise ValueError('Music missing from export')
     if hashlib.sha256(media.read_bytes()).hexdigest()!=digest:raise ValueError('Export changed during verification')
-    frames=visual_matches(job,media)
+    color_checks=[] if job.get('color_preset') else None
+    frames=visual_matches(job,media,color_checks)
+    if color_checks == []:raise ValueError('Color preset could not be verified: footage has insufficient measurable color')
     plates=plate_matches(job,media)
     titles=title_matches(job,media)
     audio=audio_match(job['music'],media) if job.get('music') else None
     if hashlib.sha256(media.read_bytes()).hexdigest()!=digest:raise ValueError('Export changed during correspondence checks')
     result={'timing_evidence':timing_evidence(job),'visual_samples':frames,'plate_checks':plates,'title_checks':titles,'title_timing_checks':title_timing_matches(job,media),'audio_correspondence':audio,'technical_pass':True,'sha256':digest,'frames_expected':job['frames'],'duration':duration,'fps':fps,'decode':'passed','native_origin':'Requires retained console evidence and project inspection; cannot be established from an MP4 alone.','creative_verdict':'unreviewed','limits':['Sampled correspondence is not exhaustive perceptual review, listening or storytelling acceptance.']}
+    if color_checks is not None:
+        result['color_preset']=job['color_preset']
+        result['color_checks']=color_checks
     output.parent.mkdir(parents=True,exist_ok=True);write(output,result);return result

@@ -11,6 +11,7 @@ from .music_timing import analysis_options,extract_cues
 from .plate_fetch import PLATES,fetch_plate
 from .framing import refine_framing
 from .reference_rhythm import rhythm_options,extract_rhythm
+from .color import color_preset
 
 
 def framing_options(spec,backend):
@@ -64,6 +65,7 @@ def recreate(spec_path,output,token_file=None,backend="edits"):
     if backend not in ("edits","resolve"):raise ValueError("Unknown native editor backend")
     if output.exists():raise ValueError('Use a new recreation directory; previous evidence is preserved')
     snapshot=spec_path.read_bytes();spec=json.loads(snapshot);base=spec_path.parent
+    color_preset(spec, backend)
     framing=framing_options(spec,backend)
     catalog=plate_catalog({**spec,'native_backend':backend})
     presets=spec.get('plate_presets',[])

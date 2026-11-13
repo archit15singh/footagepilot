@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import urllib.request
 import urllib.error
+from .color import color_preset
 
 class EditsClient:
     def __init__(self, token_file=None):
@@ -42,6 +43,7 @@ def validate_edit(data, base):
     import math
     if not isinstance(data,dict) or not isinstance(data.get('shots'),list) or not 1<=len(data['shots'])<=60:
         raise ValueError('Choose 1–60 main shots')
+    color_preset(data)
     if data.get('aspect','9:16') not in ('9:16','16:9','1:1','4:5'):raise ValueError('Unsupported canvas aspect')
     if data.get('fps',30) not in (24,30,60):raise ValueError('Choose 24, 30 or 60 fps')
     def number(value,low,high):return type(value) in (int,float) and math.isfinite(value) and low<=value<=high
@@ -83,6 +85,7 @@ def render_edit(manifest, output, token_file=None):
     import hashlib,time,shutil,uuid
     from .__main__ import probe,binary,run,write
     snapshot=manifest.read_bytes();data=json.loads(snapshot);total=validate_edit(data,manifest.parent)
+    color_preset(data, 'edits')
     if data.get('plates'):raise ValueError('Screen plates require Resolve')
     if 'cues' in data.get('music_timing',{}):raise ValueError('Audio cue execution requires Resolve')
     if any(t.get('filter')=='transition_moving_dissolve' for t in data.get('transitions',[])):raise ValueError('Moving-source dissolves require Resolve')
