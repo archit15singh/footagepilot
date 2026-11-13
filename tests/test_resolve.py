@@ -25,6 +25,25 @@ class ResolveTests(unittest.TestCase):
         with patch('footagepilot.resolve.raw',side_effect=[a.tobytes(),b.tobytes()]),patch('footagepilot.resolve.binary',return_value='ffmpeg'):
             with self.assertRaisesRegex(ValueError,'waveform does not match'):audio_match(Path('a'),Path('b'))
 
+    def test_black_frame_gate_accepts_only_authored_spans(self):
+        from subprocess import CompletedProcess
+        from footagepilot.resolve import verify_decode_and_black_frames
+
+        log='[blackdetect] black_start:1 black_end:1.4 black_duration:0.4'
+        job={'fps':30,'backgrounds':[{'start':30,'frames':6},{'start':36,'frames':6}]}
+        with (
+            patch('footagepilot.resolve.binary',return_value='ffmpeg'),
+            patch('footagepilot.resolve.subprocess.run',return_value=CompletedProcess([],0,'',log)) as decode,
+        ):
+            report=verify_decode_and_black_frames(job,Path('video.mp4'))
+            self.assertEqual(report['allowed_authored_intervals'][0]['duration_seconds'],.4)
+            self.assertIn('-xerror',decode.call_args.args[0])
+            with self.assertRaisesRegex(ValueError,'Unexpected near-black'):
+                verify_decode_and_black_frames({**job,'backgrounds':job['backgrounds'][:1]},Path('video.mp4'))
+            decode.return_value=CompletedProcess([],1,'','Corrupt packet')
+            with self.assertRaisesRegex(ValueError,'Corrupt packet'):
+                verify_decode_and_black_frames(job,Path('video.mp4'))
+
     def test_source_audio_uses_only_exact_main_excerpts(self):
         from footagepilot.resolve import source_audio_command
         shots = [
