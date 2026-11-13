@@ -82,6 +82,10 @@ def prepare(manifest, output, render=False):
         elapsed+=Decimal(str(row['duration']));end=int((elapsed*fps).quantize(Decimal(1),rounding=ROUND_HALF_UP));count=end-cursor
         if count<1:raise ValueError('Shot rounds below one frame')
         shots.append({'path':source(row,count,output/f'shot-{i+1:03d}.mp4'),'start':cursor,'frames':count,'source_start':row.get('source_start',0),'source_path':str((manifest.parent/row['path']).resolve())});cursor=end
+    if data.get('source_audio'):
+        for path in {shot['source_path'] for shot in shots}:
+            if not any(stream['codec_type']=='audio' for stream in probe(path)['streams']):
+                raise ValueError(f'source_audio requires an audio stream on every main shot: {Path(path).name}')
     overlays=[]
     for i,row in enumerate(data.get('overlays',[])):
         count=layer_frames(row)
@@ -124,10 +128,14 @@ def prepare(manifest, output, render=False):
         path=(manifest.parent/data['music']).resolve();inputs[str(path)]=hashlib.sha256(path.read_bytes()).hexdigest()
         if float(probe(path)['format']['duration'])+.5/fps<cursor/fps:raise ValueError('Music is shorter than timeline')
         music=output/'music.wav';pending.append([binary('ffmpeg'),'-v','error','-n','-i',path,'-t',cursor/fps,'-af',f'volume={data.get("music_gain",.65)},afade=t=in:d=0.1,afade=t=out:st={max(0,cursor/fps-.3)}:d=0.3','-c:a','pcm_s16le',music])
+    elif data.get('source_audio'):
+        music=output/'source-audio.wav'
+        pending.append(source_audio_command(shots,fps,music))
     output.mkdir(parents=True)
     job={'project_name':'FootagePilot-'+output.name[:32]+'-'+uuid.uuid4().hex[:8],'schema_version':2,'status':'prepared-not-executed','fps':fps,'width':w,'height':h,'frames':cursor,'shots':shots,'overlays':overlays,'plates':plates,'backgrounds':backgrounds,'titles':titles,'transitions':transitions,'music':str(music) if music else None,'beats':[],'inputs':inputs,'manifest_sha256':hashlib.sha256(snapshot).hexdigest(),'limits':['Source crop/zoom and audio gain/fades are prepared per clip. Resolve constructs editable layers, Text+ and animated-opacity dissolves or rectangle-mask reveals.','Panel proxies are reframed to box aspect then normalized to the canvas; native independent-axis scaling restores their intended proportions.','Transition begins before the cut and reaches full incoming image on the last pre-cut frame. Moving dissolve uses source handles; legacy dissolve/wipe pre-roll freezes its first frame.','Screen plates are full-canvas black-backed layers above transitions and below titles; list order defines stacked blending. Native enum 5 was calibrated on Resolve 21.2 only.','Preparing a job does not prove native execution or creative acceptance.']}
     timing=data.get('music_timing')
     if preset:job['color_preset']=preset
+    if data.get('source_audio'):job['audio_mode']='source_audio'
     if timing:
         job['beats']=sorted({frames(t) for t in marker_times(timing,float(elapsed))})
         job['timing_mode']=timing.get('mode','authored_grid')
@@ -148,6 +156,24 @@ def prepare(manifest, output, render=False):
         return {'job':str(output/'job.json'),'console':str(output/'console.lua'),'status':job['status'],'next':'Run console.lua inside Resolve; inspect native queue/output and run resolve-verify. Native render requested.' if render else 'Run console.lua inside Resolve, inspect, then run render.lua and resolve-verify.'}
     except Exception as error:
         write(output/'failure.json',{'stage':'prepare','error':str(error)});raise
+
+
+def source_audio_command(shots, fps, output):
+    """Build a frame-aligned stereo bed from the exact main-shot excerpts."""
+    command=[binary('ffmpeg'),'-v','error','-n']
+    filters=[]
+    for i,shot in enumerate(shots):
+        duration=shot['frames']/fps
+        samples=shot['frames']*48000//fps
+        command.extend(['-ss',shot['source_start'],'-t',duration,'-i',shot['source_path']])
+        filters.append(
+            f'[{i}:a:0]aresample=48000:async=1:first_pts=0,'
+            f'aformat=channel_layouts=stereo,apad=whole_len={samples},atrim=end_sample={samples},'
+            f'afade=d=0.025,afade=t=out:st={duration-.025}:d=0.025[a{i}]'
+        )
+    labels=''.join(f'[a{i}]' for i in range(len(shots)))
+    filters.append(f'{labels}concat=n={len(shots)}:v=0:a=1,volume=0.75[audio]')
+    return command+['-filter_complex',';'.join(filters),'-map','[audio]','-c:a','pcm_s16le',output]
 
 
 def similarity(expected, actual):

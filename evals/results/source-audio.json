@@ -1,0 +1,88 @@
+{
+  "resolve": "21.2.0.6 Free Mac App Store",
+  "ffmpeg": "9.0",
+  "ffprobe": "4.4.1",
+  "native_runs": {
+    "cut_1": {
+      "duration_seconds": 11.4,
+      "main_shots": 4,
+      "fps": 30.0,
+      "dimensions": [
+        1080,
+        1920
+      ],
+      "composition_samples": 12,
+      "audio_correlation": 0.99998,
+      "native_editable_project_saved": true,
+      "audio": "source_excerpts"
+    },
+    "cut_2": {
+      "duration_seconds": 10.0,
+      "main_shots": 6,
+      "fps": 30.0,
+      "dimensions": [
+        1080,
+        1920
+      ],
+      "composition_samples": 18,
+      "audio_correlation": 0.99999,
+      "native_editable_project_saved": true,
+      "audio": "source_excerpts"
+    },
+    "cut_3": {
+      "duration_seconds": 13.0,
+      "main_shots": 6,
+      "fps": 30.0,
+      "dimensions": [
+        1080,
+        1920
+      ],
+      "composition_samples": 18,
+      "audio_correlation": 0.99974,
+      "native_editable_project_saved": true,
+      "audio": "continuous_track"
+    },
+    "cut_4": {
+      "duration_seconds": 11.1,
+      "main_shots": 4,
+      "fps": 30.0,
+      "dimensions": [
+        1080,
+        1920
+      ],
+      "composition_samples": 12,
+      "audio_correlation": 0.99999,
+      "native_editable_project_saved": true,
+      "audio": "source_excerpts"
+    },
+    "cut_5": {
+      "duration_seconds": 9.4,
+      "main_shots": 5,
+      "fps": 30.0,
+      "dimensions": [
+        1080,
+        1920
+      ],
+      "composition_samples": 15,
+      "audio_correlation": 0.99998,
+      "native_editable_project_saved": true,
+      "audio": "continuous_track"
+    }
+  },
+  "blackdetect": {
+    "tested_cuts": [
+      3,
+      4,
+      5
+    ],
+    "minimum_seconds": 0.1,
+    "pixel_threshold": 0.05,
+    "intervals_detected": 0
+  },
+  "source_audio_peak_dbfs": {
+    "first_pass": -0.1,
+    "final": -2.7
+  },
+  "creative_acceptance": "unreviewed",
+  "audio_listening": "unreviewed"
+}

@@ -68,6 +68,10 @@ def validate_edit(data, base):
     for title in data.get('titles',[]):
         if not isinstance(title.get('text'),str) or not 1<=len(title['text'])<=120:raise ValueError('Title must contain 1–120 characters')
     if data.get('music') and not (base/data['music']).is_file():raise ValueError('Music missing')
+    if type(data.get('source_audio',False)) is not bool:
+        raise ValueError('source_audio must be boolean')
+    if data.get('source_audio') and data.get('music'):
+        raise ValueError('Choose either source_audio or a separate music track')
     if not number(data.get('music_gain',.65),0,1):raise ValueError('Music gain must be 0–1')
     for transition in data.get('transitions',[]):
         i=transition.get('after_shot')
@@ -86,6 +90,7 @@ def render_edit(manifest, output, token_file=None):
     from .__main__ import probe,binary,run,write
     snapshot=manifest.read_bytes();data=json.loads(snapshot);total=validate_edit(data,manifest.parent)
     color_preset(data, 'edits')
+    if data.get('source_audio'):raise ValueError('Source audio requires Resolve')
     if data.get('plates'):raise ValueError('Screen plates require Resolve')
     if 'cues' in data.get('music_timing',{}):raise ValueError('Audio cue execution requires Resolve')
     if any(t.get('filter')=='transition_moving_dissolve' for t in data.get('transitions',[])):raise ValueError('Moving-source dissolves require Resolve')
