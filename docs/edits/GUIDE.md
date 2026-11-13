@@ -1,5 +1,7 @@
 # Edits knowledge and operating guide
 
+For the division of work between Resolve and Edits, including how to carry a master into a social cut, see the [editor workflow](../EDITOR-WORKFLOW.md).
+
 Research date: 2026-11-12. Tested Mac build: 455.0.0.32.104. This guide can go stale: Edits changes frequently, catalogs vary, and mobile tutorials do not establish desktop parity. Start with `python3 -m footagepilot learn-check`; use `--fetch` to compare current official pages. A changed/unavailable source or stale date requires renewed research. Fetching a page never renews its human-reviewed verification date.
 
 ## Sources and feature map

@@ -42,6 +42,8 @@ Checks: `python3 -m unittest discover -s tests -v`. Real-footage reproduction is
 
 ## Reference-driven editing with Instagram Edits
 
+Use Resolve for the editable master and Instagram Edits for a separate social cut when an Edits tool serves the brief. See the [editor selection and handoff guide](docs/EDITOR-WORKFLOW.md).
+
 Read the [Edits guide and official tutorial map](docs/edits/GUIDE.md) and [rebuild plan](docs/REFERENCE-PLAN.md). Native Edits for Mac can be controlled through its authenticated local MCP; computer use handles saved-post browsing, setup and file-picker access.
 
 ```sh
