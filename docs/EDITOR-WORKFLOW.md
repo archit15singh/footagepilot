@@ -23,3 +23,9 @@ Retain a treatment after it improves a reviewed export and works with replacemen
 The existing Edits integration has tested local import, trims, crops, transforms, overlays, text styling, audio, transitions, and export. Desktop template reuse still needs a live test. The CLI retains its existing backend default. Specify `--backend resolve` for this workflow’s master and `--backend edits` when deliberately choosing the Edits recreation pipeline. [Edits capabilities and evidence](edits/GUIDE.md)
 
 Keep private source media, albums, credentials, editor projects, and review exports in local project storage. Track reusable code, settings examples, documentation, and sanitized verification evidence in Git.
+
+## Diagnose a weak sequence before adding effects
+
+Start with one event and four beats: establish the place or people, show an action, show its result or a reaction, and hold the closing image. Use the same shot lengths, framing treatment, and soundtrack for a reference sequence and a sequence from the available footage. Then reorder the exact same local shots and compare again. The reorder isolates sequencing. The reference comparison can reveal gaps in coverage, but subject matter, capture conditions, and source quality can also differ.
+
+If the sequence skips an important action or reaction, record the missing shot in the capture brief. For a planned shoot, capture the wide view, a closer angle on the action, and the reaction or result before moving on. Keep local comparison renders with the source notes and capture brief.
