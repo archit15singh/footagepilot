@@ -1,31 +1,30 @@
-# Guns N’ Roses Bengaluru · Friends into the crowd
+# Guns N’ Roses Bengaluru · Knock into the show
 
-FootagePilot’s first real-life project planned around footage shot for the edit. This is the shooting brief for the 14 November 2026 show at NICE Grounds. The short reference preview tested the hand-over-lens idea using Mumbai footage. The sequence below is designed for the Bengaluru group. [Official concert announcement](https://gunsnroses.com/blogs/news/guns-n-roses-return-to-india-for-a-two-city-tour-in-2026)
+FootagePilot’s first real-life project planned around footage shot for the edit. This brief follows Archit and Divya at the 14 November 2026 show at NICE Grounds. [Official concert announcement](https://gunsnroses.com/blogs/news/guns-n-roses-return-to-india-for-a-two-city-tour-in-2026)
 
 ## The reel
 
-**The couple knocks. The friends knock back. The couple knocks again and opens the lens onto themselves at the live show. Their friends step into frame and the concert takes over.**
+**Archit knocks. Divya knocks back. Archit knocks again and covers the lens. The hand pulls away to reveal both of them together while Guns N’ Roses are playing.**
 
-Aim for a 20–25 second vertical reel. Keep the three opening setups tight, then give the venue reveal and the group’s arrival room to play. Use the original knocks as a call and response. Let sound from the venue start under the last covered frame and swell as the palm comes off.
+Aim for a 15–20 second vertical reel. Open with tight shots of the two faces, then widen on the reveal. Let the live sound start just before the palm comes off.
 
 ## Shoot in this order
 
-| Shot | Who and what to film | How to shoot it |
+| Shot | What to film | How to shoot it |
 | --- | --- | --- |
-| 01 · First knock | The couple together before the show. One person knocks toward the camera. | Vertical chest-up two-shot. Keep both faces visible and bring the knuckles close to the lens without touching it. Record one second either side of the action. |
-| 02 · Reply | The friends together at their starting point or on the way. One person knocks back. | Match shot 01’s camera height, framing and knock position. If the friends are travelling separately, get one response from whichever group can film and bring everyone together for shot 04. |
-| 03 · Final knock and cover | Back to the couple in the same setup as shot 01. Knock again, then flatten the same hand over the lens. | Shoot 01 and 03 together. Hold the cover for about a second so there are several fully obscured frames to cut on. Capture one extra take if light leaks around the palm. |
-| 04 · Reveal and group joins | At the venue while the band is playing, begin with the lens covered. Pull the hand away to reveal the couple first. Then the friends step into the same shot and everyone reacts together. | Have a friend hold the phone at chest or eye height, wide enough to leave space on both sides. Hold on the couple for a beat before the others enter. Keep rolling for 8–10 seconds with the live sound. The camera operator can hand off or get a second full-group clip. |
-| 05 · Concert payoff | One wide of the stage or crowd and one reaction from the group. | Keep each clip steady for 5–8 seconds where recording is allowed. Capture the reaction and a usable stretch of the actual crowd sound. |
-| 06 · Bengaluru coda | A short shot that places the night in Bengaluru. | On the way in, grab a station exterior, a Madavara sign, or the venue approach. On the way home, grab passing city lights or a quiet shot of the couple leaving together. A friend can capture a separate journey home if it happens naturally. |
+| 01 · First knock | Archit knocks toward the camera before the show. | Divya holds the phone vertically at eye height. Frame Archit chest-up and have him bring his knuckles toward the center of the lens without touching it. |
+| 02 · Reply | Divya knocks back. | Swap who holds the phone. Match the height, framing, and position of the knock from shot 01. Use a different background if you can get it naturally, such as the metro entrance or venue approach. |
+| 03 · Final knock and cover | Archit knocks again and flattens his palm over the lens. | Shoot this with 01. Hold the cover for a full second. Check that the palm fills the frame. |
+| 04 · Live reveal | Archit pulls his hand away to reveal both of you at the show. | Use the front camera in vertical, arm’s length, with both faces in view. Divya can hold the phone while Archit covers the lens. Start covered, uncover in one smooth move, and keep rolling for 6–8 seconds so the shared reaction has time to happen. |
+| 05 · Concert payoff | One steady shot of the stage or crowd where recording is allowed. | Hold for 5–8 seconds with the original sound. If the stage view is poor, hold on the two of you reacting in shot 04. |
+| 06 · Bengaluru ending | One quiet city shot from the ride home. | Grab passing lights, a station exterior, or the two of you walking out. A streetlight in the same part of frame as a stage light gives us a clean cut out of the show. |
 
 ## Cut and sound
 
-- Cut **01 → 02 → 03** on the three visible knocks. Use the same spot in frame for each fist so the reply reads instantly. If the camera misses the tap sound, record the knocks separately on a nearby surface.
-- Join **03 → 04** where the image is fully covered. Cut from palm to palm and let the sound of the show lead by a fraction of a second. Keep shot 04 continuous from the reveal through the friends joining.
-- Let the first strong live moment carry **04 → 05**. If the venue take cannot be recorded during the performance, get the same couple-first reveal in an allowed area, then use the group’s genuine reaction and any permitted ambience.
-- Use **06** after the concert for a short city coda. A stage light can cut to a streetlight in the same part of frame, then the concert sound can give way to street ambience. If the city footage works better as setup, use one shot before the first knock and end on the group.
+- Cut **01 → 02 → 03** on the three knocks. Leave a second before and after each gesture when filming. If the phone misses the taps, record three clean knocks on a nearby surface.
+- Join **03 → 04** on fully covered frames. Bring the live sound in a fraction before the reveal and stay on both faces long enough to catch their reaction. If recording is restricted during the performance, get the same reveal in a permitted area and use the sound captured there.
+- Let the concert carry **04 → 05**. For **06**, cut from stage light to streetlight or let the crowd give way to street ambience. If there’s no strong city shot, end on the two of you.
 
-Shoot the must-have sequence first: **three knock clips and one continuous venue reveal**. Save the original files and audio in one Google Photos album and pass along the album link. Keep source files and review exports in ignored local project storage. Review the cut for three clear knocks, a clean cover-to-reveal join, the couple visible first, the friends visibly joining, and a clear step up into the live sound.
+Prioritize **three knock clips and one covered-to-open selfie with both of you**. Save the original clips and audio to one Google Photos album for editing. Check the cut for three legible knocks, a clean hand-cover join, both faces visible on the reveal, and a clear jump into the live sound.
 
 [FootagePilot reels workflow](../.agents/skills/footagepilot-reels/SKILL.md)
