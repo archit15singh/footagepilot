@@ -1,0 +1,20 @@
+# Where to find reel ideas
+
+Public source capabilities checked on 2026-11-13. Check current account, region, and feature availability on each research pass.
+
+| Source | What to look for | How to use the evidence |
+| --- | --- | --- |
+| [Instagram Reels](https://www.instagram.com/reels/) and [Edits Ideas and templates](https://about.fb.com/news/2026/04/one-year-of-edits-built-for-and-with-creators/) | Saved Reels and audio, recurring shot sequences in recent posts, and editable examples where available. Meta also describes [trending audio and hashtags](https://about.fb.com/news/2023/04/instagram-reels-trending-audio-and-gifts-updates/). | Start with saved reels for the user's taste. Check current posts and account-visible audio for current Instagram signals. Treat the personalized feed as a sample. |
+| [TikTok Creative Center Trends](https://ads.tiktok.com/creative/creativeCenter/trends?LanguageId=1) | Recent videos and hashtags by region, period, and industry where available. Start with Travel for a trip brief. | Watch several videos behind the same signal and look for a repeatable hook, sequence, or sound cue. Record the selected region and time window. |
+| [Pinterest Trends](https://trends.pinterest.com/) and [Pinterest](https://www.pinterest.com/) | Search and save signals, visual references, styling, compositions, color, and the annual Pinterest Predicts forecast. | Turn motifs into framing or lighting instructions. A forecast is a prompt for exploration. |
+| [CapCut template previews](https://www.capcut.com/template-detail/Travel-dump/7510891111175458101) | Playable examples with slots and cut rhythms. Compare a [high-slot-count Travel Dump](https://www.capcut.com/template-detail/Travel-Dump/7473896156209139005) with a simpler structure before estimating how much footage to capture. | Derive shot types, durations, and movement requirements. Label visible use counts as cumulative template adoption. |
+| [YouTube Shorts](https://www.youtube.com/shorts/) and [Ask Studio](https://support.google.com/youtube/answer/16291691) | Shorts by relevant creators and optional channel-specific brainstorming for eligible signed-in accounts. YouTube says it is [phasing out the old Inspiration tab](https://support.google.com/youtube/answer/15575509). | Watch the linked Shorts to validate the actual format. Use Ask Studio ideas as leads. If vidIQ is available, use it to find comparable examples and verify the footage directly. |
+
+## Turn research into a concept
+
+1. Search for the destination or event plus a filmable action, constraint, or format. For a travel reel, try searches such as “night market vendor POV,” “same turn different locations,” and “train window reveal.”
+2. Gather a few relevant examples from independent creators. Record the source, platform, publication or observation date, region and time window when available, and the exact evidence behind a trend claim. Distinguish a repeated format, a popular topic, and a trending sound. If you can verify only one example, call it a reference.
+3. Record the opening, middle, and ending, then inspect the cuts that make the format work. Log the timestamp, incoming and outgoing frames, visual relationship, audible cue, and what the user would have to film. Use manual playback or the [frame and timing workflow](../../../../docs/REFERENCE-TIMING.md). Confirm apparent beat sync by listening when possible.
+4. Adapt the structure to the user's subject and shooting conditions. Confirm which music is available for the intended output. Use recorded ambience, original audio, or appropriately licensed music when the reference track is unavailable for that use.
+
+For example, a threshold reveal can become a travel reel about a city waking up. Capture a dim hotel doorway, a walk into a quiet street, and the moment a stall opens. End with the vendor serving the first order. Keep the movement direction consistent through the doorway and street cuts, then let the sound of the stall opening carry the reveal. This is a shootable concept, with a distinct last image and a sound cue the user can record.
