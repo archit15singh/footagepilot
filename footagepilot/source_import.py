@@ -1,4 +1,4 @@
-"""Import a selected local media archive without trusting its member paths."""
+"""Import selected local videos with generated filenames and provenance."""
 import hashlib,json,math,shutil,zipfile
 from pathlib import Path
 from .__main__ import probe,write
@@ -30,6 +30,62 @@ def media_info(path):
     return {'duration':duration,'coded_dimensions':[width,height],'rotation_degrees':rotation,'display_dimensions':display,'sample_aspect_ratio':video.get('sample_aspect_ratio','unknown'),'has_audio':any(s.get('codec_type')=='audio' for s in meta['streams']),'scope':'Probed stream metadata; display dimensions assume square pixels and quarter-turn rotation. Not full decode or quality selection.'}
 
 
+def write_inventory(output, rows, total_bytes, provenance, scope):
+    assets = [
+        {'id': row['id'], 'path': row['path'],
+         'note': 'Original selected video; inspect source windows and crop suitability before editing.'}
+        for row in rows
+    ]
+    write(output / 'sources.json', {**provenance, 'sources': rows, 'scope': scope})
+    write(output / 'assets.json', {'assets': assets})
+    return {'sources': str(output / 'sources.json'), 'assets': str(output / 'assets.json'),
+            'videos': len(rows), 'bytes': total_bytes, 'status': 'imported-not-quality-reviewed'}
+
+
+def import_sources(inputs, output):
+    paths = [path.resolve() for path in inputs]
+    if len(paths) == 1 and (paths[0].suffix.lower() == '.zip' or zipfile.is_zipfile(paths[0])):
+        return import_archive(paths[0], output)
+    if output.exists():
+        raise ValueError('Use a new source import directory')
+    if not 1 <= len(paths) <= 20 or any(
+        not path.is_file() or path.suffix.lower() not in VIDEO_SUFFIXES for path in paths
+    ):
+        raise ValueError('Expected one readable ZIP or 1–20 selected video files')
+    sizes = [path.stat().st_size for path in paths]
+    if not all(sizes) or sum(sizes) > MAX_BYTES:
+        raise ValueError('Empty or over 4 GiB video selections are unsupported')
+
+    output.mkdir(parents=True)
+    rows = []
+    try:
+        for index, (source, size) in enumerate(zip(paths, sizes), 1):
+            clip_id = f'clip-{index:02d}'
+            target = output / f'{clip_id}{source.suffix.lower()}'
+            fingerprint = digest(source)
+            with source.open('rb') as src, target.open('xb') as dst:
+                remaining = size
+                while remaining:
+                    block = src.read(min(remaining, 1024 * 1024))
+                    if not block:
+                        break
+                    dst.write(block)
+                    remaining -= len(block)
+                if remaining or src.read(1):
+                    raise ValueError('Source file size changed during import')
+            if digest(target) != fingerprint:
+                raise ValueError('Source file changed during import')
+            rows.append({'id': clip_id, 'path': str(target.resolve()),
+                         'original_file': str(source), 'sha256': fingerprint, **media_info(target)})
+        return write_inventory(
+            output, rows, sum(sizes), {},
+            'Local file provenance and media inventory; no automatic semantic selection or creative acceptance',
+        )
+    except Exception as error:
+        write(output / 'failure.json', {'error': str(error), 'status': 'incomplete-import'})
+        raise
+
+
 def import_archive(source,output):
     if output.exists():raise ValueError('Use a new source import directory')
     if not zipfile.is_zipfile(source):raise ValueError('Expected a readable ZIP source archive')
@@ -45,8 +101,9 @@ def import_archive(source,output):
                 if target.stat().st_size!=member.file_size:raise ValueError('Source archive size mismatch')
                 rows.append({'id':f'clip-{i:02d}','path':str(target.resolve()),'original_member':member.filename,'sha256':digest(target),**media_info(target)})
             if digest(source)!=fingerprint:raise ValueError('Source archive changed during import')
-            assets=[{'id':r['id'],'path':r['path'],'note':'Original selected video; inspect source windows and crop suitability before editing.'} for r in rows]
-            write(output/'sources.json',{'archive':str(source.resolve()),'archive_sha256':fingerprint,'sources':rows,'scope':'Local archive provenance and media inventory; no automatic semantic selection or creative acceptance'})
-            write(output/'assets.json',{'assets':assets})
-            return {'sources':str(output/'sources.json'),'assets':str(output/'assets.json'),'videos':len(rows),'bytes':sum(r.file_size for r in members),'status':'imported-not-quality-reviewed'}
+            return write_inventory(
+                output, rows, sum(r.file_size for r in members),
+                {'archive': str(source.resolve()), 'archive_sha256': fingerprint},
+                'Local archive provenance and media inventory; no automatic semantic selection or creative acceptance',
+            )
         except Exception as error:write(output/'failure.json',{'error':str(error),'status':'incomplete-import'});raise
