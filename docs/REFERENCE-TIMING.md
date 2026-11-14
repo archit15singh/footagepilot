@@ -12,7 +12,7 @@ Open **Soundtrack** to inspect the log-frequency spectrograms. Each image covers
 
 Click a point in a spectrogram or use the window start button to seek. Orange markers identify visual change candidates. Blue markers identify audio onsets. In the timing table, expand **Frames** to see the decoded frame before, at and after a candidate. Compare those images with the measured offsets before tying a cut to the soundtrack. The original video remains available for listening.
 
-The images use the first audio stream mixed to mono at 24 kHz. The audio timeline pads gaps with silence. The plots help locate sound changes. Source attribution, lyrics and musical structure require additional evidence. See the [audio model research](RESEARCH-REFERENCE-AUDIO.md) for candidate listening approaches.
+The images use the first audio stream mixed to mono at 24 kHz. The audio timeline pads gaps with silence. The plots help locate sound changes. Source attribution, lyrics and musical structure require additional evidence. Use `reference-listen` with a local audio-capable server for a description of a short excerpt. See the [local listening pilot and setup](RESEARCH-REFERENCE-AUDIO.md#local-listening-pilot).
 
 `analysis.json` version 2 includes:
 

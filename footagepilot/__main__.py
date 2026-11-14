@@ -155,6 +155,12 @@ def main():
     production = commands.add_parser('produce'); production.add_argument('project',type=Path); production.add_argument('--brief',required=True); production.add_argument('--skip-cleanup',action='store_true'); production.add_argument('--engine',action='append',choices=('remotion','hyperframes'),help='Render only this engine; repeat for both (default: both)')
     planner = commands.add_parser('plan'); planner.add_argument('project',type=Path); planner.add_argument('--brief',required=True)
     reference=commands.add_parser('reference');reference.add_argument('source');reference.add_argument('--output',type=Path,required=True);reference.add_argument('--interval',type=float,default=1.);reference.add_argument('--scene-threshold',type=float,default=.28);reference.add_argument('--max-duration',type=float,default=180.);reference.add_argument('--browser',choices=('brave','chrome','firefox','edge'))
+    audio_review = commands.add_parser('reference-listen')
+    audio_review.add_argument('analysis', type=Path)
+    audio_review.add_argument('--start', type=float, required=True)
+    audio_review.add_argument('--end', type=float, required=True)
+    audio_review.add_argument('--port', type=int, default=8080)
+    audio_review.add_argument('--output', type=Path, required=True)
     cues=commands.add_parser('music-cues');cues.add_argument('source',type=Path);cues.add_argument('--output',type=Path,required=True);cues.add_argument('--max-duration',type=float,default=30.);cues.add_argument('--min-gap',type=float,default=.3)
     edits=commands.add_parser('edits-render');edits.add_argument('manifest',type=Path);edits.add_argument('--output',type=Path,required=True);edits.add_argument('--token-file',type=Path)
     knowledge=commands.add_parser('learn-check');knowledge.add_argument('--sources',type=Path,default=Path('docs/edits/sources.json'));knowledge.add_argument('--fetch',action='store_true')
@@ -230,6 +236,10 @@ def main():
         elif args.command == 'reference':
             from .reference import analyze_reference
             print(json.dumps(analyze_reference(args.source,args.output.resolve(),args.interval,args.scene_threshold,args.max_duration,args.browser),indent=2))
+        elif args.command == 'reference-listen':
+            from .reference_audio import listen
+            note = listen(args.analysis, args.output, args.start, args.end, args.port)
+            print(json.dumps(note, indent=2))
         elif args.command == 'serve':
             from .server import serve
             serve(args.directory, args.port)
