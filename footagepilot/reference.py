@@ -17,8 +17,8 @@ from .__main__ import binary, probe, write
 from .reference_timing import decoded_frames, estimate_pulse, frame_selection, transition_timing
 
 
-def execute(args, timeout=180):
-    result = subprocess.run([str(x) for x in args], capture_output=True, timeout=timeout)
+def execute(args, timeout=180, input_data=None):
+    result = subprocess.run([str(x) for x in args], input=input_data, capture_output=True, timeout=timeout)
     if result.returncode:
         raise ValueError(result.stderr.decode(errors='replace')[-3000:])
     return result
@@ -55,14 +55,92 @@ def cut_alignment(cuts, events):
              'offset_seconds':round(min((abs(e['time']-t) for e in events),default=math.inf),4) if events else None} for t in cuts]
 
 
+def render_spectrograms(ff, media, output, duration):
+    """Render bounded windows on the same zero-based clock as the onset analysis."""
+    rate = 24000
+    pcm = execute([
+        ff, '-v', 'error', '-i', media, '-map', '0:a:0',
+        '-af', f'aresample={rate}:async=1:first_pts=0', '-ac', '1',
+        '-t', str(duration), '-f', 's16le', '-',
+    ]).stdout
+    directory = output / 'spectrograms'
+    directory.mkdir()
+    windows = []
+    for start in range(0, math.ceil(duration), 8):
+        end = min(start + 8, duration)
+        size = (round(end * rate) - start * rate) * 2
+        if size <= 0:
+            break
+        chunk = pcm[start * rate * 2:start * rate * 2 + size].ljust(size, b'\0')
+        filename = f'spectrograms/{len(windows):03d}.png'
+        execute([
+            ff, '-v', 'error', '-f', 's16le', '-ar', str(rate), '-ac', '1',
+            '-i', 'pipe:0', '-lavfi',
+            'showspectrumpic=s=960x256:fscale=log:color=intensity:drange=75:legend=0',
+            '-frames:v', '1', output / filename,
+        ], input_data=chunk)
+        if not (output / filename).is_file():
+            raise ValueError(f'No spectrogram for {start}–{end} seconds')
+        windows.append({'file': filename, 'start': start, 'end': end})
+    return windows
+
+
+def soundtrack_report(audio, transitions):
+    windows = audio.get('spectrograms', [])
+    if not windows:
+        return '<h2>Soundtrack</h2><p>No audio stream.</p>' if not audio['present'] else ''
+    sections = [
+        '<h2>Soundtrack</h2><p>Log-frequency spectrograms show low frequencies at the bottom. '
+        'Orange lines mark picture changes and blue lines mark detected audio onsets. '
+        'Click the plot to seek or use the window start button. '
+        'Use the plot to inspect timing and listen to identify the sound.</p>'
+    ]
+    for window in windows:
+        start, end = window['start'], window['end']
+        midpoint = (start + end) / 2
+        lines = []
+        for times, color in (([event['time'] for event in audio['onsets']], '#a8d7ff'),
+                             ([cut['time'] for cut in transitions], '#ffbb79')):
+            for time in times:
+                if start <= time < end:
+                    x = (time - start) / (end - start) * 1000
+                    lines.append(f'<line x1="{x:.4f}" x2="{x:.4f}" y1="0" y2="100" stroke="{color}"/>')
+        sections.append(
+            f'<figure class="spectrum"><div class="spectrum-plot" data-start="{start}" data-end="{end}">'
+            f'<img loading="lazy" src="{window["file"]}" alt="Log-frequency spectrogram from {start:.2f} to {end:.2f} seconds">'
+            '<svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true">'
+            + ''.join(lines) + '</svg></div>'
+            f'<figcaption><button data-time="{start}">Start at {start:.2f}s</button>'
+            f'<span>{midpoint:.2f}s</span><span>{end:.2f}s</span></figcaption></figure>'
+        )
+    return ''.join(sections)
+
+
 def make_report(root, data):
     # Only generated numeric timestamps and escaped strings enter markup.
     tiles=''.join(f'<button class="frame" data-time="{f["time"]}"><img loading="lazy" src="{f["file"]}" alt="Frame at {f["time"]:.2f} seconds"><span>{f["time"]:.2f}s · {html.escape(f["kind"])}</span></button>' for f in data['frames'])
     def offset(value):
         return '—' if value is None else f'{value*1000:+.0f} ms'
-    rows=''.join(f'<tr><td><button data-time="{c["time"]}">{c["time"]:.3f}s</button></td><td>{c["frame_index"]+1}</td>'
-                 f'<td>{offset(c["cut_minus_onset_seconds"])}</td><td>{offset(c["cut_minus_pulse_seconds"])}</td></tr>'
-                 for c in data['transitions'])
+    frames_by_index = {frame['frame_index']: frame for frame in data['frames']}
+    rows = []
+    for cut in data['transitions']:
+        index = cut['frame_index']
+        neighbors = []
+        for i, label in ((index - 1, 'Before'), (index, 'Change'), (index + 1, 'After')):
+            frame = frames_by_index.get(i)
+            if frame:
+                neighbors.append(
+                    f'<button class="frame" data-time="{frame["time"]}">'
+                    f'<img loading="lazy" src="{frame["file"]}" alt="{label}, frame {i + 1}">'
+                    f'<span>{label} · {frame["time"]:.3f}s</span></button>'
+                )
+        rows.append(
+            f'<tr><td><button data-time="{cut["time"]}">{cut["time"]:.3f}s</button></td>'
+            f'<td>{index + 1}</td><td>{offset(cut["cut_minus_onset_seconds"])}</td>'
+            f'<td>{offset(cut["cut_minus_pulse_seconds"])}</td>'
+            '<td><details><summary>Frames</summary><div class="neighbors">'
+            + ''.join(neighbors) + '</div></details></td></tr>'
+        )
     timeline=data['frame_timeline']
     audio=data['audio'];energy=audio['energy'];maximum=max(energy,default=1) or 1;duration=data['duration']
     points=' '.join(f'{i*.01/duration*1000:.2f},{100-v/maximum*90:.2f}' for i,v in enumerate(energy))
@@ -73,11 +151,12 @@ def make_report(root, data):
     pulse=audio['pulse']
     pulses=''.join(f'<circle cx="{t/duration*1000:.2f}" cy="85" r="3" fill="#e6afff"/>' for t in pulse['times'])
     pulse_label=f'Estimated pulse {pulse["bpm"]} BPM' if pulse['status']=='estimated' else 'No reliable constant pulse'
-    body='''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FootagePilot reference analysis</title><style>:root{color-scheme:dark;font:16px/1.5 system-ui;background:#101512;color:#e9eee9}body{max-width:1200px;margin:30px auto;padding:0 20px}video{width:100%;max-height:550px;background:#000}h1{font-size:36px}button,a{color:#d6eeb9}button{background:#243126;border:1px solid #52634a;border-radius:6px;padding:8px;cursor:pointer}button:focus-visible{outline:3px solid #fff}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.frame{padding:0;overflow:hidden}.frame img{display:block;width:100%;height:210px;object-fit:contain;background:#080a08}.frame span{display:block;padding:5px;font-size:12px}svg{width:100%;height:130px;background:#1d261f}table{border-collapse:collapse}td,th{padding:8px;border-bottom:1px solid #435342;text-align:left}.muted{color:#b3c0b4}details{margin:25px 0}</style><h1>Reference → editing evidence</h1><p class="muted">Local media · Scene changes are candidates · Audio peaks can include music, speech and effects</p><video id="video" controls preload="metadata" src="media.mp4"></video>'''
+    body='''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FootagePilot reference analysis</title><style>:root{color-scheme:dark;font:16px/1.5 system-ui;background:#101512;color:#e9eee9}body{max-width:1200px;margin:30px auto;padding:0 20px}video{width:100%;max-height:550px;background:#000}h1{font-size:36px}button,a{color:#d6eeb9}button{background:#243126;border:1px solid #52634a;border-radius:6px;padding:8px;cursor:pointer}button:focus-visible{outline:3px solid #fff}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.frame{padding:0;overflow:hidden}.frame img{display:block;width:100%;height:210px;object-fit:contain;background:#080a08}.frame span{display:block;padding:5px;font-size:12px}svg{width:100%;height:130px;background:#1d261f}table{border-collapse:collapse}td,th{padding:8px;border-bottom:1px solid #435342;text-align:left}.muted{color:#b3c0b4}details{margin:25px 0}.spectrum{margin:18px 0}.spectrum-plot{position:relative;cursor:crosshair}.spectrum-plot img{width:100%;display:block}.spectrum-plot svg{position:absolute;inset:0;width:100%;height:100%;background:transparent;pointer-events:none}.spectrum figcaption{display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center}.spectrum figcaption button{justify-self:start}.spectrum figcaption span{text-align:center}.spectrum figcaption span:last-child{text-align:right}.neighbors{display:flex;flex-wrap:wrap;gap:4px}.neighbors img{height:70px;width:80px}td details{margin:0}</style><h1>Reference → editing evidence</h1><p class="muted">Local media · Scene changes are candidates · Audio peaks can include music, speech and effects</p><video id="video" controls preload="metadata" src="media.mp4"></video>'''
     body+=f'<p>{duration:.2f}s · {data["width"]}×{data["height"]} · {len(timeline)} decoded frames · {pulse_label}</p>'
     body+='<p><button id="prev">Previous frame</button> <button id="next">Next frame</button> <output id="frame-status" aria-live="polite"></output></p>'
     body+='<h2>Timing map</h2><p>Orange lines mark change candidates. The amber curve shows frame difference. Blue dots mark audio onsets, purple dots mark estimated pulses, and the green curve shows RMS energy.</p><svg id="map" viewBox="0 0 1000 100" preserveAspectRatio="none" role="img" aria-label="Frame changes and audio timing"><polyline fill="none" stroke="#a5c985" points="'+points+'"/><polyline fill="none" stroke="#bb8e4f" points="'+changes+'"/>'+marks+onsets+pulses+'</svg>'
-    body+='<h2>Visual changes and audio timing</h2><p>Positive offsets mean the frame change follows the audio marker. Review neighboring frames and listen before attributing a change to music.</p><table><tr><th>Visual change</th><th>Frame</th><th>From onset</th><th>From pulse</th></tr>'+rows+'</table>'
+    body+=soundtrack_report(audio, data['transitions'])
+    body+='<h2>Visual changes and audio timing</h2><p>Positive offsets mean the frame change follows the audio marker. Review neighboring frames and listen before attributing a change to music.</p><table><tr><th>Visual change</th><th>Frame</th><th>From onset</th><th>From pulse</th><th>Neighbors</th></tr>'+''.join(rows)+'</table>'
     body+='<h2>Frame samples</h2><p>Regular samples and neighboring decoded frames around change candidates.</p><div class="grid">'+tiles+'</div><p><a href="analysis.json">Machine-readable analysis</a> · <a href="contact.jpg">Overview contact sheet</a></p>'
     body+='<script id="timeline" type="application/json">'+json.dumps([row['time'] for row in timeline],separators=(',',':'))+'</script>'
     body+='''<script>
@@ -123,6 +202,12 @@ document.querySelector('#map').onclick = e => {
     const bounds = e.currentTarget.getBoundingClientRect();
     if (v.readyState) seek((e.clientX - bounds.left) / bounds.width * v.duration);
 };
+document.querySelectorAll('.spectrum-plot').forEach(plot => plot.onclick = e => {
+    const bounds = plot.getBoundingClientRect();
+    const start = Number(plot.dataset.start);
+    const fraction = Math.max(0, Math.min(1, (e.clientX - bounds.left) / bounds.width));
+    if (v.readyState) seek(start + fraction * (Number(plot.dataset.end) - start));
+});
 showFrame(0);
 </script></html>'''
     (root/'index.html').write_text(body)
@@ -168,6 +253,7 @@ def analyze_reference(source, output, interval=1., threshold=.28, max_duration=1
             samples=array.array('f');samples.frombytes(raw)
             if sys.byteorder!='little':samples.byteswap()
             values,onsets=audio_events(samples);audio.update(energy=[round(x,5) for x in values],onsets=onsets)
+            audio['spectrograms'] = render_spectrograms(ff, media, output, duration)
         audio['pulse']=estimate_pulse(audio['onsets'])
         transitions=transition_timing(cuts,timeline,audio['onsets'],audio['pulse'])
         timestamps=[row['time'] for row in timeline]
