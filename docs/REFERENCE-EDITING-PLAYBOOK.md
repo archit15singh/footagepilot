@@ -34,12 +34,14 @@ Use this when planning an original edit from a reference. Identify the relations
 
 | Observation | Rebuild implication |
 | --- | --- |
-| In a mountain montage, the picture holds for about 3 s before a run of changes roughly 0.71 s apart. All 12 visual-change candidates in this example lie within 80 ms of an RMS onset. | Try a sustained opening, a short run on repeated musical accents and a longer closing image. Confirm the actual accents against your track. |
+| In a mountain montage, the picture holds for about 3 s before a run of changes roughly 0.71 s apart. On the shared timeline, nine of 12 candidates are within 50 ms of an RMS onset. The median is two after circularly shifting the onset series 16 times. | Try a sustained opening, a short run on repeated musical accents and a longer closing image. Confirm the actual accents against your track. |
 | In a layered room portrait, low-band peaks repeat about 0.64 s apart while a single frame accumulates several panels. The whole-frame detector registered zero candidate changes. | Time changes by panel, then inspect each crop around the cue. A sequence can have sound-led changes without any full-frame cuts. |
 | In a rapid vehicle montage, recognizable wheels stay in roughly the same place across visual changes about 0.1 s apart. Visual changes outnumber the detected RMS events. | Match subject geometry before increasing cut rate. Leave some visual subdivisions independent of audible transients. |
 | In a perspective-reveal clip, the setup switches to the finished view around 4.42 s and the low-band energy rises around 4.35 s. The finished angle then holds. | Test whether the reveal reads better slightly before, at or after a cue. This measured offset gives one example to compare. |
 
-The offsets describe the delivered mixes. Listening is needed to distinguish music, speech, an effect or coincident energy at the cue.
+For a dense sequence, compare the measured match count with a few shifts of the same onset series. If a similar count survives those shifts, annotate only the individual cues supported by the picture and audio evidence. An action recap had 18 of 67 candidates within 50 ms, compared with a shifted median of 21.5. Its visible acceleration remains a useful editing pattern. The offset measurements describe the delivered mixes. Listening is needed to distinguish music, speech, effects and coincident energy.
+
+Check localized changes at their actual boundaries. The whole-frame detector missed a spin match that passed from a blurred building outline to a clear figure against the sky. An animated return to an opening composition produced several detections in less than half a second. For reconstruction, mark the spin join and annotate the animated return as one effect sequence with several visual states.
 
 ## Keep the grade and tutorial editable
 
