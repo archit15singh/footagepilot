@@ -54,6 +54,19 @@ class ReferenceTimingTests(unittest.TestCase):
             self.assertEqual([row['time'] for row in data['frame_timeline'][:5]], [0,.04,.08,.16,.2])
             self.assertEqual(data['audio']['pulse']['bpm'], 120)
             self.assertEqual(data['audio']['onsets'][0]['time'], .2)
+            self.assertEqual(data['audio']['spectrograms'], [
+                {'file': 'spectrograms/000.png', 'start': 0, 'end': 6.0}
+            ])
+            plot = execute([ff, '-v', 'error', '-i', output/'spectrograms/000.png',
+                            '-vf', 'format=gray', '-f', 'rawvideo', '-']).stdout
+            self.assertEqual(len(plot), 960 * 256)
+            # A delayed tone must appear close to 0.2 s on the image clock.
+            first_bright_column = next(x for x in range(960)
+                                       if max(plot[x::960]) > 48)
+            self.assertAlmostEqual(first_bright_column * 6 / 960, .2, delta=.05)
+            report = (output/'index.html').read_text()
+            self.assertIn('data-start="0" data-end="6.0"', report)
+            self.assertIn('alt="Before, frame', report)
             self.assertEqual([row['cut_minus_pulse_seconds'] for row in data['transitions']], [0,.06,0])
             evidence = select_frames(data, output)
             timing = timing_for_frames(data, evidence)
