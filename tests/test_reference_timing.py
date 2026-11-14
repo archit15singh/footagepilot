@@ -1,10 +1,15 @@
+import base64
+import io
 import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
+import wave
 
 from footagepilot.__main__ import binary
 from footagepilot.reference import analyze_reference, execute
+from footagepilot.reference_audio import listen
 from footagepilot.reference_evidence import select_frames, timing_for_frames
 from footagepilot.reference_timing import decoded_frames, estimate_pulse
 
@@ -82,3 +87,20 @@ class ReferenceTimingTests(unittest.TestCase):
                           for frame in neighbors]
                 self.assertGreater(abs(levels[0]-levels[1]), 150)
                 self.assertAlmostEqual(levels[1], levels[2], delta=5)
+
+            reply = {'model': 'fixture', 'choices': [{'message': {'content': 'A pulse.'}}]}
+            with patch('footagepilot.reference_audio.build_opener') as opener:
+                opener.return_value.open.return_value = io.BytesIO(json.dumps(reply).encode())
+                note = listen(output/'analysis.json', root/'note.json', .1, .3)
+                request = opener.return_value.open.call_args.args[0]
+            self.assertEqual(request.full_url, 'http://127.0.0.1:8080/v1/chat/completions')
+            audio_part = json.loads(request.data)['messages'][0]['content'][1]
+            wav = base64.b64decode(audio_part['input_audio']['data'])
+            with wave.open(io.BytesIO(wav)) as excerpt:
+                self.assertEqual(excerpt.getframerate(), 16000)
+                self.assertEqual(excerpt.getnframes(), 3200)
+                self.assertEqual(excerpt.readframes(1200), bytes(2400))
+                self.assertNotEqual(excerpt.readframes(800), bytes(1600))
+            self.assertEqual(note['status'], 'model_hypothesis')
+            self.assertEqual(note['source_sha256'], data['source_sha256'])
+            self.assertEqual(note, json.loads((root/'note.json').read_text()))

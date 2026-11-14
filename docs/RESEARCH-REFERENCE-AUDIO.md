@@ -4,7 +4,7 @@ Research checked 14 November 2026. The goal is to interpret music, speech and so
 
 ## First local pilot
 
-**Run Qwen2.5-Omni-3B with llama.cpp and Beat This! on CPU.** llama.cpp lists the Qwen model as supporting audio and vision inputs. Its Q4_K_M weights are about 2.10 GB and the Q8 multimodal projector is about 1.54 GB. Their combined file size makes this a plausible pilot on the available 16 GB Mac. Runtime memory, latency and output quality on this machine remain unmeasured. Supply WAV excerpts and separate timestamped frames. [llama.cpp multimodal support](https://github.com/ggml-org/llama.cpp/blob/master/docs/multimodal.md), [GGUF files](https://huggingface.co/ggml-org/Qwen2.5-Omni-3B-GGUF/tree/main), [Qwen model documentation](https://github.com/QwenLM/Qwen2.5-Omni)
+**Run Qwen2.5-Omni-3B with llama.cpp and Beat This! on CPU.** llama.cpp lists the Qwen model as supporting audio and vision inputs. Its Q4_K_M weights are about 2.10 GB and the Q8 multimodal projector is about 1.54 GB. Their combined file size makes this a plausible pilot on the available 16 GB Mac. The local listening pilot below verifies WAV ingestion on this machine. Separate frame inputs and Beat This! remain follow-up evaluations. [llama.cpp multimodal support](https://github.com/ggml-org/llama.cpp/blob/master/docs/multimodal.md), [GGUF files](https://huggingface.co/ggml-org/Qwen2.5-Omni-3B-GGUF/tree/main), [Qwen model documentation](https://github.com/QwenLM/Qwen2.5-Omni)
 
 Beat This! takes audio and returns separate beat and downbeat estimates, with a documented CPU execution path. Align both streams of estimates to the existing frame presentation timestamps and retain their signed differences. Keep audio-model descriptions such as an instrumental build, vocal entry or impact as hypotheses tied to bounded audio excerpts. [Beat This! inference](https://github.com/CPJKU/beat_this#inference), [research paper](https://arxiv.org/abs/2407.21658), [FootagePilot timing](REFERENCE-TIMING.md)
 
@@ -28,4 +28,21 @@ At Google's documented 32 audio tokens per second and Flash-Lite's paid rate of 
 3. Score cue classification and timing separately. At 30 fps, two frames are about 67 ms. Report both missed cues and false positives, including beat guesses in silence. A convincing explanation with an incorrect time is still a timing error.
 4. Check one representative reel of each type after the controls, then expand. Let the existing frame ledger and beat tracker measure timing. Use the audio model to label what the cue may be, preserving uncertainty where sources overlap.
 
-Model ingestion is documented above. The proposed model runs and performance comparisons have yet to be tested on the reel set.
+## Local listening pilot
+
+A 16 GB Apple Silicon Mac ran llama.cpp b12383 with Qwen2.5-Omni-3B Q4_K_M and its Q8_0 projector. The server used one slot, a 4096-token context, and CPU projector execution. Keep the server on loopback and use a local API key when the server is running. [Pinned runtime](https://github.com/ggml-org/llama.cpp/releases/tag/b12383), [OpenAI-compatible audio request format](https://github.com/ggml-org/llama.cpp/blob/b12383/tools/server/README.md)
+
+```sh
+llama-server -m Qwen2.5-Omni-3B-Q4_K_M.gguf \
+  --mmproj mmproj-Qwen2.5-Omni-3B-Q8_0.gguf \
+  --no-mmproj-offload --host 127.0.0.1 --port 8080 -c 4096 --parallel 1 \
+  --api-key "$FOOTAGEPILOT_AUDIO_API_KEY"
+
+# In a second shell with the same key:
+python3 -m footagepilot reference-listen projects/reference/analysis.json \
+  --start 2.5 --end 8.5 --output projects/audio-note.json
+```
+
+The command verifies the source hash, extracts up to 15 seconds of mono PCM on the reference clock and sends a WAV to the local server. The JSON retains the excerpt bounds, source and audio hashes, the server's model name and its description. Treat the description as a hypothesis. Compare it with the spectrogram, frame timestamps and source material before using it to explain a cut.
+
+The pilot transcribed a generated spoken sentence and recognized digital silence. A synthetic mix had repeating low pulses, sustained harmonics, a noise burst and a quiet tail. The model recognized the pulse and missed the other events. A real soundtrack excerpt from 2.5–8.5 s was recognized as music. In a second reel the model reported music without singing, while the local speech-recognition output contained candidate sung words. One excerpt exceeded the output limit. These outcomes leave detailed event coverage and source attribution open. Use the deterministic cue ledger to place events and retain uncertain source labels. [Reference timing](REFERENCE-TIMING.md)
