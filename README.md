@@ -44,7 +44,7 @@ Checks: `python3 -m unittest discover -s tests -v`. Real-footage reproduction is
 
 Use Resolve for the editable master and Instagram Edits for a separate social cut when an Edits tool serves the brief. See the [editor selection and handoff guide](docs/EDITOR-WORKFLOW.md).
 
-Start with the [reference editorial workflow](docs/REFERENCE-EDITORIAL.md) to turn a reel into a directing idea and check that the footage supports it. Read the [Edits guide and official tutorial map](docs/edits/GUIDE.md) and [rebuild plan](docs/REFERENCE-PLAN.md). Native Edits for Mac can be controlled through its authenticated local MCP; computer use handles saved-post browsing, setup and file-picker access.
+Start with the [reference editorial workflow](docs/REFERENCE-EDITORIAL.md) to turn a reel into a directing idea and check that the footage supports it. Use the [short-form editing playbook](docs/REFERENCE-EDITING-PLAYBOOK.md) for composition, audio cues, grade and rebuild exercises. Read the [Edits guide and official tutorial map](docs/edits/GUIDE.md) and [rebuild plan](docs/REFERENCE-PLAN.md). Native Edits for Mac can be controlled through its authenticated local MCP; computer use handles saved-post browsing, setup and file-picker access.
 
 ```sh
 # Requires yt-dlp (or FOOTAGEPILOT_YT_DLP), FFmpeg and ffprobe.

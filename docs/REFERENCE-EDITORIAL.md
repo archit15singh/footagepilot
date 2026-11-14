@@ -50,6 +50,8 @@ A useful note per sequence is: **idea, anchor, setup shot, payoff shot, intended
 | Waterfront, architecture and night photos | Build around a visible motif, such as reflections or a repeated horizon line, and choose a closing frame that pays it off. | Compare the candidates side by side. Check that the motif reads at phone size. |
 | New footage at several landmarks | Film a repeated turn, pose or camera move with consistent framing, direction and usable start/end handles. | Check the pairs on location. The reviewed archive has no verified matching set for the landmark gesture idea. |
 
+For more patterns in panel layouts, title timing, grading and sound, see the [short-form editing playbook](REFERENCE-EDITING-PLAYBOOK.md).
+
 ## Evidence and local retention
 
 The study covered all 30 visible reels across two collections. Twenty-eight full local copies were measured and reviewed with timed frame samples. Two additional reels were inspected through timestamped frames in signed-in playback. One local copy had no audio track. The constant-pulse estimator returned a candidate in two local copies. Proximity to an audio transient does not establish beat sync or artistic intent. A scene detector can fire on flashes and overlay changes as well as cuts.
