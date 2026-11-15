@@ -172,6 +172,14 @@ def main():
     cues=commands.add_parser('music-cues');cues.add_argument('source',type=Path);cues.add_argument('--output',type=Path,required=True);cues.add_argument('--max-duration',type=float,default=30.);cues.add_argument('--min-gap',type=float,default=.3)
     edits=commands.add_parser('edits-render');edits.add_argument('manifest',type=Path);edits.add_argument('--output',type=Path,required=True);edits.add_argument('--token-file',type=Path)
     knowledge=commands.add_parser('learn-check');knowledge.add_argument('--sources',type=Path,default=Path('docs/edits/sources.json'));knowledge.add_argument('--fetch',action='store_true')
+    learn_record = commands.add_parser('learn-record', help='Record an editing lesson with comparison evidence')
+    learn_record.add_argument('lesson', type=Path)
+    learn_record.add_argument('--comparison', type=Path, required=True)
+    learn_record.add_argument('--library', type=Path, default=Path('projects/learning'))
+    learn_recall = commands.add_parser('learn-recall', help='Retrieve past editing lessons by topic')
+    learn_recall.add_argument('--library', type=Path, default=Path('projects/learning'))
+    learn_recall.add_argument('--topic')
+    learn_recall.add_argument('--preferred-only', action='store_true')
     compare=commands.add_parser('compare-edits');compare.add_argument('baseline',type=Path);compare.add_argument('candidate',type=Path);compare.add_argument('--output',type=Path,required=True);compare.add_argument('--verdict',choices=('unreviewed','better','worse','tie'),default='unreviewed');compare.add_argument('--notes',default='')
     et=commands.add_parser('edits-tools');et.add_argument('--token-file',type=Path);et.add_argument('--output',type=Path,required=True)
     review=commands.add_parser('review-reference');review.add_argument('spec',type=Path);review.add_argument('candidate',type=Path);review.add_argument('--output',type=Path,required=True)
@@ -235,6 +243,12 @@ def main():
         elif args.command == 'learn-check':
             from .learning import check_sources
             result=check_sources(args.sources,args.fetch);print(json.dumps(result,indent=2));return 2 if result['needs_research'] else 0
+        elif args.command == 'learn-record':
+            from .lessons import record_lesson
+            print(json.dumps(record_lesson(args.lesson, args.comparison, args.library), indent=2))
+        elif args.command == 'learn-recall':
+            from .lessons import recall_lessons
+            print(json.dumps(recall_lessons(args.library, args.topic, args.preferred_only), indent=2))
         elif args.command == 'compare-edits':
             from .learning import compare_edits
             print(json.dumps(compare_edits(args.baseline,args.candidate,args.output,args.verdict,args.notes),indent=2))

@@ -9,6 +9,8 @@ Follow the stage the user asks for. For new footage, develop the concept and sho
 
 For an incremental review of Video Ideas and Tutorials, use [saved reel delta](../footagepilot-saved-reel-delta/SKILL.md).
 
+When applying a technique from an earlier experiment or learning a new one, use the [editing lesson library](../../../docs/EDITING-LEARNING.md) to retrieve relevant trials or record a tested result.
+
 ## Develop the concept
 
 - Establish the subject, audience, occasion, and any people or moments that must appear. Use the user's saved references for taste and current public examples for format or music research.
