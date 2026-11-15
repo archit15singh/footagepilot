@@ -161,6 +161,14 @@ def main():
     audio_review.add_argument('--end', type=float, required=True)
     audio_review.add_argument('--port', type=int, default=8080)
     audio_review.add_argument('--output', type=Path, required=True)
+    saved_delta = commands.add_parser('saved-reel-delta')
+    saved_delta.add_argument('baseline', type=Path)
+    saved_delta.add_argument('snapshot', type=Path)
+    saved_advance = commands.add_parser('saved-reel-advance')
+    saved_advance.add_argument('baseline', type=Path)
+    saved_advance.add_argument('plan', type=Path)
+    saved_advance.add_argument('--notes-dir', type=Path)
+    saved_advance.add_argument('--reviewed', nargs='+', default=[])
     cues=commands.add_parser('music-cues');cues.add_argument('source',type=Path);cues.add_argument('--output',type=Path,required=True);cues.add_argument('--max-duration',type=float,default=30.);cues.add_argument('--min-gap',type=float,default=.3)
     edits=commands.add_parser('edits-render');edits.add_argument('manifest',type=Path);edits.add_argument('--output',type=Path,required=True);edits.add_argument('--token-file',type=Path)
     knowledge=commands.add_parser('learn-check');knowledge.add_argument('--sources',type=Path,default=Path('docs/edits/sources.json'));knowledge.add_argument('--fetch',action='store_true')
@@ -240,6 +248,17 @@ def main():
             from .reference_audio import listen
             note = listen(args.analysis, args.output, args.start, args.end, args.port)
             print(json.dumps(note, indent=2))
+        elif args.command == 'saved-reel-delta':
+            from .saved_reels import plan_saved_reels
+            print(json.dumps(plan_saved_reels(args.baseline, args.snapshot), indent=2))
+        elif args.command == 'saved-reel-advance':
+            from .saved_reels import advance_saved_reels
+            if args.reviewed and args.notes_dir is None:
+                raise ValueError('--reviewed requires --notes-dir')
+            state = advance_saved_reels(
+                args.baseline, json.loads(args.plan.read_text()), args.reviewed, args.notes_dir,
+            )
+            print(json.dumps(state, indent=2))
         elif args.command == 'serve':
             from .server import serve
             serve(args.directory, args.port)
