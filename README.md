@@ -57,7 +57,7 @@ python3 -m footagepilot compare-edits projects/baseline.mp4 projects/recreation-
 
 Reference reports offer frame-by-frame playback controls, seekable soundtrack spectrograms, neighboring cut frames, and signed offsets from visual changes to audio onsets or a supported pulse estimate. The visual planner receives timing evidence for its cited frames. See [reference timing and verified runs](docs/REFERENCE-TIMING.md). Saved collections are selected through the signed-in browser, not scraped by the CLI. Optional `reference --browser brave` uses the existing authenticated browser session; no cookie file is exported. Keep references, personal media and authentication local. See [recreation manifest](examples/edits-recreation.json) for the executable format; replace its paths with your own imported media.
 
-`learn-check` exits 2 when research is stale, changed or unavailable. It never silently renews verified dates. `compare-edits` retains hashes and technical checks; only an explicit `--verdict better --notes 'reason'` records a preferred candidate. These are evidence/feedback loops, not model training or unattended policy/code changes.
+`learn-check` exits 2 when research is stale, changed or unavailable. It never silently renews verified dates. `compare-edits` retains hashes and technical checks; only an explicit `--verdict better --notes 'reason'` records a preferred candidate. For a reusable learning loop, use [the editing lesson library](docs/EDITING-LEARNING.md) to record a comparison with its conditions and retrieve earlier experiments before the next edit.
 
 For tutorial research and editing experiments, see the [YouTube editing research notes](docs/RESEARCH-YOUTUBE-EDITING.md).
 
