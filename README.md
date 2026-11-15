@@ -59,6 +59,8 @@ Reference reports offer frame-by-frame playback controls, seekable soundtrack sp
 
 `learn-check` exits 2 when research is stale, changed or unavailable. It never silently renews verified dates. `compare-edits` retains hashes and technical checks; only an explicit `--verdict better --notes 'reason'` records a preferred candidate. These are evidence/feedback loops, not model training or unattended policy/code changes.
 
+For tutorial research and editing experiments, see the [YouTube editing research notes](docs/RESEARCH-YOUTUBE-EDITING.md).
+
 For changes in saved Instagram collections, use the [saved reel delta skill](.agents/skills/footagepilot-saved-reel-delta/SKILL.md) to compare Video Ideas and Tutorials against a private baseline and review the new or unfinished reels.
 
 For reference-conditioned planning, use [visual-spec.json](examples/visual-spec.json): `visual-plan <spec> --output projects/new-plan` produces a validated native-edit manifest. `recreate <spec> --token-file /private/path/token --output projects/new-run` chains research freshness, optional Instagram download/analysis (`reference_url`), visual Codex planning and native export with a retained stage ledger. `inspiration-open <spec>` opens its private `saved_collection_url` in Brave for computer-use selection. This workflow preserves an unreviewed preference state until the user evaluates the result.
