@@ -7,6 +7,8 @@ description: Develop and make reference-driven reels with FootagePilot. Use for 
 
 Follow the stage the user asks for. For new footage, develop the concept and shooting brief first. When the user already has an album, inventory it and choose a concept the footage can carry. Read the [inspiration guide](references/inspiration.md) for research and the [tool guide](references/tools.md) for intake, editing, and delivery.
 
+For an incremental review of Video Ideas and Tutorials, use [saved reel delta](../footagepilot-saved-reel-delta/SKILL.md).
+
 ## Develop the concept
 
 - Establish the subject, audience, occasion, and any people or moments that must appear. Use the user's saved references for taste and current public examples for format or music research.
