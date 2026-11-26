@@ -154,11 +154,15 @@ def main():
         sub = commands.add_parser(name); sub.add_argument('project', type=Path)
     production = commands.add_parser('produce'); production.add_argument('project',type=Path); production.add_argument('--brief',required=True); production.add_argument('--skip-cleanup',action='store_true'); production.add_argument('--engine',action='append',choices=('remotion','hyperframes'),help='Render only this engine; repeat for both (default: both)')
     planner = commands.add_parser('plan'); planner.add_argument('project',type=Path); planner.add_argument('--brief',required=True)
+    photos=commands.add_parser('photo-film');photos.add_argument('manifest',type=Path);photos.add_argument('--output',type=Path,required=True)
     commands.add_parser('doctor')
     web = commands.add_parser('serve'); web.add_argument('directory', type=Path); web.add_argument('--port', type=int, default=8765)
     args = parser.parse_args()
     try:
-        if args.command == 'serve':
+        if args.command == 'photo-film':
+            from .photos import render_photo_film
+            print(json.dumps(render_photo_film(args.manifest.resolve(),args.output.resolve()),indent=2))
+        elif args.command == 'serve':
             from .server import serve
             serve(args.directory, args.port)
         elif args.command == 'doctor':
